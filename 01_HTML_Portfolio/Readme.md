@@ -4,8 +4,7 @@ A single-page resume website built using **only HTML**, focusing on clean struct
 
 ## Live Demo
 
-Live Deployed Link:  
-https://your-username.github.io/html-resume
+Live Deployed Link:  [Link](https://web-cohort-assignments.vercel.app/)
 
 ## Tech Stack
 
