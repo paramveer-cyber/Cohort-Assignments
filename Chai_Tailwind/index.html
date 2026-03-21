@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,36 +9,54 @@
 
 <body class="chai-bg-[#020617] chai-text-[#e2e8f0] chai-m-0">
     <nav class="chai-flexbetween chai-p-4 chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
-        <h1 class="chai-bold chai-fs-4 chai-text-white">☕ Chai UI</h1>
+        <h1 class="chai-bold chai-fs-4 chai-text-white chai-translatey-[2px]">☕ Chai UI</h1>
+
         <div class="chai-flex chai-gap-2">
-            <button class="chai-btn chai-bg-transparent chai-b-solid chai-bc-[#334155] chai-text-white">Login</button>
-            <button class="chai-btn chai-bg-[#3b82f6]">Signup</button>
+            <button
+                class="chai-btn chai-bg-transparent chai-b-solid chai-bc-[#334155] chai-text-white chai-transition chai-duration-[0.2s]">
+                Login
+            </button>
+
+            <button class="chai-btn chai-bg-[#3b82f6] chai-transition chai-duration-[0.2s] chai-scale-[1]">
+                Signup
+            </button>
         </div>
     </nav>
 
     <div class="chai-container chai-mt-4">
+        <section
+            class="chai-carddark chai-mb-4 chai-center chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b] chai-transition chai-duration-[0.3s]">
+            <h2 class="chai-fs-5 chai-bold chai-mb-2 chai-text-white">
+                Build UI at Chai Speed 🚀
+            </h2>
 
-        <section class="chai-carddark chai-mb-4 chai-center chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
-            <h2 class="chai-fs-5 chai-bold chai-mb-2">Build UI at Chai Speed 🚀</h2>
             <p class="chai-text-[#94a3b8] chai-mb-3">
                 Utility-first CSS… but homemade and slightly unhinged.
             </p>
-            <button class="chai-btn chai-bg-[#22c55e] chai-m-1">Get Started</button>
-            <button class="chai-btn chai-bg-[#1e293b] chai-m-1">Docs</button>
-        </section>
 
+            <button class="chai-btn chai-bg-[#22c55e] chai-m-1 chai-scale-[1]">
+                Get Started
+            </button>
+
+            <button class="chai-btn chai-bg-[#1e293b] chai-m-1">
+                Docs
+            </button>
+        </section>
         <section class="chai-grid3 chai-mb-4">
-            <div class="chai-card chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
+            <div
+                class="chai-card chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b] chai-transition chai-duration-[0.3s]">
                 <h3 class="chai-bold chai-mb-1 chai-white">Fast</h3>
                 <p class="chai-text-[#94a3b8]">Write styles directly in HTML.</p>
             </div>
 
-            <div class="chai-card chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
+            <div
+                class="chai-card chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b] chai-transition chai-duration-[0.3s]">
                 <h3 class="chai-bold chai-mb-1 chai-white">Flexible</h3>
                 <p class="chai-text-[#94a3b8]">Supports dynamic values.</p>
             </div>
 
-            <div class="chai-card chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
+            <div
+                class="chai-card chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b] chai-transition chai-duration-[0.3s]">
                 <h3 class="chai-bold chai-mb-1 chai-white">Minimal</h3>
                 <p class="chai-text-[#94a3b8]">No config. Just chaos.</p>
             </div>
@@ -48,35 +67,53 @@
                 <h3 class="chai-bold chai-fs-4 chai-white">Flex Layout</h3>
                 <p class="chai-text-[#94a3b8]">Clean alignment utilities.</p>
             </div>
-            <span class="chai-badge chai-bg-[#3b82f6] chai-white">NEW</span>
+
+            <span class="chai-badge chai-bg-[#3b82f6] chai-white chai-rotate-[3deg]">
+                NEW
+            </span>
         </section>
 
         <section class="chai-card chai-mb-4 chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
             <h3 class="chai-bold chai-mb-2 chai-white">Form Elements</h3>
-            <input class="chai-input chai-mb-2 chai-w-[100%] chai-bg-[#020617] chai-text-white chai-b-solid chai-bc-[#334155]" placeholder="Your name" />
-            <input class="chai-input chai-w-[100%] chai-bg-[#020617] chai-text-white chai-b-solid chai-bc-[#334155]" placeholder="Your email" />
+
+            <input
+                class="chai-input chai-mb-2 chai-w-[100%] chai-bg-[#020617] chai-text-white chai-b-solid chai-bc-[#334155]"
+                placeholder="Your name" />
+
+            <input class="chai-input chai-w-[100%] chai-bg-[#020617] chai-text-white chai-b-solid chai-bc-[#334155]"
+                placeholder="Your email" />
         </section>
 
         <section class="chai-card chai-mb-4 chai-bg-[#020617] chai-b-solid chai-bc-[#1e293b]">
             <h3 class="chai-bold chai-mb-2 chai-white">Buttons</h3>
-            <button class="chai-btn chai-bg-[#1e293b] chai-m-1">Default</button>
-            <button class="chai-btn chai-bg-[#ef4444] chai-m-1">Danger</button>
-            <button class="chai-btn chai-bg-[#22c55e] chai-m-1">Success</button>
-        </section>
 
-        <section class="chai-flexcenter chai-h-20 chai-bg-[#020617] chai-br-2 chai-b-solid chai-bc-[#1e293b] chai-mb-4 chai-white">
+            <button class="chai-btn chai-bg-[#1e293b] chai-m-1 chai-translatey-[1px]">
+                Default
+            </button>
+
+            <button class="chai-btn chai-bg-[#ef4444] chai-m-1 chai-rotate-[1deg]">
+                Danger
+            </button>
+
+            <button class="chai-btn chai-bg-[#22c55e] chai-m-1 chai-scale-[1]">
+                Success
+            </button>
+        </section>
+        <section
+            class="chai-flexcenter chai-h-20 chai-bg-[#020617] chai-br-2 chai-b-solid chai-bc-[#1e293b] chai-mb-4 chai-white chai-translatey-[2px]">
             Perfectly Centered Content!
         </section>
-
         <div class="chai-divider chai-mb-4 chai-bg-[#1e293b]"></div>
-
         <footer class="chai-center chai-text-[#64748b] chai-mb-4">
             Built by Paramveer Oberoi
         </footer>
 
     </div>
 
-    <script type="module" src="./chaiTailwind.js"></script>
+    <script type="module">
+        import "https://unpkg.com/chai-css-engine@1.0.10/index.js";
+    </script>
 
 </body>
+
 </html>

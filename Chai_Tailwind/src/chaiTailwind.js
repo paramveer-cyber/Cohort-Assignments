@@ -1,27 +1,19 @@
-import { processClass } from './processing.js'
+import { processClass } from './processing.js';
+
 export function initChaiTailwind() {
-    let mainBody = document.querySelectorAll("[class*='chai-']");
+    const elements = document.querySelectorAll("[class*='chai-']");
 
-    mainBody.forEach(element => {
-        let classesApplied = element.getAttribute("class");
+    elements.forEach(element => {
         const existing = element.getAttribute("style") || "";
-
-        if (classesApplied === null) {
-            return;
-        }
-        let stylesToApply = ""
-
-        element.classList.forEach((elementClass) => {
-            let result = processClass(elementClass, classesApplied, stylesToApply);
-            classesApplied = result.classesApplied;
-            stylesToApply = result.stylesToApply;
-        })
-        if (classesApplied) {
-            element.setAttribute("class", classesApplied);
-        }
-        else {
+        const stylesArr = [];
+        [...element.classList].forEach(elementClass => {
+            processClass(element, elementClass, stylesArr);
+        });
+        if (element.classList.length === 0){
             element.removeAttribute("class");
         }
-        element.setAttribute("style", existing + stylesToApply);
+        if (stylesArr.length > 0) {
+            element.setAttribute("style", existing + stylesArr.join(""));
+        }
     });
 }

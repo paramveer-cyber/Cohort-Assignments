@@ -198,6 +198,19 @@ export const standAlone = {
         border-radius: 50%;
         overflow: hidden;
     `,
+    flexwrap: "flex-wrap: wrap;",
+    flexnowrap: "flex-wrap: nowrap;",
+    flex1: "flex: 1;",
+    flexauto: "flex: auto;",
+
+    itemsstretch: "align-items: stretch;",
+    justifyend: "justify-content: flex-end;",
+    justifystart: "justify-content: flex-start;",
+
+    invisible: "visibility: hidden;",
+
+    pointernone: "pointer-events: none;",
+    pointerauto: "pointer-events: auto;",
 };
 export const propMap = {
     bg: "background: ",
@@ -281,6 +294,30 @@ export const propMap = {
     borderc: "border-color: ",
     radius: "border-radius: ",
     display: "display: ",
+    translatex: "transform: translateX(",
+    translatey: "transform: translateY(",
+    scale: "transform: scale(",
+    rotate: "transform: rotate(",
+
+    bgr: "background-repeat: ",
+    bgimg: "background-image: ",
+
+    bt: "border-top: ",
+    bb: "border-bottom: ",
+    bl: "border-left: ",
+    brd: "border-right: ",
+
+    fw: "font-weight: ",
+    ta: "text-align: ",
+    td: "text-decoration: ",
+
+    box: "box-sizing: ",
+
+    transition: "transition: ",
+    duration: "transition-duration: ",
+    ease: "transition-timing-function: ",
+
+    inset: "inset: ",
 };
 export const unitLess = [
     "z",
@@ -291,5 +328,7 @@ export const unitLess = [
     "grow",
     "shrink",
     "order",
-    "flex"
+    "flex",
+    "scale",
+    "fw"
 ];
