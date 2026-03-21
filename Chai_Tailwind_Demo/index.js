@@ -3,6 +3,8 @@
 // This is only submitted so as to give all javascript in one file as 
 // advised by admins! :)
 
+
+
 const standAlone = {
     red: "color: red;",
     black: "color: black;",
