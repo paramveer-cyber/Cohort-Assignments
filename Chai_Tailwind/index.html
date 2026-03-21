@@ -2,184 +2,1183 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chai CSS Engine Docs</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chai CSS Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --orange: #f97316;
+            --orange-light: #fb923c;
+            --orange-pale: #fdba74;
+            --cyan: #22d3ee;
+            --bg-deep: #020617;
+            --bg-mid: #0f172a;
+            --border: #1e293b;
+            --border-bright: #334155;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --subtext: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Syne', system-ui;
+            background: var(--bg-deep);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(249, 115, 22, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 90% 80%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 50% at 10% 90%, rgba(249, 115, 22, 0.06) 0%, transparent 60%),
+                #020617;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: -1;
+            animation: drift 18s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            top: -150px;
+            left: -100px;
+            background: rgba(249, 115, 22, 0.12);
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            bottom: 10%;
+            right: -100px;
+            background: rgba(34, 211, 238, 0.08);
+            animation-delay: -6s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            left: 30%;
+            background: rgba(251, 146, 60, 0.07);
+            animation-delay: -12s;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(40px, 60px) scale(1.1);
+            }
+        }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 36px;
+            backdrop-filter: blur(20px) saturate(1.5);
+            background: rgba(2, 6, 23, 0.7);
+            border-bottom: 1px solid rgba(249,115,22,0.15);
+            position: sticky; top: 0; z-index: 100;
+        }
+ 
+        nav h2 {
+            font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--orange), var(--orange-pale));
+            -webkit-background-clip: text; color: transparent;
+        }
+ 
+        .nav-pill { display: flex; gap: 8px; align-items: center; }
+        .nav-pill span {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 4px 12px;
+            border-radius: 999px; border: 1px solid rgba(249,115,22,0.3);
+            color: var(--orange-light); background: rgba(249,115,22,0.07); letter-spacing: 1px;
+        }
+ 
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 4px 12px;
+            border-radius: 999px; border: 1px solid rgba(249,115,22,0.3);
+            color: var(--orange-light); background: rgba(249,115,22,0.07); letter-spacing: 1px;
+            text-decoration: none; display: flex; align-items: center; gap: 6px;
+            transition: all 0.2s;
+        }
+ 
+        .nav-link:hover {
+            border-color: var(--orange); color: #fff;
+            background: rgba(249,115,22,0.15);
+            box-shadow: 0 0 12px rgba(249,115,22,0.2);
+        }
+ 
+        .nav-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+        .ticker-wrap {
+            overflow: hidden;
+            border-top: 1px solid rgba(249, 115, 22, 0.1);
+            border-bottom: 1px solid rgba(249, 115, 22, 0.1);
+            background: rgba(249, 115, 22, 0.04);
+            padding: 10px 0;
+        }
+
+        .ticker {
+            display: flex;
+            gap: 48px;
+            white-space: nowrap;
+            animation: ticker 22s linear infinite;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--orange-light);
+            letter-spacing: 1px;
+        }
+
+        .ticker span::before {
+            content: '✦ ';
+            opacity: 0.5;
+        }
+
+        @keyframes ticker {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .hero {
+            text-align: center;
+            margin: 0 auto;
+            max-width: 1000px;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+
+        .hero-eyebrow {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--orange);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 999px;
+            padding: 6px 18px;
+            margin-bottom: 28px;
+            background: rgba(249, 115, 22, 0.06);
+            animation: fadeSlideUp 0.6s ease both;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(72px, 12vw, 140px);
+            line-height: 0.9;
+            letter-spacing: 4px;
+            background: linear-gradient(160deg, #ffffff 0%, var(--orange-pale) 40%, var(--orange) 70%, #c2410c 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: fadeSlideUp 0.7s 0.1s ease both;
+            position: relative;
+        }
+
+        .hero h1::after {
+            content: 'Chai CSS Engine';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, #ffffff 0%, var(--orange-pale) 40%, var(--orange) 70%, #c2410c 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: blur(20px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .hero-sub {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(20px, 3vw, 32px);
+            letter-spacing: 4px;
+            color: var(--subtext);
+            margin: 16px 0 0;
+            animation: fadeSlideUp 0.7s 0.2s ease both;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: var(--subtext);
+            margin-top: 16px;
+            line-height: 1.7;
+            animation: fadeSlideUp 0.7s 0.3s ease both;
+            font-family: 'Syne', sans-serif;
+            font-weight: 400;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border-bright);
+            background: rgba(2, 6, 23, 0.8);
+            color: white;
+            cursor: pointer;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--orange), var(--orange-light));
+            border: none;
+            box-shadow: 0 0 24px rgba(249, 115, 22, 0.35);
+        }
+
+        .btn.primary:hover {
+            box-shadow: 0 0 40px rgba(249, 115, 22, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .info {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            display: flex;
+            gap: 16px;
+            padding: 0 20px;
+        }
+
+        .info div {
+            flex: 1;
+            padding: 22px 24px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .info div::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--orange), var(--orange-light), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .info div:hover {
+            transform: translateY(-4px);
+            border-color: rgba(249, 115, 22, 0.3);
+            box-shadow: 0 8px 40px rgba(249, 115, 22, 0.1);
+        }
+
+        .info div:hover::before {
+            opacity: 1;
+        }
+
+        .info div h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .info div p {
+            font-size: 13px;
+            color: var(--subtext);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeSlideUp 0.5s ease both;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(249, 115, 22, 0.06), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .section:hover {
+            transform: translateY(-4px);
+            border-color: rgba(249, 115, 22, 0.5);
+            box-shadow: 0 12px 48px rgba(249, 115, 22, 0.1);
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        .section h2 {
+            color: var(--orange-light);
+            margin-bottom: 18px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 18px;
+            border-radius: 2px;
+            background: linear-gradient(to bottom, var(--orange), var(--orange-pale));
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+        }
+
+        .code {
+            padding: 9px 12px;
+            border-radius: 10px;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--border-bright);
+            text-align: center;
+            color: var(--orange-light);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code::after {
+            content: '📋';
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%) scale(0);
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .code:hover {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.4);
+            color: #fff;
+            box-shadow: 0 0 16px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .code:hover::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .code:active {
+            transform: scale(0.95);
+        }
+
+        .badge {
+            padding: 7px 12px;
+            border-radius: 999px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--orange), var(--orange-light));
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: 0 2px 16px rgba(249, 115, 22, 0.25);
+        }
+
+        .badge:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 24px rgba(249, 115, 22, 0.45);
+        }
+
+        .badge:active {
+            transform: scale(0.95);
+        }
+
+        #why-section {
+            margin: 40px auto;
+            max-width: 1100px;
+            padding: 0 20px;
+        }
+
+        /* ── SANDBOX ── */
+        .sandbox {
+            margin: 0 auto 0;
+            max-width: 1100px;
+            padding: 28px;
+            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sandbox::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--orange), var(--cyan), var(--orange));
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 200% 0;
+            }
+
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .sandbox-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: var(--orange-light);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sandbox textarea {
+            width: 100%;
+            height: 100px;
+            background: rgba(2, 6, 23, 0.9);
+            border: 1px solid var(--border-bright);
+            border-radius: 12px;
+            color: var(--text);
+            padding: 14px;
+            margin-bottom: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            resize: vertical;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .sandbox textarea:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .sandbox textarea::placeholder {
+            color: var(--muted);
+        }
+
+        .preview {
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px dashed var(--border-bright);
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-top: 1px solid var(--border);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+        }
+
+        .docs-header {
+            max-width: 1100px;
+            margin: 48px auto 24px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .docs-header h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: var(--muted);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .docs-header hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(249, 115, 22, 0.95);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 1px;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(249, 115, 22, 0.4);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 640px) {
+            .info {
+                flex-direction: column;
+            }
+
+            .hero h1 {
+                font-size: 72px;
+            }
+        }
+
+        /* ── HOW IT WORKS ── */
+        #how-section {
+            max-width: 1100px;
+            margin: 48px auto 0;
+            padding: 0 20px;
+        }
+
+        .how-header {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: var(--muted);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .how-header hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 0;
+            align-items: start;
+            margin-bottom: 0;
+        }
+
+        .step {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            cursor: default;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.12), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .step:hover {
+            transform: translateY(-6px);
+            border-color: rgba(249, 115, 22, 0.45);
+            box-shadow: 0 16px 48px rgba(249, 115, 22, 0.12);
+        }
+
+        .step:hover::after {
+            opacity: 1;
+        }
+
+        .step-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 56px;
+            line-height: 1;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05));
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .step-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: var(--orange-light);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--subtext);
+            line-height: 1.65;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-code {
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: rgba(2, 6, 23, 0.9);
+            border: 1px solid var(--border-bright);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            white-space: pre;
+        }
+
+        .step-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            margin-top: 60px;
+        }
+
+        .step-arrow svg {
+            width: 28px;
+            height: 28px;
+            color: var(--orange);
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+
+        .steps:hover .step-arrow svg {
+            opacity: 0.7;
+        }
+
+
+
+        .quick-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(249, 115, 22, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            color: var(--orange-light);
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .quick-chip:hover {
+            background: rgba(249, 115, 22, 0.18);
+            border-color: rgba(249, 115, 22, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .quick-chip:active {
+            transform: scale(0.95);
+        }
+
+        .play-status {
+            padding: 12px 24px;
+            border-top: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--muted);
+            transition: all 0.3s;
+        }
+
+        .status-dot.active {
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
+        }
+
+        @media (max-width: 680px) {
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step-arrow {
+                transform: rotate(90deg);
+                padding: 8px 0;
+            }
+
+            .play-pane:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+        }
+    </style>
 </head>
 
-<body class="chai-bg-[#020617] chai-text-[#e2e8f0] chai-m-0">
+<body>
 
-    <nav class="chai-flexbetween chai-p-4 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
-        <h1 class="chai-bold chai-fs-4 chai-text-white">☕ Chai Docs</h1>
-        <div class="chai-flex chai-gap-2">
-            <button class="chai-btn chai-bg-[#0f172a] chai-b chai-bc-[#334155] chai-text-white">Login</button>
-            <button class="chai-btn chai-bg-[#f97316] chai-text-white">Signup</button>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="toast" id="toast">Copied to clipboard ✓</div>
+
+     <nav>
+        <h2>☕ Chai Docs</h2>
+        <div class="nav-pill">
+            <span>v1.1.2</span>
+            <span>RUNTIME</span>
+            <a class="nav-link" href="https://github.com/paramveer-cyber/Cohort-Assignments/tree/main/Chai_Tailwind" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .268.18.58.688.482C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+            </a>
+            <a class="nav-link" href="https://www.npmjs.com/package/chai-css-engine" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474C23.214 24 24 23.214 24 22.237V1.763C24 .786 23.214 0 22.237 0zm5.927 19.931H4.888V4.069h2.802v15.862zm6.155 0h-2.802V4.069h2.802v9.931h2.802V4.069h2.802v15.862h-5.604z"/></svg>
+                npm
+            </a>
         </div>
     </nav>
 
-    <div class="chai-container chai-mt-4">
-
-        <!-- HERO -->
-        <section class="chai-carddark chai-mb-4 chai-center chai-bg-[#0f172a] chai-b chai-bc-[#1e293b] chai-shadowlg">
-
-            <h2 class="chai-fs-5 chai-bold chai-mb-2 chai-text-white">
-                Build Docs at Chai Speed 🚀
-            </h2>
-
-            <p class="chai-text-[#94a3b8] chai-mb-3">
-                Utility-first CSS… but now it actually looks premium.
-            </p>
-
-            <button class="chai-btn chai-bg-[#f97316] chai-m-1">Get Started</button>
-            <button class="chai-btn chai-bg-[#1e293b] chai-m-1 chai-text-white">Docs</button>
-        </section>
-
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span>No Build Step</span><span>Runtime Parsing</span><span>Custom Values</span>
+            <span>Zero Config</span><span>Fast Prototyping</span><span>Utility First</span>
+            <span>Instant Browser</span><span>Open Source</span><span>chai-flex</span>
+            <span>chai-grid3</span><span>chai-btn</span><span>chai-card</span>
+            <span>No Build Step</span><span>Runtime Parsing</span><span>Custom Values</span>
+            <span>Zero Config</span><span>Fast Prototyping</span><span>Utility First</span>
+            <span>Instant Browser</span><span>Open Source</span><span>chai-flex</span>
+            <span>chai-grid3</span><span>chai-btn</span><span>chai-card</span>
+        </div>
     </div>
 
-    <div class="chai-container chai-mt-4" id="docs"></div>
+    <section class="hero">
+        <div class="hero-eyebrow">☕ Runtime CSS Engine</div>
+        <h1>Chai CSS Engine</h1>
+        <p class="hero-sub">Build Docs at Chai Speed 🚀</p>
+        <p>A runtime-first utility CSS engine that works instantly in the browser.</p>
+    </section>
+
+    <div class="info">
+        <div class="reveal">
+            <h3>⚡ Runtime Engine</h3>
+            <p>No build step. Drop in a script tag and you're done.</p>
+        </div>
+        <div class="reveal">
+            <h3>🎯 Custom Values</h3>
+            <p>Use [] syntax freely for any arbitrary value.</p>
+        </div>
+        <div class="reveal">
+            <h3>📦 Zero Config</h3>
+            <p>Works out of the box — no setup, no config files.</p>
+        </div>
+    </div>
+
+    <div id="why-section">
+        <div class="section reveal" style="border-color:#06b6d4; box-shadow:0 0 60px rgba(6,182,212,0.08);">
+            <h2 style="color:#22d3ee;">Why Chai?</h2>
+            <div class="grid">
+                <div class="code" style="color:#22d3ee; border-color:#164e63;">⚡ No Build Step</div>
+                <div class="code" style="color:#22d3ee; border-color:#164e63;">🧠 Runtime Parsing</div>
+                <div class="code" style="color:#22d3ee; border-color:#164e63;">🎯 Custom Values []</div>
+                <div class="code" style="color:#22d3ee; border-color:#164e63;">📦 Zero Config</div>
+                <div class="code" style="color:#22d3ee; border-color:#164e63;">🚀 Fast Prototyping</div>
+                <div class="code" style="color:#22d3ee; border-color:#164e63;">🎨 Utility First</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="how-section">
+        <div class="how-header reveal">
+            <h3>How It Works</h3>
+            <hr>
+        </div>
+
+        <div class="steps reveal">
+            <div class="step">
+                <span class="step-num">01</span>
+                <span class="step-icon">📥</span>
+                <div class="step-title">Drop the Script</div>
+                <p class="step-desc">Add a single script tag to your HTML. No npm, no bundler, no config. Chai boots
+                    instantly in any browser.</p>
+                <div class="step-code">&lt;script type="module"&gt;
+                    import "chai-css-engine";
+                    &lt;/script&gt;</div>
+            </div>
+
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </div>
+
+            <div class="step">
+                <span class="step-num">02</span>
+                <span class="step-icon">✍️</span>
+                <div class="step-title">Write Chai Classes</div>
+                <p class="step-desc">Add <code
+                        style="color:var(--orange-light); font-family:'JetBrains Mono',monospace; font-size:11px;">chai-*</code>
+                    classes directly on your elements. Use brackets for arbitrary values — no limits.</p>
+                <div class="step-code">&lt;div class="chai-flex
+                    chai-p-4
+                    chai-bg-[#1e1e1e]
+                    chai-radius-[12px]
+                    chai-shadow"&gt;
+                    Hello Chai
+                    &lt;/div&gt;</div>
+            </div>
+
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </div>
+
+            <div class="step">
+                <span class="step-num">03</span>
+                <span class="step-icon">🎨</span>
+                <div class="step-title">Styles Appear</div>
+                <p class="step-desc">Chai's runtime engine scans the DOM, parses every class, and injects the precise
+                    CSS rules — zero waste, zero config.</p>
+                <div class="step-code">/* Auto-generated by Chai */
+                    .chai-flex { display: flex }
+                    .chai-p-4 { padding: 1rem }
+                    .chai-shadow {
+                    box-shadow: 0 4px 24px
+                    rgba(0,0,0,0.2)
+                    }</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="docs-header reveal">
+        <h3>Reference Docs</h3>
+        <hr>
+    </div>
+
+    <div class="container" id="docs"></div>
+
+    <footer>
+        © 2026 Chai CSS Engine · Built by Paramveer Oberoi
+    </footer>
 
     <script type="module">
         import "https://unpkg.com/chai-css-engine@1.0.10/index.js";
 
+        /* ── SECTIONS DATA ── */
         const sections = {
-
+            typography: ["center", "left", "right", "justify", "bold", "italic", "underline", "linethrough", "upper", "lower", "capitalize"],
             colors: ["red", "black", "white", "gray", "blue", "green", "yellow", "purple", "pink", "orange"],
-
-            typography: [
-                "center", "left", "right", "justify",
-                "bold", "italic",
-                "underline", "linethrough",
-                "upper", "lower", "capitalize"
-            ],
-
             display: ["block", "inline", "inlineblock", "hidden", "visible"],
-
             position: ["relative", "absolute", "fixed", "sticky"],
-
-            overflow: [
-                "overflowhidden", "overflowauto", "overflowscroll",
-                "overflowxhidden", "overflowyhidden",
-                "overflowxauto", "overflowyauto"
-            ],
-
+            overflow: ["overflowhidden", "overflowauto", "overflowscroll", "overflowxhidden", "overflowyhidden", "overflowxauto", "overflowyauto"],
             cursor: ["pointer", "notallowed", "grab", "crosshair", "move"],
-
             whitespace: ["nowrap", "wrap", "pre", "ellipsis"],
-
             bordersQuick: ["border", "border0"],
-
-            backgroundHelpers: [
-                "bgcover", "bgcontain",
-                "bgcenter", "bgtop", "bgbottom",
-                "bgleft", "bgright",
-                "norepeat", "repeat"
-            ],
-
-            flex: [
-                "flex", "flexcol", "flexrow",
-                "flexcenter", "flexbetween", "flexaround",
-                "flexwrap", "flexnowrap",
-                "flex1", "flexauto",
-                "justifycenter", "justifybetween", "justifyaround",
-                "justifyend", "justifystart",
-                "itemscenter", "itemsstart", "itemsend", "itemsstretch"
-            ],
-
+            backgroundHelpers: ["bgcover", "bgcontain", "bgcenter", "bgtop", "bgbottom", "bgleft", "bgright", "norepeat", "repeat"],
+            flex: ["flex", "flexcol", "flexrow", "flexcenter", "flexbetween", "flexaround", "flexwrap", "flexnowrap", "flex1", "flexauto", "justifycenter", "justifybetween", "justifyaround", "justifyend", "justifystart", "itemscenter", "itemsstart", "itemsend", "itemsstretch"],
             effects: ["shadow", "shadowmd", "shadowlg", "shadowxl", "round"],
-
             misc: ["transparent", "selectnone", "selectall", "invisible", "pointernone", "pointerauto"],
-
-            components: [
-                "btn", "card", "carddark",
-                "badge", "input", "inputdark",
-                "container",
-                "divider", "dividerdark",
-                "circle"
-            ],
-
+            components: ["btn", "card", "carddark", "badge", "input", "inputdark", "container", "divider", "dividerdark", "circle"],
             grid: ["grid2", "grid3", "grid4"],
-
-            spacingProps: [
-                "m", "mt", "mb", "ml", "mr", "mx", "my",
-                "p", "pt", "pb", "pl", "pr", "px", "py"
-            ],
-
+            spacingProps: ["m", "mt", "mb", "ml", "mr", "mx", "my", "p", "pt", "pb", "pl", "pr", "px", "py"],
             sizing: ["w", "h", "minw", "minh", "maxw", "maxh"],
-
             typographyProps: ["fs", "fontw", "fw", "lh", "ls"],
-
             borderProps: ["b", "bw", "bc", "bs", "br", "radius", "bt", "bb", "bl", "brd"],
-
             positioningProps: ["pos", "top", "left", "right", "bottom", "inset", "z"],
-
             layoutProps: ["jc", "ai", "gap", "grow", "shrink", "basis", "wrap"],
-
             effectsProps: ["shadow", "opacity"],
-
             media: ["fit", "aspect"],
-
             overflowProps: ["overflow", "overflowx", "overflowy"],
-
             interaction: ["cursor", "select"],
-
             outline: ["outline", "outlinew", "outlinec"],
-
             background: ["bg", "bgc", "bgsize", "bgpos", "bgimg", "bgr"],
-
             transforms: ["translatex", "translatey", "scale", "rotate"],
-
             transitions: ["transition", "duration", "ease"],
-
             box: ["box"]
         };
 
-        function createCode(text) {
-            const el = document.createElement("code");
-            el.className = "chai-bg-[#020617] chai-p-1 chai-br-2 chai-center chai-b chai-bc-[#1e293b] chai-text-[#fb923c] chai-shadowmd";
+        const root = document.getElementById("docs");
 
+        function showToast(text) {
+            const t = document.getElementById('toast');
+            t.textContent = `Copied: ${text} ✓`;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1800);
+        }
+
+        function createItem(text, type) {
+            const el = document.createElement("div");
+            el.className = type === "badge" ? "badge" : "code";
             el.textContent = text;
+            el.onclick = () => {
+                navigator.clipboard.writeText(text);
+                el.style.opacity = 0.5;
+                setTimeout(() => el.style.opacity = 1, 300);
+                showToast(text);
+            };
             return el;
         }
 
-        const root = document.getElementById("docs");
+        Object.entries(sections).forEach(([title, items], i) => {
+            const section = document.createElement("div");
+            section.className = "section reveal";
+            section.style.animationDelay = `${i * 0.04}s`;
 
-        Object.entries(sections).forEach(([title, items], index) => {
-
-            const section = document.createElement("section");
-
-            const shades = ["#0f172a", "#111827"];
-            section.className = "chai-mb-4 chai-p-3 chai-br-3 chai-b chai-bc-[#1e293b] chai-shadowmd";
-            section.style.background = shades[index % shades.length];
-
-            const heading = document.createElement("h2");
-
-            const orange = ["#f97316", "#fb923c", "#fdba74"];
-            heading.className = "chai-bold chai-fs-4 chai-mb-2";
-            heading.style.color = orange[index % orange.length];
-
-            heading.textContent = title;
-
-            const container = document.createElement("div");
-            container.className = "chai-grid chai-gap-1 chai-grid4";
-
-            items.forEach(item => {
-
-                if (
-                    title.includes("Props") ||
-                    ["background", "transforms", "transitions", "box", "layoutProps", "positioningProps", "sizing", "borderProps", "typographyProps", "effectsProps", "overflowProps", "interaction", "outline"].includes(title)
-                ) {
-                    container.appendChild(createCode(`chai-${item}-2`));
-                    container.appendChild(createCode(`chai-${item}-[value]`));
-                } else {
-                    container.appendChild(createCode(`chai-${item}`));
-                }
-
+            section.addEventListener('mousemove', (e) => {
+                const rect = section.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+                const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+                section.style.setProperty('--mx', `${x}%`);
+                section.style.setProperty('--my', `${y}%`);
             });
 
-            section.appendChild(heading);
-            section.appendChild(container);
+            const h = document.createElement("h2");
+            h.textContent = title;
+
+            const grid = document.createElement("div");
+            grid.className = "grid";
+
+            items.forEach(item => {
+                if (title === "components") {
+                    grid.appendChild(createItem(`chai-${item}`, "badge"));
+                } else if (title.includes("Props")) {
+                    grid.appendChild(createItem(`chai-${item}-2`));
+                    grid.appendChild(createItem(`chai-${item}-[value]`));
+                } else {
+                    grid.appendChild(createItem(`chai-${item}`));
+                }
+            });
+
+            section.appendChild(h);
+            section.appendChild(grid);
             root.appendChild(section);
         });
+
+        /* ── SCROLL REVEAL ── */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        /* ── PLAYGROUND ── */
+        const playInput = document.getElementById('play-input');
+        const playPreview = document.getElementById('play-preview');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+
+        let previewEl = null;
+        let debounceTimer = null;
+
+        function updatePreview() {
+            const raw = playInput.value.trim();
+            if (!raw) {
+                playPreview.innerHTML = '<div class="play-preview-empty">← type some chai classes to see magic</div>';
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Waiting for input…';
+                previewEl = null;
+                return;
+            }
+
+            const classes = raw.split(/\s+/).filter(Boolean);
+            const classStr = classes.join(' ');
+
+            // Create or update the preview element
+            if (!previewEl) {
+                previewEl = document.createElement('div');
+                previewEl.style.cssText = 'transition: all 0.2s; font-family: Syne, sans-serif;';
+                playPreview.innerHTML = '';
+                playPreview.appendChild(previewEl);
+            }
+
+            previewEl.className = classStr;
+            previewEl.textContent = previewEl.textContent || 'Preview Element';
+
+            // Count applied classes
+            const count = classes.length;
+            statusDot.className = 'status-dot active';
+            statusText.textContent = `${count} class${count !== 1 ? 'es' : ''} applied — chai is styling live ✦`;
+        }
+
+        playInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(updatePreview, 80);
+        });
+
+        // Quick chip clicks
+        document.querySelectorAll('.quick-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const val = chip.dataset.val;
+                playInput.value = val;
+
+                // Ensure preview element has useful text
+                if (previewEl) previewEl.textContent = '';
+                if (!previewEl) {
+                    previewEl = null; // force recreate
+                }
+
+                // Set text based on preset
+                const labelMap = {
+                    'chai-btn': 'Click Me',
+                    'chai-card': 'Card Component',
+                    'chai-badge': 'New Badge',
+                    'chai-input': 'Type here...',
+                };
+                setTimeout(() => {
+                    if (previewEl) {
+                        const found = Object.entries(labelMap).find(([k]) => val.includes(k));
+                        previewEl.textContent = found ? found[1] : 'Preview Element';
+                    }
+                }, 0);
+
+                updatePreview();
+                playInput.focus();
+
+                chip.style.background = 'rgba(249,115,22,0.3)';
+                setTimeout(() => chip.style.background = '', 300);
+            });
+        });
+
     </script>
 
 </body>
