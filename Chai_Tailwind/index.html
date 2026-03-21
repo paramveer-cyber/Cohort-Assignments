@@ -1,422 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Chai CSS — Reference</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chai CSS Engine Docs</title>
 </head>
-<body class="chai-bg-[#0a0a0a] chai-white chai-p-6">
 
-  <!-- HERO -->
-  <div class="chai-center chai-py-8 chai-mb-8">
-    <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[3px] chai-mb-4">☕  Runtime CSS Engine</p>
-    <h1 class="chai-bold chai-mb-4 chai-fs-[72px] chai-ls-[1px]">Chai CSS</h1>
-    <p class="chai-fs-[16px] chai-gray chai-mb-6">Zero build. Drop a script. Write classes. Ship.</p>
-    <div class="chai-flex chai-gap-3 chai-flexcenter chai-flexwrap">
-      <span class="chai-badge chai-bg-[#1a1a1a] chai-gray chai-fs-[12px]">v1.1.2</span>
-      <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[12px]">Runtime Parsing</span>
-      <span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[12px]">Zero Config</span>
-      <span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[12px]">Arbitrary Values</span>
+<body class="chai-bg-[#020617] chai-text-[#e2e8f0] chai-m-0">
+
+    <!-- NAV -->
+    <nav class="chai-flexbetween chai-p-4 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
+        <h1 class="chai-bold chai-fs-4 chai-text-white">☕ Chai Docs</h1>
+    </nav>
+
+    <div class="chai-container chai-mt-4">
+
+        <!-- HERO -->
+        <section class="chai-carddark chai-mb-4 chai-center chai-bg-[#0f172a] chai-b chai-bc-[#1e293b] chai-shadowlg">
+
+            <h2 class="chai-fs-5 chai-bold chai-mb-2 chai-text-white">
+                Build Docs at Chai Speed 🚀
+            </h2>
+
+            <p class="chai-text-[#94a3b8] chai-mb-3">
+                Utility-first CSS… but now it actually looks premium.
+            </p>
+
+            <button class="chai-btn chai-bg-[#f97316] chai-m-1">Get Started</button>
+            <button class="chai-btn chai-bg-[#1e293b] chai-m-1 chai-text-white">Docs</button>
+        </section>
+
     </div>
-  </div>
+    <section class="chai-container chai-carddark chai-mb-4 chai-bg-[#0f172a] chai-b chai-bc-[#1e293b] chai-shadowlg">
 
-  <!-- ── PATTERNS ── -->
-  <p class="chai-upper chai-gray chai-fs-[10px] chai-ls-[3px] chai-mb-5">Class Patterns</p>
+        <h2 class="chai-fs-5 chai-bold chai-mb-3 chai-text-white chai-center">
+            Why Chai Hits Different ⚡
+        </h2>
 
-  <div class="chai-grid2 chai-gap-4 chai-mb-4">
+        <div class="chai-grid chai-grid4 chai-gap-2">
 
-    <!-- Pattern 1 -->
-    <div class="chai-bg-[#111111] chai-p-6 chai-radius-[16px]">
-      <div class="chai-flex chai-gap-3 chai-itemscenter chai-mb-4">
-        <div class="chai-bg-[#1a0d00] chai-radius-[8px] chai-w-[32px] chai-h-[32px] chai-flex chai-flexcenter">
-          <span class="chai-bold chai-orange chai-fs-[14px]">1</span>
+            <div class="chai-p-2 chai-br-3 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
+                <h3 class="chai-bold chai-mb-1 chai-text-[#22c55e]">⚡ No Build Step</h3>
+                <p class="chai-text-[#94a3b8] chai-fs-2">
+                    Skip bundlers. Write classes and see styles instantly.
+                </p>
+            </div>
+
+            <div class="chai-p-2 chai-br-3 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
+                <h3 class="chai-bold chai-mb-1 chai-text-[#38bdf8]">🧠 Runtime Parsing</h3>
+                <p class="chai-text-[#94a3b8] chai-fs-2">
+                    Styles are generated in the browser, not compiled.
+                </p>
+            </div>
+
+            <div class="chai-p-2 chai-br-3 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
+                <h3 class="chai-bold chai-mb-1 chai-text-[#f97316]">🎯 Custom Values</h3>
+                <p class="chai-text-[#94a3b8] chai-fs-2">
+                    Use brackets like <code class="chai-text-[#fb923c]">[value]</code> for full control.
+                </p>
+            </div>
+
+            <div class="chai-p-2 chai-br-3 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
+                <h3 class="chai-bold chai-mb-1 chai-text-[#a78bfa]">🧹 Auto Clean Classes</h3>
+                <p class="chai-text-[#94a3b8] chai-fs-2">
+                    Removes class names after applying styles, keeping your DOM clean.
+                </p>
+            </div>
+
         </div>
-        <p class="chai-bold chai-fs-[15px]">Standalone</p>
-      </div>
-      <p class="chai-fs-[13px] chai-gray chai-mb-4">Keyword maps directly to a complete CSS rule. No value needed.</p>
-      <div class="chai-bg-[#0a0a0a] chai-radius-[10px] chai-p-4 chai-mb-3">
-        <p class="chai-fs-[13px] chai-bold chai-mb-1">chai-<span class="chai-orange">[keyword]</span></p>
-        <p class="chai-fs-[11px] chai-gray">2 parts · fixed output</p>
-      </div>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-flex</span>
-          <span class="chai-fs-[12px] chai-gray">display: flex</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-bold</span>
-          <span class="chai-fs-[12px] chai-gray">font-weight: bold</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-center</span>
-          <span class="chai-fs-[12px] chai-gray">text-align: center</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-pointer</span>
-          <span class="chai-fs-[12px] chai-gray">cursor: pointer</span>
-        </div>
-      </div>
-    </div>
 
-    <!-- Pattern 2 -->
-    <div class="chai-bg-[#111111] chai-p-6 chai-radius-[16px]">
-      <div class="chai-flex chai-gap-3 chai-itemscenter chai-mb-4">
-        <div class="chai-bg-[#00101a] chai-radius-[8px] chai-w-[32px] chai-h-[32px] chai-flex chai-flexcenter">
-          <span class="chai-bold chai-blue chai-fs-[14px]">2</span>
-        </div>
-        <p class="chai-bold chai-fs-[15px]">Prop + Value</p>
-      </div>
-      <p class="chai-fs-[13px] chai-gray chai-mb-4">Maps a CSS property to a value. Numbers scale by <span class="chai-orange chai-bold">×0.5rem</span> unless the prop is unitless.</p>
-      <div class="chai-bg-[#0a0a0a] chai-radius-[10px] chai-p-4 chai-mb-3">
-        <p class="chai-fs-[13px] chai-bold chai-mb-1">chai-<span class="chai-blue">[prop]</span>-<span class="chai-orange">[value]</span></p>
-        <p class="chai-fs-[11px] chai-gray">3 parts · dynamic output</p>
-      </div>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[11px]">chai-p-4</span>
-          <span class="chai-fs-[12px] chai-gray">padding: 2rem <span class="chai-orange">(4×0.5)</span></span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[11px]">chai-fs-[18px]</span>
-          <span class="chai-fs-[12px] chai-gray">font-size: 18px</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[11px]">chai-bg-[#111]</span>
-          <span class="chai-fs-[12px] chai-gray">background: #111</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[11px]">chai-z-10</span>
-          <span class="chai-fs-[12px] chai-gray">z-index: 10 <span class="chai-orange">(unitless)</span></span>
-        </div>
-      </div>
-    </div>
+    </section>
 
-  </div>
+    <!-- DOCS -->
+    <div class="chai-container chai-mt-4" id="docs"></div>
 
-  <!-- Scaling + Unitless + Arbitrary row -->
-  <div class="chai-grid2 chai-gap-4 chai-mb-8">
+    <script type="module">
+        import "https://unpkg.com/chai-css-engine@1.0.10/index.js";
 
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-yellow chai-fs-[10px] chai-ls-[2px] chai-mb-4">Unitless Props</p>
-      <p class="chai-fs-[12px] chai-gray chai-mb-3">These take raw numbers — no ×0.5rem scaling applied.</p>
-      <div class="chai-flex chai-flexwrap chai-gap-2">
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">z</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">opacity</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">lh</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">fontw</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">fw</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">aspect</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">grow</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">shrink</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">scale</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">flex</span>
-      </div>
-    </div>
+        const sections = {
 
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[2px] chai-mb-4">Arbitrary [ ] + Transforms</p>
-      <p class="chai-fs-[12px] chai-gray chai-mb-3">Wrap any value in <span class="chai-orange chai-bold">[ ]</span>. Underscores become spaces. Transforms always use <span class="chai-orange">[ ]</span>.</p>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-w-[100%]</span>
-          <span class="chai-fs-[12px] chai-gray">width: 100%</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-shadow-[0_4px_24px_red]</span>
-          <span class="chai-fs-[12px] chai-gray">0 4px 24px red</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-rotate-[45deg]</span>
-          <span class="chai-fs-[12px] chai-gray">rotate(45deg)</span>
-        </div>
-        <div class="chai-flex chai-gap-3 chai-itemscenter">
-          <span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[11px]">chai-scale-[1.2]</span>
-          <span class="chai-fs-[12px] chai-gray">scale(1.2)</span>
-        </div>
-      </div>
-    </div>
+            colors: ["red", "black", "white", "gray", "blue", "green", "yellow", "purple", "pink", "orange"],
 
-  </div>
+            typography: [
+                "center", "left", "right", "justify",
+                "bold", "italic",
+                "underline", "linethrough",
+                "upper", "lower", "capitalize"
+            ],
 
-  <!-- ── EXAMPLES ── -->
-  <p class="chai-upper chai-gray chai-fs-[10px] chai-ls-[3px] chai-mb-5">Examples</p>
+            display: ["block", "inline", "inlineblock", "hidden", "visible"],
 
-  <div class="chai-grid2 chai-gap-4 chai-mb-4">
+            position: ["relative", "absolute", "fixed", "sticky"],
 
-    <!-- Profile card -->
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[2px] chai-mb-4">Profile Card</p>
-      <div class="chai-flex chai-gap-4 chai-itemscenter chai-bg-[#0a0a0a] chai-radius-[12px] chai-p-4 chai-mb-3">
-        <div class="chai-circle chai-bg-[#c2410c] chai-flex chai-flexcenter chai-bold chai-white chai-fs-[18px] chai-w-[48px] chai-h-[48px]">P</div>
-        <div>
-          <p class="chai-bold chai-fs-[14px] chai-mb-1">Paramveer</p>
-          <p class="chai-fs-[12px] chai-gray chai-mb-2">Frontend Engineer</p>
-          <div class="chai-flex chai-gap-2">
-            <span class="chai-badge chai-bg-[#14532d] chai-white chai-fs-[10px]">Active</span>
-            <span class="chai-badge chai-bg-[#1e3a8a] chai-white chai-fs-[10px]">Pro</span>
-          </div>
-        </div>
-      </div>
-      <div class="chai-bg-[#0a0a0a] chai-radius-[8px] chai-p-3">
-        <p class="chai-fs-[11px] chai-blue chai-lh-[1.8]">&lt;div class="chai-flex chai-gap-4 chai-itemscenter"&gt;<br>&nbsp;&nbsp;&lt;div class="chai-circle chai-bg-[#c2410c] chai-w-[48px] chai-h-[48px]"&gt;P&lt;/div&gt;<br>&nbsp;&nbsp;&lt;span class="chai-badge chai-bg-[#14532d]"&gt;Active&lt;/span&gt;<br>&lt;/div&gt;</p>
-      </div>
-    </div>
+            overflow: [
+                "overflowhidden", "overflowauto", "overflowscroll",
+                "overflowxhidden", "overflowyhidden",
+                "overflowxauto", "overflowyauto"
+            ],
 
-    <!-- Buttons + Badges -->
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-blue chai-fs-[10px] chai-ls-[2px] chai-mb-4">Buttons & Badges</p>
-      <div class="chai-flex chai-gap-3 chai-flexwrap chai-mb-4">
-        <button class="chai-btn">Default</button>
-        <button class="chai-btn chai-bg-[#c2410c] chai-white">Primary</button>
-        <button class="chai-btn chai-bg-[#15803d] chai-white">Success</button>
-        <button class="chai-btn chai-bg-[#9f1239] chai-white">Danger</button>
-      </div>
-      <div class="chai-flex chai-gap-2 chai-flexwrap chai-mb-4">
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">v1.1.2</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">Stable</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">New</span>
-        <span class="chai-badge chai-bg-[#1a001a] chai-purple">Beta</span>
-        <span class="chai-badge chai-bg-[#1a0000] chai-red">Deprecated</span>
-      </div>
-      <div class="chai-bg-[#0a0a0a] chai-radius-[8px] chai-p-3">
-        <p class="chai-fs-[11px] chai-blue chai-lh-[1.8]">&lt;button class="chai-btn chai-bg-[#c2410c] chai-white"&gt;Primary&lt;/button&gt;<br>&lt;span class="chai-badge chai-bg-[#001a0d] chai-green"&gt;Stable&lt;/span&gt;</p>
-      </div>
-    </div>
+            cursor: ["pointer", "notallowed", "grab", "crosshair", "move"],
 
-  </div>
+            whitespace: ["nowrap", "wrap", "pre", "ellipsis"],
 
-  <div class="chai-grid2 chai-gap-4 chai-mb-8">
+            bordersQuick: ["border", "border0"],
 
-    <!-- Layout -->
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-green chai-fs-[10px] chai-ls-[2px] chai-mb-4">Flex & Grid</p>
-      <div class="chai-flexbetween chai-bg-[#0a0a0a] chai-radius-[8px] chai-p-3 chai-mb-3">
-        <p class="chai-bold chai-fs-[13px]">Section Title</p>
-        <button class="chai-btn chai-bg-[#c2410c] chai-white chai-fs-[12px]">Action</button>
-      </div>
-      <div class="chai-grid3 chai-gap-2 chai-mb-3">
-        <div class="chai-bg-[#c2410c] chai-radius-[8px] chai-p-3 chai-center chai-white chai-bold chai-fs-[12px]">One</div>
-        <div class="chai-bg-[#0d9488] chai-radius-[8px] chai-p-3 chai-center chai-white chai-bold chai-fs-[12px]">Two</div>
-        <div class="chai-bg-[#7c3aed] chai-radius-[8px] chai-p-3 chai-center chai-white chai-bold chai-fs-[12px]">Three</div>
-      </div>
-      <div class="chai-bg-[#0a0a0a] chai-radius-[8px] chai-p-3">
-        <p class="chai-fs-[11px] chai-blue chai-lh-[1.8]">&lt;div class="chai-flexbetween"&gt;...&lt;/div&gt;<br>&lt;div class="chai-grid3 chai-gap-2"&gt;...&lt;/div&gt;</p>
-      </div>
-    </div>
+            backgroundHelpers: [
+                "bgcover", "bgcontain",
+                "bgcenter", "bgtop", "bgbottom",
+                "bgleft", "bgright",
+                "norepeat", "repeat"
+            ],
 
-    <!-- Inputs -->
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-purple chai-fs-[10px] chai-ls-[2px] chai-mb-4">Inputs</p>
-      <input class="chai-input chai-mb-3" placeholder="Light input…">
-      <input class="chai-inputdark chai-mb-3" placeholder="Dark input…">
-      <div class="chai-bg-[#0a0a0a] chai-radius-[8px] chai-p-3">
-        <p class="chai-fs-[11px] chai-blue chai-lh-[1.8]">&lt;input class="chai-input" placeholder="..." /&gt;<br>&lt;input class="chai-inputdark" placeholder="..." /&gt;</p>
-      </div>
-    </div>
+            flex: [
+                "flex", "flexcol", "flexrow",
+                "flexcenter", "flexbetween", "flexaround",
+                "flexwrap", "flexnowrap",
+                "flex1", "flexauto",
+                "justifycenter", "justifybetween", "justifyaround",
+                "justifyend", "justifystart",
+                "itemscenter", "itemsstart", "itemsend", "itemsstretch"
+            ],
 
-  </div>
+            effects: ["shadow", "shadowmd", "shadowlg", "shadowxl", "round"],
 
-  <!-- ── STANDALONE CLASSES ── -->
-  <p class="chai-upper chai-gray chai-fs-[10px] chai-ls-[3px] chai-mb-5">Standalone Classes</p>
+            misc: ["transparent", "selectnone", "selectall", "invisible", "pointernone", "pointerauto"],
 
-  <div class="chai-grid2 chai-gap-4 chai-mb-4">
+            components: [
+                "btn", "card", "carddark",
+                "badge", "input", "inputdark",
+                "container",
+                "divider", "dividerdark",
+                "circle"
+            ],
 
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[2px] chai-mb-3">Colors</p>
-      <div class="chai-flex chai-flexwrap chai-gap-2 chai-mb-4">
-        <span class="chai-badge chai-bg-[#1a0000] chai-red">chai-red</span>
-        <span class="chai-badge chai-bg-[#1a1a1a] chai-white">chai-white</span>
-        <span class="chai-badge chai-bg-[#141414] chai-gray">chai-gray</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-blue</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-green</span>
-        <span class="chai-badge chai-bg-[#1a1a00] chai-yellow">chai-yellow</span>
-        <span class="chai-badge chai-bg-[#100018] chai-purple">chai-purple</span>
-        <span class="chai-badge chai-bg-[#1a000f] chai-pink">chai-pink</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-orange</span>
-      </div>
-      <p class="chai-upper chai-blue chai-fs-[10px] chai-ls-[2px] chai-mb-3">Typography</p>
-      <div class="chai-flex chai-flexwrap chai-gap-2">
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-bold</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-italic</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-underline</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-linethrough</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-center</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-left</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-right</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-upper</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-lower</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-capitalize</span>
-        <span class="chai-badge chai-bg-[#00101a] chai-blue">chai-ellipsis</span>
-      </div>
-    </div>
+            grid: ["grid2", "grid3", "grid4"],
 
-    <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px]">
-      <p class="chai-upper chai-green chai-fs-[10px] chai-ls-[2px] chai-mb-3">Flex</p>
-      <div class="chai-flex chai-flexwrap chai-gap-2 chai-mb-4">
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flex</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexcol</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexrow</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexcenter</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexbetween</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexaround</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexwrap</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexnowrap</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flex1</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-flexauto</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-justifycenter</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-justifybetween</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-justifyaround</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-justifyend</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-justifystart</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-itemscenter</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-itemsstart</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-itemsend</span>
-        <span class="chai-badge chai-bg-[#001a0d] chai-green">chai-itemsstretch</span>
-      </div>
-      <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[2px] chai-mb-3">Effects & Misc</p>
-      <div class="chai-flex chai-flexwrap chai-gap-2">
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-shadow</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-shadowmd</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-shadowlg</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-shadowxl</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-round</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-pointer</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-block</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-inline</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-hidden</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-relative</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-absolute</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-fixed</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-sticky</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-transparent</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-selectnone</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-invisible</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-pointernone</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-nowrap</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-grid2</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-grid3</span>
-        <span class="chai-badge chai-bg-[#1a0d00] chai-orange">chai-grid4</span>
-      </div>
-    </div>
+            spacingProps: [
+                "m", "mt", "mb", "ml", "mr", "mx", "my",
+                "p", "pt", "pb", "pl", "pr", "px", "py"
+            ],
 
-  </div>
+            sizing: ["w", "h", "minw", "minh", "maxw", "maxh"],
 
-  <!-- Components -->
-  <div class="chai-bg-[#111111] chai-p-5 chai-radius-[16px] chai-mb-8">
-    <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[2px] chai-mb-3">Components</p>
-    <div class="chai-flex chai-flexwrap chai-gap-2">
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-btn</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-card</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-carddark</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-badge</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-input</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-inputdark</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-container</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-divider</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-dividerdark</span>
-      <span class="chai-badge chai-bg-[#431407] chai-white">chai-circle</span>
-    </div>
-  </div>
+            typographyProps: ["fs", "fontw", "fw", "lh", "ls"],
 
-  <!-- ── PROP-VALUE REFERENCE ── -->
-  <p class="chai-upper chai-gray chai-fs-[10px] chai-ls-[3px] chai-mb-5">Prop-Value Reference</p>
+            borderProps: ["b", "bw", "bc", "bs", "br", "radius", "bt", "bb", "bl", "brd"],
 
-  <div class="chai-grid4 chai-gap-4 chai-mb-8">
+            positioningProps: ["pos", "top", "left", "right", "bottom", "inset", "z"],
 
-    <div class="chai-bg-[#111111] chai-p-4 chai-radius-[16px]">
-      <p class="chai-upper chai-orange chai-fs-[10px] chai-ls-[2px] chai-mb-3">Spacing</p>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-m-*</span><span class="chai-fs-[11px] chai-gray">margin</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-mt-*</span><span class="chai-fs-[11px] chai-gray">margin-top</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-mb-*</span><span class="chai-fs-[11px] chai-gray">margin-bottom</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-ml-*</span><span class="chai-fs-[11px] chai-gray">margin-left</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-mr-*</span><span class="chai-fs-[11px] chai-gray">margin-right</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-mx-*</span><span class="chai-fs-[11px] chai-gray">margin-inline</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-my-*</span><span class="chai-fs-[11px] chai-gray">margin-block</span></div>
-        <div class="chai-dividerdark chai-my-1"></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-p-*</span><span class="chai-fs-[11px] chai-gray">padding</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-pt-*</span><span class="chai-fs-[11px] chai-gray">padding-top</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-pb-*</span><span class="chai-fs-[11px] chai-gray">padding-bottom</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-pl-*</span><span class="chai-fs-[11px] chai-gray">padding-left</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-pr-*</span><span class="chai-fs-[11px] chai-gray">padding-right</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-px-*</span><span class="chai-fs-[11px] chai-gray">padding-inline</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#1a0d00] chai-orange chai-fs-[10px]">chai-py-*</span><span class="chai-fs-[11px] chai-gray">padding-block</span></div>
-      </div>
-    </div>
+            layoutProps: ["jc", "ai", "gap", "grow", "shrink", "basis", "wrap"],
 
-    <div class="chai-bg-[#111111] chai-p-4 chai-radius-[16px]">
-      <p class="chai-upper chai-blue chai-fs-[10px] chai-ls-[2px] chai-mb-3">Sizing & Type</p>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-w-*</span><span class="chai-fs-[11px] chai-gray">width</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-h-*</span><span class="chai-fs-[11px] chai-gray">height</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-minw-*</span><span class="chai-fs-[11px] chai-gray">min-width</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-minh-*</span><span class="chai-fs-[11px] chai-gray">min-height</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-maxw-*</span><span class="chai-fs-[11px] chai-gray">max-width</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-maxh-*</span><span class="chai-fs-[11px] chai-gray">max-height</span></div>
-        <div class="chai-dividerdark chai-my-1"></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-fs-*</span><span class="chai-fs-[11px] chai-gray">font-size</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-fw-*</span><span class="chai-fs-[11px] chai-gray">font-weight</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-lh-*</span><span class="chai-fs-[11px] chai-gray">line-height</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-ls-*</span><span class="chai-fs-[11px] chai-gray">letter-spacing</span></div>
-        <div class="chai-dividerdark chai-my-1"></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-bg-*</span><span class="chai-fs-[11px] chai-gray">background</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-bgc-*</span><span class="chai-fs-[11px] chai-gray">bg-color</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-text-*</span><span class="chai-fs-[11px] chai-gray">color</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#00101a] chai-blue chai-fs-[10px]">chai-opacity-*</span><span class="chai-fs-[11px] chai-gray">opacity</span></div>
-      </div>
-    </div>
+            effectsProps: ["shadow", "opacity"],
 
-    <div class="chai-bg-[#111111] chai-p-4 chai-radius-[16px]">
-      <p class="chai-upper chai-green chai-fs-[10px] chai-ls-[2px] chai-mb-3">Borders</p>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-b-*</span><span class="chai-fs-[11px] chai-gray">border</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-bw-*</span><span class="chai-fs-[11px] chai-gray">border-width</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-bc-*</span><span class="chai-fs-[11px] chai-gray">border-color</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-bs-*</span><span class="chai-fs-[11px] chai-gray">border-style</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-br-*</span><span class="chai-fs-[11px] chai-gray">border-radius</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-bt-*</span><span class="chai-fs-[11px] chai-gray">border-top</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-bb-*</span><span class="chai-fs-[11px] chai-gray">border-bottom</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-bl-*</span><span class="chai-fs-[11px] chai-gray">border-left</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-brd-*</span><span class="chai-fs-[11px] chai-gray">border-right</span></div>
-        <div class="chai-dividerdark chai-my-1"></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-shadow-*</span><span class="chai-fs-[11px] chai-gray">box-shadow</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-outline-*</span><span class="chai-fs-[11px] chai-gray">outline</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-outlinew-*</span><span class="chai-fs-[11px] chai-gray">outline-width</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#001a0d] chai-green chai-fs-[10px]">chai-outlinec-*</span><span class="chai-fs-[11px] chai-gray">outline-color</span></div>
-      </div>
-    </div>
+            media: ["fit", "aspect"],
 
-    <div class="chai-bg-[#111111] chai-p-4 chai-radius-[16px]">
-      <p class="chai-upper chai-purple chai-fs-[10px] chai-ls-[2px] chai-mb-3">Layout & More</p>
-      <div class="chai-flex chai-flexcol chai-gap-2">
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-gap-*</span><span class="chai-fs-[11px] chai-gray">gap</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-jc-*</span><span class="chai-fs-[11px] chai-gray">justify-content</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-ai-*</span><span class="chai-fs-[11px] chai-gray">align-items</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-grow-*</span><span class="chai-fs-[11px] chai-gray">flex-grow</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-shrink-*</span><span class="chai-fs-[11px] chai-gray">flex-shrink</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-basis-*</span><span class="chai-fs-[11px] chai-gray">flex-basis</span></div>
-        <div class="chai-dividerdark chai-my-1"></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-top-*</span><span class="chai-fs-[11px] chai-gray">top</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-left-*</span><span class="chai-fs-[11px] chai-gray">left</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-bottom-*</span><span class="chai-fs-[11px] chai-gray">bottom</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-z-*</span><span class="chai-fs-[11px] chai-gray">z-index</span></div>
-        <div class="chai-dividerdark chai-my-1"></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-transition-*</span><span class="chai-fs-[11px] chai-gray">transition</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-cursor-*</span><span class="chai-fs-[11px] chai-gray">cursor</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-overflow-*</span><span class="chai-fs-[11px] chai-gray">overflow</span></div>
-        <div class="chai-flexbetween"><span class="chai-badge chai-bg-[#100018] chai-purple chai-fs-[10px]">chai-fit-*</span><span class="chai-fs-[11px] chai-gray">object-fit</span></div>
-      </div>
-    </div>
+            overflowProps: ["overflow", "overflowx", "overflowy"],
 
-  </div>
+            interaction: ["cursor", "select"],
 
-  <div class="chai-center chai-py-4">
-    <p class="chai-fs-[12px] chai-gray">© 2026 Chai CSS Engine · Built by Paramveer Oberoi</p>
-  </div>
+            outline: ["outline", "outlinew", "outlinec"],
 
-<script type="module">
-  import { initChaiTailwind } from "https://unpkg.com/chai-css-engine@1.1.2/index.js";
-  initChaiTailwind(document.body);
-</script>
+            background: ["bg", "bgc", "bgsize", "bgpos", "bgimg", "bgr"],
+
+            transforms: ["translatex", "translatey", "scale", "rotate"],
+
+            transitions: ["transition", "duration", "ease"],
+
+            box: ["box"]
+        };
+
+        function createCode(text) {
+            const el = document.createElement("code");
+
+            // 🔥 upgraded chips (depth + contrast)
+            el.className = "chai-bg-[#020617] chai-p-1 chai-br-2 chai-center chai-b chai-bc-[#1e293b] chai-text-[#fb923c] chai-shadowmd";
+
+            el.textContent = text;
+            return el;
+        }
+
+        const root = document.getElementById("docs");
+
+        Object.entries(sections).forEach(([title, items], index) => {
+
+            const section = document.createElement("section");
+
+            // 🔥 alternating subtle panel shades
+            const shades = ["#0f172a", "#111827"];
+            section.className = "chai-mb-4 chai-p-3 chai-br-3 chai-b chai-bc-[#1e293b] chai-shadowmd";
+            section.style.background = shades[index % shades.length];
+
+            const heading = document.createElement("h2");
+
+            const orange = ["#f97316", "#fb923c", "#fdba74"];
+            heading.className = "chai-bold chai-fs-4 chai-mb-2";
+            heading.style.color = orange[index % orange.length];
+
+            heading.textContent = title;
+
+            const container = document.createElement("div");
+            container.className = "chai-grid chai-gap-1 chai-grid4";
+
+            items.forEach(item => {
+
+                if (
+                    title.includes("Props") ||
+                    ["background", "transforms", "transitions", "box", "layoutProps", "positioningProps", "sizing", "borderProps", "typographyProps", "effectsProps", "overflowProps", "interaction", "outline"].includes(title)
+                ) {
+                    container.appendChild(createCode(`chai-${item}-2`));
+                    container.appendChild(createCode(`chai-${item}-[value]`));
+                } else {
+                    container.appendChild(createCode(`chai-${item}`));
+                }
+
+            });
+
+            section.appendChild(heading);
+            section.appendChild(container);
+            root.appendChild(section);
+        });
+    </script>
+
 </body>
+
 </html>
