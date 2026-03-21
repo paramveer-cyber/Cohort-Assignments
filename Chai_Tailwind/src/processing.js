@@ -32,7 +32,6 @@ export function processClass(element, elementClass, stylesArr) {
 
     const isNumber = !isNaN(parseFloat(value)) && isFinite(value);
 
-    // ✅ ONLY ADDITION
     if (transformProps.includes(prop)) {
         stylesArr.push(`${propMap[prop]}${value});`);
     }
