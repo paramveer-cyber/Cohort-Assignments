@@ -72,7 +72,6 @@
     <script type="module" src="./index.js"></script>
     <script>
         const sections = {
-
             colors: ["red", "black", "white", "gray", "blue", "green", "yellow", "purple", "pink", "orange"],
 
             typography: [
@@ -198,7 +197,6 @@
                     title.includes("Props") ||
                     ["background", "transforms", "transitions", "box", "layoutProps", "positioningProps", "sizing", "borderProps", "typographyProps", "effectsProps", "overflowProps", "interaction", "outline"].includes(title)
                 ) {
-                    container.appendChild(createCode(`chai-${item}-2`));
                     container.appendChild(createCode(`chai-${item}-[value]`));
                 } else {
                     container.appendChild(createCode(`chai-${item}`));
