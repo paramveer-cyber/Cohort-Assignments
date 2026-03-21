@@ -9,7 +9,6 @@
 
 <body class="chai-bg-[#020617] chai-text-[#e2e8f0] chai-m-0">
 
-    <!-- NAV -->
     <nav class="chai-flexbetween chai-p-4 chai-bg-[#020617] chai-b chai-bc-[#1e293b] chai-shadowmd">
         <h1 class="chai-bold chai-fs-4 chai-text-white">☕ Chai Docs</h1>
         <div class="chai-flex chai-gap-2">
@@ -37,7 +36,6 @@
 
     </div>
 
-    <!-- DOCS -->
     <div class="chai-container chai-mt-4" id="docs"></div>
 
     <script type="module">
@@ -137,8 +135,6 @@
 
         function createCode(text) {
             const el = document.createElement("code");
-
-            // 🔥 upgraded chips (depth + contrast)
             el.className = "chai-bg-[#020617] chai-p-1 chai-br-2 chai-center chai-b chai-bc-[#1e293b] chai-text-[#fb923c] chai-shadowmd";
 
             el.textContent = text;
@@ -151,7 +147,6 @@
 
             const section = document.createElement("section");
 
-            // 🔥 alternating subtle panel shades
             const shades = ["#0f172a", "#111827"];
             section.className = "chai-mb-4 chai-p-3 chai-br-3 chai-b chai-bc-[#1e293b] chai-shadowmd";
             section.style.background = shades[index % shades.length];
