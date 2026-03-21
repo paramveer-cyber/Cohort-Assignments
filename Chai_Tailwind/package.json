@@ -1,0 +1,22 @@
+{
+  "name": "chaicss",
+  "version": "1.0.1",
+  "description": "A lightweight utility-first CSS engine that parses chai-* classes and applies inline styles dynamically.",
+  "main": "chaiTailwind.js",
+  "type": "module",
+  "keywords": [
+    "css",
+    "utility",
+    "tailwind",
+    "javascript",
+    "styling"
+  ],
+  "author": "Paramveer Oberoi",
+  "license": "MIT",
+  "files": [
+  "src"
+],
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  }
+}
