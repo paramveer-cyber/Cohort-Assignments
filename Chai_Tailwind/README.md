@@ -21,8 +21,6 @@ No CSS files. No build step. Just write classes and it works.
 npm install chai-css-engine
 ```
 
-
-
 ## Usage
 
 ### 1. Import
@@ -156,4 +154,4 @@ Inspired by utility-first CSS frameworks like Tailwind, built as part of the Cha
 ## Links
 
 - GitHub: https://github.com/paramveer-cyber/Cohort-Assignments/tree/main/Chai_Tailwind
-- Hosted Link: https://cohort-assignments-vsnm.vercel.app/ 
+- Hosted + Documentation Link: https://cohort-assignments-vsnm.vercel.app/ 
