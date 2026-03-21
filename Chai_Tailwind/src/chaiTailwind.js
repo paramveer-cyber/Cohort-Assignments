@@ -1,5 +1,5 @@
 import { processClass } from './processing.js'
-function initChaiTailwind() {
+export function initChaiTailwind() {
     let mainBody = document.querySelectorAll("[class*='chai-']");
 
     mainBody.forEach(element => {
@@ -24,7 +24,4 @@ function initChaiTailwind() {
         }
         element.setAttribute("style", existing + stylesToApply);
     });
-}
-if (typeof window !== "undefined") {
-    window.addEventListener("DOMContentLoaded", initChaiTailwind);
 }

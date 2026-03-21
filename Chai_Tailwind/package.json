@@ -1,8 +1,15 @@
 {
-  "name": "chaicss",
-  "version": "1.0.1",
+  "name": "chai-css-engine",
+  "version": "1.0.12",
   "description": "A lightweight utility-first CSS engine that parses chai-* classes and applies inline styles dynamically.",
-  "main": "chaiTailwind.js",
+  "main": "./index.js",
+  "module": "./index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
   "type": "module",
   "keywords": [
     "css",
@@ -14,9 +21,7 @@
   "author": "Paramveer Oberoi",
   "license": "MIT",
   "files": [
-  "src"
-],
-  "scripts": {
-    "test": "echo \"No tests yet\""
-  }
+    "src",
+    "index.js"
+  ]
 }
