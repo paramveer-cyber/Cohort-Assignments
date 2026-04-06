@@ -24,7 +24,7 @@ npm install chai-css-engine
 
 ```html
 <script type="module">
-  import "https://unpkg.com/chai-css-engine@1.0.10/index.js";
+  import "https://unpkg.com/chai-css-engine/index.js";
 </script>
 ```
 
@@ -396,7 +396,7 @@ The following props are **unit-less** (numbers passed as-is, no scaling):
 <html>
   <head>
     <script type="module">
-      import "https://unpkg.com/chai-css-engine@1.0.10/index.js";
+      import "https://unpkg.com/chai-css-engine/index.js";
     </script>
   </head>
   <body class="chai-bg-[#0f0f0f] chai-flexcenter chai-h-[100vh]">
