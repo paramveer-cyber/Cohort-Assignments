@@ -1,8 +1,9 @@
 import { checkIfUserExists, getUser, insertUser, updateRefreshToken } from "../common/db/db.js";
-import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "../common/utils/jwt.utils.js"
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../common/utils/jwt.utils.js"
 import ApiError from "../common/utils/apiError.js"
 import bcrypt from "bcrypt"
 
+// hash
 const hash = async (pass) => {
     return await bcrypt.hash(pass, 12);
 };
@@ -14,7 +15,6 @@ async function createUser(username, password) {
     }
     const hashedPass = await hash(password);
     const createdUser = await insertUser(username, hashedPass);
-    console.log("createdUser:", createdUser);
     delete createdUser.password;
     delete createdUser.refresh_token;
     return createdUser;
@@ -30,7 +30,7 @@ async function findUser(username) {
 }
 
 async function loginUser(username, password) {
-    const user = await findUser(username, password);
+    const user = await findUser(username);
     const verifyPassword = await bcrypt.compare(password, user.password);
     if (!verifyPassword) {
         throw ApiError.unauthorized("Invalid username/password!");
@@ -46,25 +46,38 @@ async function loginUser(username, password) {
 }
 
 async function logoutUser(refreshToken) {
-    const decoded = verifyRefreshToken(refreshToken);
+    // decode
+    let decoded;
+    try {
+        decoded = verifyRefreshToken(refreshToken);
+    } catch {
+        // expired
+        throw ApiError.unauthorized("Invalid or expired refresh token!");
+    }
     await updateRefreshToken(decoded.name, null);
 }
 
 async function updateTokens(refreshToken) {
-    let decodedRefreshToken;
+    // verify
+    let decoded;
     try {
-        decodedRefreshToken = verifyRefreshToken(refreshToken);
+        decoded = verifyRefreshToken(refreshToken);
+    } catch {
+        throw ApiError.unauthorized("Invalid or expired refresh token!");
     }
-    catch {
-        throw ApiError.unauthorized("Invalid or expired refresh token!")
-    }
-    const user = await findUser(decodedRefreshToken.name);
+
+    const user = await findUser(decoded.name);
+
+    // validate
     if (user.refresh_token !== refreshToken) {
-        throw ApiError.unauthorized("Invalid refresh token!")
+        await updateRefreshToken(user.username, null);
+        throw ApiError.unauthorized("Refresh token reuse detected!");
     }
+
     const newAccessToken = generateAccessToken({ id: user.user_id, name: user.username });
     const newRefreshToken = generateRefreshToken({ id: user.user_id, name: user.username });
-    
+
+    // rotate
     await updateRefreshToken(user.username, newRefreshToken);
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 }
