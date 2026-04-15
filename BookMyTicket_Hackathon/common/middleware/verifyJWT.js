@@ -45,7 +45,7 @@ async function verifyJWT(req, res, next) {
         await updateRefreshToken(user.username, newRefreshToken);
 
         res.setHeader("X-New-Access-Token", newAccessToken);
-        res.cookie("refreshToken", newRefreshToken, { httpOnly: true, secure: true, sameSite: "strict" });
+        res.cookie("refreshToken", newRefreshToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict" });
 
         req.user = { id: user.user_id, name: user.username };
         return next();
