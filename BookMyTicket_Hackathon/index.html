@@ -48,7 +48,6 @@
       overflow-x: hidden;
     }
 
-    /* subtle grain texture via repeating radial */
     body::before {
       content: '';
       position: fixed;
@@ -58,17 +57,23 @@
       z-index: 0;
     }
 
-    /* ── Auth Modal ── */
     #authModal {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 100;
       padding: 1rem;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     #authModal.hidden {
@@ -84,6 +89,7 @@
       max-width: 440px;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     }
 
     .auth-card::before {
@@ -99,11 +105,11 @@
 
     .auth-logo {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .auth-logo .wordmark {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 900;
       letter-spacing: -0.03em;
       color: var(--white);
@@ -116,7 +122,7 @@
     .auth-logo .tagline {
       font-size: 0.75rem;
       color: var(--gray-mid);
-      margin-top: 4px;
+      margin-top: 6px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
@@ -132,7 +138,7 @@
 
     .tab-btn {
       flex: 1;
-      padding: 0.5rem;
+      padding: 0.6rem;
       border: none;
       border-radius: 7px;
       font-size: 0.875rem;
@@ -145,6 +151,7 @@
     .tab-btn.active {
       background: var(--orange);
       color: var(--white);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     .tab-btn:not(.active) {
@@ -154,6 +161,7 @@
 
     .tab-btn:not(.active):hover {
       color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .auth-input {
@@ -161,17 +169,18 @@
       background: var(--black-3);
       border: 1px solid var(--black-4);
       border-radius: 10px;
-      padding: 0.9rem 1.1rem;
+      padding: 1rem 1.1rem;
       font-size: 0.95rem;
       color: var(--white);
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
       font-family: inherit;
       margin-bottom: 1rem;
     }
 
     .auth-input:focus {
       border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     }
 
     .auth-input::placeholder {
@@ -196,9 +205,9 @@
       text-align: center;
       font-size: 0.8rem;
       font-weight: 500;
-      padding: 0.6rem;
+      padding: 0.75rem;
       border-radius: 8px;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .auth-error.err {
@@ -215,7 +224,7 @@
 
     .btn-primary {
       width: 100%;
-      padding: 1rem;
+      padding: 1.1rem;
       background: var(--orange);
       border: none;
       border-radius: 10px;
@@ -224,28 +233,30 @@
       color: var(--white);
       cursor: pointer;
       letter-spacing: 0.02em;
-      transition: background 0.15s, transform 0.1s;
+      transition: all 0.2s;
       font-family: inherit;
       margin-top: 0.5rem;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
     }
 
     .btn-primary:hover {
       background: var(--orange-light);
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+      transform: translateY(-1px);
     }
 
     .btn-primary:active {
-      transform: scale(0.98);
+      transform: translateY(1px);
     }
 
-    /* ── Main wrapper ── */
     .main-wrap {
       width: 100%;
       max-width: 1000px;
       position: relative;
       z-index: 1;
+      padding-bottom: 4rem;
     }
 
-    /* ── Header ── */
     .site-header {
       text-align: center;
       margin-bottom: 4rem;
@@ -256,26 +267,30 @@
       align-items: center;
       gap: 10px;
       margin-bottom: 1.5rem;
+      background: var(--black-2);
+      padding: 6px 16px 6px 6px;
+      border-radius: 100px;
+      border: 1px solid var(--black-4);
     }
 
     .brand-icon {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background: var(--orange);
-      border-radius: 10px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .brand-icon svg {
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       fill: white;
     }
 
     .brand-name {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -283,12 +298,12 @@
     }
 
     .movie-title {
-      font-size: clamp(2.4rem, 5vw, 3.5rem);
+      font-size: clamp(2.4rem, 5vw, 4rem);
       font-weight: 900;
       letter-spacing: -0.04em;
       line-height: 1.05;
       color: var(--white);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
     }
 
     .movie-title .highlight {
@@ -296,7 +311,7 @@
     }
 
     .movie-subtitle {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--gray-mid);
       font-style: italic;
       letter-spacing: 0.02em;
@@ -309,8 +324,8 @@
       background: var(--black-3);
       border: 1px solid var(--black-4);
       border-radius: 100px;
-      padding: 6px 14px 6px 10px;
-      margin-top: 1.25rem;
+      padding: 6px 16px 6px 12px;
+      margin-top: 1.5rem;
     }
 
     .user-dot {
@@ -318,6 +333,7 @@
       height: 8px;
       border-radius: 50%;
       background: var(--orange);
+      box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
     }
 
     .user-badge span {
@@ -337,21 +353,19 @@
       font-size: 0.75rem;
       color: #ef4444;
       font-family: inherit;
-      font-weight: 500;
-      margin-left: 4px;
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      font-weight: 600;
+      margin-left: 6px;
+      transition: color 0.2s;
     }
 
     .logout-btn:hover {
       color: #f87171;
     }
 
-    /* ── Legend ── */
     .legend {
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 2rem;
       margin-bottom: 2.5rem;
     }
 
@@ -359,18 +373,20 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 500;
       color: var(--gray-light);
     }
 
     .leg-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 4px;
     }
 
     .leg-dot.avail {
       background: var(--orange);
+      box-shadow: 0 2px 6px rgba(249, 115, 22, 0.3);
     }
 
     .leg-dot.taken {
@@ -384,11 +400,10 @@
       outline-offset: 1px;
     }
 
-    /* ── Filter Tabs ── */
     .filter-row {
       display: flex;
       justify-content: center;
-      margin-bottom: 3rem;
+      margin-bottom: 3.5rem;
     }
 
     .filter-pill {
@@ -401,11 +416,11 @@
     }
 
     .filter-btn {
-      padding: 0.45rem 1.1rem;
+      padding: 0.5rem 1.25rem;
       border: none;
       background: transparent;
       border-radius: 100px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--gray-light);
       cursor: pointer;
@@ -417,6 +432,7 @@
     .filter-btn.active {
       background: var(--orange);
       color: var(--white);
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2);
     }
 
     .filter-btn:not(.active):hover {
@@ -424,30 +440,30 @@
       background: var(--black-4);
     }
 
-    /* ── Screen indicator ── */
     .screen-bar {
       text-align: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 3.5rem;
     }
 
     .screen-line {
       display: inline-block;
-      width: 320px;
+      width: 400px;
+      max-width: 80%;
       height: 4px;
-      background: linear-gradient(90deg, transparent, var(--gray-dark), transparent);
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
       border-radius: 4px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 10px rgba(249, 115, 22, 0.3);
     }
 
     .screen-label {
       display: block;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--gray-dark);
+      color: var(--gray-mid);
     }
 
-    /* ── Seat Grid ── */
     .seat-stage {
       display: flex;
       justify-content: center;
@@ -462,11 +478,11 @@
       width: 62px;
       height: 62px;
       border-radius: 12px 12px 7px 7px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       position: relative;
-      transition: transform 0.15s, box-shadow 0.15s;
+      transition: all 0.2s;
       border: none;
       letter-spacing: 0.01em;
       display: flex;
@@ -475,7 +491,6 @@
       font-family: inherit;
     }
 
-    /* seat back notch */
     .seat::before {
       content: '';
       position: absolute;
@@ -486,6 +501,7 @@
       border-radius: 4px 4px 0 0;
       background: inherit;
       filter: brightness(0.7);
+      transition: background 0.2s;
     }
 
     .seat.avail {
@@ -495,7 +511,7 @@
     }
 
     .seat.avail:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px) scale(1.03);
       box-shadow: 0 6px 16px rgba(249, 115, 22, 0.45);
     }
 
@@ -520,7 +536,13 @@
       pointer-events: none;
     }
 
-    /* tooltip */
+    .seat.selected {
+      background: var(--orange-light);
+      box-shadow: 0 0 0 2px var(--black), 0 0 0 4px var(--white), 0 6px 16px rgba(249, 115, 22, 0.5);
+      transform: translateY(-3px) scale(1.05);
+      z-index: 2;
+    }
+
     .seat-tooltip {
       position: absolute;
       bottom: calc(100% + 10px);
@@ -538,6 +560,7 @@
       opacity: 0;
       transition: opacity 0.15s;
       z-index: 10;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .seat-tooltip strong {
@@ -549,12 +572,11 @@
       opacity: 1;
     }
 
-    /* ── Stats bar ── */
     .stats-bar {
       display: flex;
       justify-content: center;
-      gap: 2rem;
-      margin-top: 3rem;
+      gap: 3rem;
+      margin-top: 3.5rem;
       padding-top: 2.5rem;
       border-top: 1px solid var(--black-3);
     }
@@ -565,7 +587,7 @@
 
     .stat-val {
       display: block;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
       color: var(--white);
       letter-spacing: -0.03em;
@@ -576,20 +598,20 @@
     }
 
     .stat-label {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       color: var(--gray-mid);
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-top: 2px;
+      margin-top: 4px;
+      font-weight: 600;
     }
 
-
-    /* ── Custom Confirm Modal ── */
     #confirmModal {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -611,19 +633,13 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-      animation: popIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
     }
 
     @keyframes popIn {
-      from {
-        transform: scale(0.85);
-        opacity: 0;
-      }
-
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .confirm-card::before {
@@ -644,7 +660,7 @@
     }
 
     .confirm-title {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: var(--white);
       margin-bottom: 0.5rem;
@@ -652,7 +668,7 @@
     }
 
     .confirm-sub {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--gray-mid);
       margin-bottom: 1.75rem;
       line-height: 1.5;
@@ -665,14 +681,14 @@
 
     .confirm-btns button {
       flex: 1;
-      padding: 0.75rem;
+      padding: 0.85rem;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
       border: none;
-      transition: background 0.15s, transform 0.1s;
+      transition: all 0.2s;
       letter-spacing: 0.01em;
     }
 
@@ -703,7 +719,6 @@
       display: none !important;
     }
 
-    /* ── Top progress bar ── */
     #progressBar {
       position: fixed;
       top: 0;
@@ -722,7 +737,6 @@
       opacity: 1;
     }
 
-    /* ── Confetti canvas ── */
     #confettiCanvas {
       position: fixed;
       inset: 0;
@@ -730,7 +744,6 @@
       z-index: 9998;
     }
 
-    /* ── Button loading state ── */
     .btn-primary.loading {
       opacity: 0.7;
       cursor: not-allowed;
@@ -744,14 +757,52 @@
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
     .logout-btn.loading {
       opacity: 0.5;
       pointer-events: none;
+    }
+
+    #bookingBar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(20, 20, 20, 0.95);
+      border-top: 1px solid var(--black-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+    }
+
+    #bookingBar.active {
+      transform: translateY(0);
+    }
+
+    #bookingBar span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--gray-light);
+    }
+    
+    #bookingBar span strong {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    #bookingBar button {
+      width: auto;
+      padding: 0.8rem 2rem;
+      margin-top: 0;
     }
   </style>
 </head>
@@ -761,7 +812,6 @@
   <div id="progressBar"></div>
   <canvas id="confettiCanvas"></canvas>
 
-  <!-- Auth Modal -->
   <div id="authModal">
     <div class="auth-card">
       <div class="auth-logo">
@@ -788,10 +838,9 @@
     </div>
   </div>
 
-  <!-- Custom Confirm Modal -->
   <div id="confirmModal" class="hidden">
     <div class="confirm-card">
-      <span class="confirm-emoji">🎟️</span>
+      <span class="confirm-emoji" id="confirmEmoji">🎟️</span>
       <div class="confirm-title" id="confirmTitle">Confirm your seat</div>
       <div class="confirm-sub" id="confirmSub">Ready to lock in this seat?</div>
       <div id="confirmTimer"
@@ -804,7 +853,6 @@
     </div>
   </div>
 
-  <!-- Main App -->
   <div class="main-wrap">
     <header class="site-header">
       <div class="site-brand">
@@ -827,7 +875,6 @@
       </div>
     </header>
 
-    <!-- Legend -->
     <div class="legend">
       <div class="legend-item">
         <div class="leg-dot avail"></div> Available
@@ -840,7 +887,6 @@
       </div>
     </div>
 
-    <!-- Filters -->
     <div class="filter-row">
       <div class="filter-pill">
         <button class="filter-btn active" id="btn-all" onclick="setFilter('all')">All seats</button>
@@ -850,18 +896,15 @@
       </div>
     </div>
 
-    <!-- Screen -->
     <div class="screen-bar">
       <span class="screen-line"></span>
       <span class="screen-label">Screen</span>
     </div>
 
-    <!-- Seats -->
     <div class="seat-stage">
       <table id="tbl"></table>
     </div>
 
-    <!-- Stats -->
     <div class="stats-bar" id="statsBar" style="display:none;">
       <div class="stat">
         <span class="stat-val orange" id="statAvail">—</span>
@@ -878,14 +921,19 @@
     </div>
   </div>
 
+  <div id="bookingBar">
+    <span id="selectedCount"><strong>0</strong> seats selected</span>
+    <button id="bookSelectedBtn" class="btn-primary">Book Selected</button>
+  </div>
+
   <script>
+    let selectedSeats = new Set();
     let currentTab = "login";
     let accessToken = null;
     let currentUser = null;
     let seatsData = [];
     let currentFilter = 'all';
 
-    /* ── Progress bar ── */
     let _progTimer = null;
     function progressStart() {
       const bar = document.getElementById('progressBar');
@@ -908,7 +956,6 @@
       }, 250);
     }
 
-    /* ── Confetti ── */
     const CONFETTI_COLORS = ['#f97316', '#fb923c', '#ffffff', '#fafafa', '#fed7aa', '#ffedd5', '#ff6b00'];
     let confettiParticles = [];
     let confettiRAF = null;
@@ -964,7 +1011,6 @@
       draw();
     }
 
-    /* ── Cookies ── */
     function setCookie(n, v, d) { let e = ""; if (d) { let t = new Date(); t.setTime(t.getTime() + (d * 864e5)); e = "; expires=" + t.toUTCString(); } document.cookie = n + "=" + (v || "") + e + "; path=/"; }
     function getCookie(n) { let eq = n + "=", ca = document.cookie.split(';'); for (let i = 0; i < ca.length; i++) { let c = ca[i].trim(); if (c.indexOf(eq) === 0) return c.substring(eq.length); } return null; }
     function eraseCookie(n) { document.cookie = n + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'; }
@@ -1007,9 +1053,9 @@
       }
 
       authModal.classList.remove("hidden");
-
       progressDone();
     });
+
     function switchTab(tab) {
       currentTab = tab;
       hideErr();
@@ -1028,10 +1074,21 @@
       if (seatsData.length) renderTable();
     }
 
+    function updateBookingBar() {
+      const bar = document.getElementById("bookingBar");
+      const count = selectedSeats.size;
+      document.getElementById("selectedCount").innerHTML = `<strong>${count}</strong> seat${count !== 1 ? 's' : ''} selected`;
+      if (count > 0) {
+        bar.classList.add("active");
+      } else {
+        bar.classList.remove("active");
+      }
+    }
+
     async function submitAuth() {
       const u = document.getElementById("authUsername").value.trim();
       const p = document.getElementById("authPassword").value;
-      const btn = document.querySelector('.btn-primary');
+      const btn = document.querySelector('.auth-card .btn-primary');
       hideErr();
       if (!u || !p) { showErr("Fill all fields"); return; }
 
@@ -1075,6 +1132,7 @@
       el.className = "auth-error " + (ok ? "ok" : "err");
       el.classList.remove("hidden");
     }
+    
     function hideErr() {
       document.getElementById("authError").classList.add("hidden");
     }
@@ -1084,10 +1142,10 @@
       if (lb) { lb.classList.add('loading'); lb.textContent = 'Logging out…'; }
       progressStart();
       try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch { }
-      accessToken = null; currentUser = null; seatsData = [];
+      accessToken = null; currentUser = null; seatsData = []; selectedSeats.clear(); updateBookingBar();
       ['username'].forEach(eraseCookie);
       progressDone();
-      // Reset logout button BEFORE hiding userInfo so next login shows fresh state
+      
       if (lb) { lb.classList.remove('loading'); lb.textContent = 'Logout'; }
       document.getElementById("authModal").classList.remove("hidden");
       document.getElementById("userInfo").classList.add("hidden");
@@ -1104,7 +1162,7 @@
         credentials: "include"
       });
       if (res.status === 401) { progressDone(); logout(); return; }
-      // Pick up rotated access token if server issued a new one
+      
       const newTok = res.headers.get("X-New-Access-Token");
       if (newTok) { accessToken = newTok; }
       seatsData = (await res.json()).sort((a, b) => a.seat_no - b.seat_no);
@@ -1113,13 +1171,24 @@
     }
 
     function renderTable() {
+      let rowIndex = 0;
       const tbl = document.getElementById("tbl");
       tbl.innerHTML = "";
       let tr;
       let avail = 0, taken = 0, mine = 0;
 
       for (let i = 0; i < seatsData.length; i++) {
-        if (i % 8 === 0) tr = document.createElement("tr");
+        if (i % 8 === 0) {
+          tr = document.createElement("tr");
+          const rowLabel = document.createElement("td");
+          rowLabel.textContent = String.fromCharCode(65 + rowIndex);
+          rowLabel.style.fontWeight = "700";
+          rowLabel.style.color = "var(--gray-light)";
+          rowLabel.style.paddingRight = "10px";
+
+          tr.appendChild(rowLabel);
+          rowIndex++;
+        }
         const seat = seatsData[i];
         const td = document.createElement("td");
 
@@ -1140,6 +1209,10 @@
           btn.style.outlineOffset = "2px";
         }
 
+        if(selectedSeats.has(seat.id) && !seat.isbooked) {
+            btn.classList.add("selected");
+        }
+
         btn.innerHTML = `${seat.seat_no}`;
 
         if (seat.isbooked && isVisible) {
@@ -1152,30 +1225,15 @@
         }
 
         if (!seat.isbooked) {
-          btn.addEventListener("click", async () => {
-            showConfirm(`Seat ${seat.seat_no}`, `Lock in seat #${seat.seat_no}? This can't be undone.`, async () => {
-              btn.classList.add('taken');
-              btn.classList.remove('avail');
-              progressStart();
-              try {
-                const r = await fetch(`/${seat.id}/${encodeURIComponent(getCookie('username'))}`, { method: "PUT", headers: { Authorization: "Bearer " + accessToken }, credentials: "include" });
-                const newTok2 = r.headers.get("X-New-Access-Token");
-                if (newTok2) { accessToken = newTok2; }
-                const d = await r.json();
-                progressDone();
-                if (!d.success) {
-                  showConfirmAlert(d.message || "Booking failed");
-                  btn.classList.remove('taken'); btn.classList.add('avail');
-                } else {
-                  launchConfetti();
-                  await loadSeats();
-                }
-              } catch (ex) {
-                progressDone();
-                btn.classList.remove('taken'); btn.classList.add('avail');
-                showConfirmAlert("Network error: " + ex);
-              }
-            }, true);
+          btn.addEventListener("click", () => {
+            if (selectedSeats.has(seat.id)) {
+              selectedSeats.delete(seat.id);
+              btn.classList.remove("selected");
+            } else {
+              selectedSeats.add(seat.id);
+              btn.classList.add("selected");
+            }
+            updateBookingBar();
           });
         }
 
@@ -1188,7 +1246,54 @@
       document.getElementById("statTaken").textContent = taken;
       document.getElementById("statMine").textContent = mine;
       document.getElementById("statsBar").style.display = "flex";
+      document.getElementById("btn-all").textContent = `All (${seatsData.length})`;
+      document.getElementById("btn-vacant").textContent = `Vacant (${avail})`;
+      document.getElementById("btn-occupied").textContent = `Occupied (${taken})`;
+      document.getElementById("btn-my").textContent = `My Bookings (${mine})`;
     }
+
+    document.getElementById("bookSelectedBtn").addEventListener("click", () => {
+      if (selectedSeats.size === 0) return;
+
+      showConfirm(
+        "Confirm booking",
+        `Book ${selectedSeats.size} seat${selectedSeats.size > 1 ? 's' : ''}?`,
+        async () => {
+          progressStart();
+
+          try {
+            let allSuccess = true;
+            for (const seatId of selectedSeats) {
+              const res = await fetch(`/${seatId}/${encodeURIComponent(getCookie('username'))}`, {
+                method: "PUT",
+                headers: { Authorization: "Bearer " + accessToken },
+                credentials: "include"
+              });
+              
+              if (!res.ok) {
+                  allSuccess = false;
+              }
+            }
+
+            selectedSeats.clear();
+            updateBookingBar();
+            await loadSeats();
+            progressDone();
+
+            if (allSuccess) {
+                launchConfetti();
+            } else {
+                showConfirmAlert("One or more seats were already taken by someone else! We've refreshed the board to show updated availability.", "⚠️");
+            }
+
+          } catch {
+            progressDone();
+            showConfirmAlert("Booking failed due to a network error.", "❌");
+          }
+        },
+        true
+      );
+    });
 
     let _confirmTimeoutId = null;
     let _confirmCounterId = null;
@@ -1198,6 +1303,7 @@
       const modal = document.getElementById('confirmModal');
       document.getElementById('confirmTitle').textContent = title;
       document.getElementById('confirmSub').textContent = sub;
+      document.getElementById('confirmEmoji').textContent = "🎟️";
       modal.classList.remove('hidden');
 
       const timerEl = document.getElementById('confirmTimer');
@@ -1237,10 +1343,12 @@
       document.getElementById('confirmNo').addEventListener('click', () => { cleanup(); }, { once: true });
     }
 
-    function showConfirmAlert(msg) {
+    function showConfirmAlert(msg, emoji = "ℹ️") {
       const modal = document.getElementById('confirmModal');
       document.getElementById('confirmTitle').textContent = 'Notice';
       document.getElementById('confirmSub').textContent = msg;
+      document.getElementById('confirmEmoji').textContent = emoji;
+      
       const timerEl = document.getElementById('confirmTimer');
       if (timerEl) timerEl.style.display = 'none';
       modal.classList.remove('hidden');
@@ -1262,6 +1370,7 @@
     }
 
   </script>
+
 </body>
 
 </html>
