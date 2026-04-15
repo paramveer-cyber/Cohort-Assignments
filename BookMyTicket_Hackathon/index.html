@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiCode Cinema</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --orange: #f97316;
+        --orange-light: #fb923c;
+        --orange-pale: #fff7ed;
+        --orange-muted: #fed7aa;
+        --black: #0a0a0a;
+        --black-2: #141414;
+        --black-3: #1e1e1e;
+        --black-4: #2a2a2a;
+        --gray-dark: #3a3a3a;
+        --gray-mid: #6b6b6b;
+        --gray-light: #a0a0a0;
+        --gray-pale: #e5e5e5;
+        --white: #fafafa;
+        --white-pure: #ffffff;
+        --seat-avail: var(--orange);
+        --seat-taken: #2a2a2a;
+        --seat-mine: #ff6b00;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--black);
+        color: var(--white);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1.5rem;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* subtle grain texture via repeating radial */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249,115,22,0.06) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── Auth Modal ── */
+      #authModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 1rem;
+      }
+      #authModal.hidden { display: none; }
+
+      .auth-card {
+        background: var(--black-2);
+        border: 1px solid var(--black-4);
+        border-radius: 20px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 440px;
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), var(--orange-light));
+        border-radius: 20px 20px 0 0;
+      }
+
+      .auth-logo {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .auth-logo .wordmark {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--white);
+      }
+      .auth-logo .wordmark span { color: var(--orange); }
+      .auth-logo .tagline {
+        font-size: 0.75rem;
+        color: var(--gray-mid);
+        margin-top: 4px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .tab-row {
+        display: flex;
+        background: var(--black-3);
+        border-radius: 10px;
+        padding: 4px;
+        margin-bottom: 1.75rem;
+        gap: 4px;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 7px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.01em;
+      }
+      .tab-btn.active { background: var(--orange); color: var(--white); }
+      .tab-btn:not(.active) { background: transparent; color: var(--gray-light); }
+      .tab-btn:not(.active):hover { color: var(--white); }
+
+      .auth-input {
+        width: 100%;
+        background: var(--black-3);
+        border: 1px solid var(--black-4);
+        border-radius: 10px;
+        padding: 0.9rem 1.1rem;
+        font-size: 0.95rem;
+        color: var(--white);
+        outline: none;
+        transition: border-color 0.2s;
+        font-family: inherit;
+        margin-bottom: 1rem;
+      }
+      .auth-input:focus { border-color: var(--orange); }
+      .auth-input::placeholder { color: var(--gray-dark); }
+
+      .auth-hints {
+        background: var(--black-3);
+        border: 1px solid var(--black-4);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+      }
+      .auth-hints p {
+        font-size: 0.75rem;
+        color: var(--gray-light);
+        line-height: 1.6;
+      }
+
+      .auth-error {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.6rem;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+      }
+      .auth-error.err { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+      .auth-error.ok  { background: rgba(249,115,22,0.1); color: var(--orange-light); border: 1px solid rgba(249,115,22,0.2); }
+
+      .btn-primary {
+        width: 100%;
+        padding: 1rem;
+        background: var(--orange);
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--white);
+        cursor: pointer;
+        letter-spacing: 0.02em;
+        transition: background 0.15s, transform 0.1s;
+        font-family: inherit;
+        margin-top: 0.5rem;
+      }
+      .btn-primary:hover { background: var(--orange-light); }
+      .btn-primary:active { transform: scale(0.98); }
+
+      /* ── Main wrapper ── */
+      .main-wrap {
+        width: 100%;
+        max-width: 1000px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── Header ── */
+      .site-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+      .site-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+      }
+      .brand-icon {
+        width: 36px; height: 36px;
+        background: var(--orange);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .brand-icon svg { width: 20px; height: 20px; fill: white; }
+      .brand-name {
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--gray-light);
+      }
+
+      .movie-title {
+        font-size: clamp(2.4rem, 5vw, 3.5rem);
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+        color: var(--white);
+        margin-bottom: 0.6rem;
+      }
+      .movie-title .highlight { color: var(--orange); }
+
+      .movie-subtitle {
+        font-size: 0.9rem;
+        color: var(--gray-mid);
+        font-style: italic;
+        letter-spacing: 0.02em;
+      }
+
+      .user-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--black-3);
+        border: 1px solid var(--black-4);
+        border-radius: 100px;
+        padding: 6px 14px 6px 10px;
+        margin-top: 1.25rem;
+      }
+      .user-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--orange);
+      }
+      .user-badge span { font-size: 0.82rem; color: var(--gray-light); }
+      .user-badge .username { color: var(--white); font-weight: 600; }
+      .logout-btn {
+        background: none; border: none; cursor: pointer;
+        font-size: 0.75rem; color: #ef4444;
+        font-family: inherit; font-weight: 500;
+        margin-left: 4px;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .logout-btn:hover { color: #f87171; }
+
+      /* ── Legend ── */
+      .legend {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .legend-item {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 0.8rem; color: var(--gray-light);
+      }
+      .leg-dot {
+        width: 12px; height: 12px; border-radius: 4px;
+      }
+      .leg-dot.avail { background: var(--orange); }
+      .leg-dot.taken { background: var(--black-4); border: 1px solid var(--gray-dark); }
+      .leg-dot.mine  { background: var(--orange); outline: 2px solid var(--white); outline-offset: 1px; }
+
+      /* ── Filter Tabs ── */
+      .filter-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+      }
+      .filter-pill {
+        display: flex;
+        background: var(--black-2);
+        border: 1px solid var(--black-4);
+        border-radius: 100px;
+        padding: 5px;
+        gap: 2px;
+      }
+      .filter-btn {
+        padding: 0.45rem 1.1rem;
+        border: none; background: transparent;
+        border-radius: 100px;
+        font-size: 0.82rem; font-weight: 600;
+        color: var(--gray-light);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+      .filter-btn.active { background: var(--orange); color: var(--white); }
+      .filter-btn:not(.active):hover { color: var(--white); background: var(--black-4); }
+
+      /* ── Screen indicator ── */
+      .screen-bar {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+      .screen-line {
+        display: inline-block;
+        width: 320px; height: 4px;
+        background: linear-gradient(90deg, transparent, var(--gray-dark), transparent);
+        border-radius: 4px;
+        margin-bottom: 6px;
+      }
+      .screen-label {
+        display: block;
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gray-dark);
+      }
+
+      /* ── Seat Grid ── */
+      .seat-stage {
+        display: flex;
+        justify-content: center;
+      }
+      #tbl {
+        border-collapse: separate;
+        border-spacing: 12px;
+      }
+      .seat {
+        width: 62px; height: 62px;
+        border-radius: 12px 12px 7px 7px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.15s, box-shadow 0.15s;
+        border: none;
+        letter-spacing: 0.01em;
+        display: flex; align-items: center; justify-content: center;
+        font-family: inherit;
+      }
+
+      /* seat back notch */
+      .seat::before {
+        content: '';
+        position: absolute;
+        top: -5px; left: 8px; right: 8px;
+        height: 5px;
+        border-radius: 4px 4px 0 0;
+        background: inherit;
+        filter: brightness(0.7);
+      }
+
+      .seat.avail {
+        background: var(--orange);
+        color: var(--white);
+        box-shadow: 0 2px 8px rgba(249,115,22,0.3);
+      }
+      .seat.avail:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(249,115,22,0.45);
+      }
+      .seat.avail:active { transform: scale(0.95); }
+
+      .seat.taken {
+        background: var(--black-3);
+        color: var(--gray-dark);
+        cursor: default;
+        border: 1px solid var(--black-4);
+      }
+      .seat.taken::before { background: var(--black-4); filter: none; }
+
+      .seat.invisible {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* tooltip */
+      .seat-tooltip {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--black);
+        border: 1px solid var(--black-4);
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 0.72rem;
+        font-weight: 400;
+        color: var(--gray-light);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s;
+        z-index: 10;
+      }
+      .seat-tooltip strong { color: var(--white); font-weight: 600; }
+      .seat:hover .seat-tooltip { opacity: 1; }
+
+      /* ── Stats bar ── */
+      .stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 3rem;
+        padding-top: 2.5rem;
+        border-top: 1px solid var(--black-3);
+      }
+      .stat { text-align: center; }
+      .stat-val {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--white);
+        letter-spacing: -0.03em;
+      }
+      .stat-val.orange { color: var(--orange); }
+      .stat-label {
+        font-size: 0.72rem;
+        color: var(--gray-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 2px;
+      }
+
+
+      /* ── Custom Confirm Modal ── */
+      #confirmModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        padding: 1rem;
+      }
+      #confirmModal.hidden { display: none; }
+
+      .confirm-card {
+        background: var(--black-2);
+        border: 1px solid var(--black-4);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 360px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        animation: popIn 0.18s cubic-bezier(0.34,1.56,0.64,1);
+      }
+      @keyframes popIn {
+        from { transform: scale(0.85); opacity: 0; }
+        to   { transform: scale(1);    opacity: 1; }
+      }
+      .confirm-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), var(--orange-light));
+        border-radius: 20px 20px 0 0;
+      }
+      .confirm-emoji {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .confirm-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+      }
+      .confirm-sub {
+        font-size: 0.85rem;
+        color: var(--gray-mid);
+        margin-bottom: 1.75rem;
+        line-height: 1.5;
+      }
+      .confirm-btns {
+        display: flex;
+        gap: 0.75rem;
+      }
+      .confirm-btns button {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        border: none;
+        transition: background 0.15s, transform 0.1s;
+        letter-spacing: 0.01em;
+      }
+      .confirm-btns button:active { transform: scale(0.97); }
+      #confirmYes { background: var(--orange); color: var(--white); }
+      #confirmYes:hover { background: var(--orange-light); }
+      #confirmNo  { background: var(--black-4); color: var(--gray-light); }
+      #confirmNo:hover  { background: var(--gray-dark); color: var(--white); }
+
+      .hidden { display: none !important; }
+
+      /* ── Top progress bar ── */
+      #progressBar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 3px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--orange), var(--orange-light), #fff8f0);
+        z-index: 9999;
+        transition: width 0.25s ease, opacity 0.4s ease;
+        opacity: 0;
+        border-radius: 0 2px 2px 0;
+        box-shadow: 0 0 10px rgba(249,115,22,0.6);
+      }
+      #progressBar.running { opacity: 1; }
+
+      /* ── Confetti canvas ── */
+      #confettiCanvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9998;
+      }
+
+      /* ── Button loading state ── */
+      .btn-primary.loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .btn-primary.loading::after {
+        content: ' ⟳';
+        display: inline-block;
+        animation: spin 1.4s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      .logout-btn.loading { opacity: 0.5; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+
+    <div id="progressBar"></div>
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Auth Modal -->
+    <div id="authModal">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="wordmark">Chai<span>Code</span> Cinema</div>
+          <div class="tagline">Now showing</div>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
+          <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <div id="authError" class="auth-error hidden"></div>
+
+        <input id="authUsername" class="auth-input" type="text" placeholder="Username" autocomplete="off"/>
+        <input id="authPassword" class="auth-input" type="password" placeholder="Password"/>
+
+        <div id="registerHints" class="auth-hints hidden">
+          <p>Username: 2–100 characters</p>
+          <p>Password: 8+ chars, 1 uppercase, 1 lowercase, 1 number</p>
+        </div>
+
+        <button class="btn-primary" onclick="submitAuth()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="confirmModal" class="hidden">
+      <div class="confirm-card">
+        <span class="confirm-emoji">🎟️</span>
+        <div class="confirm-title" id="confirmTitle">Confirm your seat</div>
+        <div class="confirm-sub" id="confirmSub">Ready to lock in this seat?</div>
+        <div id="confirmTimer" style="display:none; font-size:0.78rem; color:var(--gray-mid); margin-top:-0.75rem; margin-bottom:1.25rem; font-variant-numeric: tabular-nums;"></div>
+        <div class="confirm-btns">
+          <button id="confirmNo">Cancel</button>
+          <button id="confirmYes">Book it!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="main-wrap">
+      <header class="site-header">
+        <div class="site-brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+            </svg>
+          </div>
+          <span class="brand-name">ChaiCode Cinema</span>
+        </div>
+
+        <h1 class="movie-title">Dhurandhar<br/><span class="highlight">The Revenge</span></h1>
+        <p class="movie-subtitle">Jassi ko ghar ki yaad kyu nhi aai?</p>
+
+        <div id="userInfo" class="user-badge hidden">
+          <div class="user-dot"></div>
+          <span>Logged in as <span id="loggedUsername" class="username"></span></span>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+      </header>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item"><div class="leg-dot avail"></div> Available</div>
+        <div class="legend-item"><div class="leg-dot taken"></div> Booked</div>
+        <div class="legend-item"><div class="leg-dot mine"></div> Mine</div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-row">
+        <div class="filter-pill">
+          <button class="filter-btn active" id="btn-all" onclick="setFilter('all')">All seats</button>
+          <button class="filter-btn" id="btn-vacant" onclick="setFilter('vacant')">Vacant</button>
+          <button class="filter-btn" id="btn-occupied" onclick="setFilter('occupied')">Occupied</button>
+          <button class="filter-btn" id="btn-my" onclick="setFilter('my')">My bookings</button>
+        </div>
+      </div>
+
+      <!-- Screen -->
+      <div class="screen-bar">
+        <span class="screen-line"></span>
+        <span class="screen-label">Screen</span>
+      </div>
+
+      <!-- Seats -->
+      <div class="seat-stage">
+        <table id="tbl"></table>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar" id="statsBar" style="display:none;">
+        <div class="stat">
+          <span class="stat-val orange" id="statAvail">—</span>
+          <span class="stat-label">Available</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val" id="statTaken">—</span>
+          <span class="stat-label">Booked</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val" id="statMine">—</span>
+          <span class="stat-label">My seats</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTab = "login";
+      let accessToken = null;
+      let currentUser = null;
+      let seatsData = [];
+      let currentFilter = 'all';
+
+      /* ── Progress bar ── */
+      let _progTimer = null;
+      function progressStart() {
+        const bar = document.getElementById('progressBar');
+        bar.style.transition = 'none';
+        bar.style.width = '0%';
+        bar.classList.add('running');
+        requestAnimationFrame(() => {
+          bar.style.transition = 'width 1.8s cubic-bezier(0.1,0.4,0.6,1)';
+          bar.style.width = '85%';
+        });
+      }
+      function progressDone() {
+        const bar = document.getElementById('progressBar');
+        bar.style.transition = 'width 0.2s ease, opacity 0.4s ease 0.2s';
+        bar.style.width = '100%';
+        clearTimeout(_progTimer);
+        _progTimer = setTimeout(() => {
+          bar.style.opacity = '0';
+          setTimeout(() => { bar.style.width = '0%'; bar.classList.remove('running'); bar.style.opacity = ''; }, 500);
+        }, 250);
+      }
+
+      /* ── Confetti ── */
+      const CONFETTI_COLORS = ['#f97316','#fb923c','#ffffff','#fafafa','#fed7aa','#ffedd5','#ff6b00'];
+      let confettiParticles = [];
+      let confettiRAF = null;
+
+      function launchConfetti() {
+        const canvas = document.getElementById('confettiCanvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+
+        confettiParticles = [];
+        for (let i = 0; i < 350; i++) {
+          confettiParticles.push({
+            x: Math.random() * canvas.width,
+            y: -10 - Math.random() * 100,
+            w: 6 + Math.random() * 8,
+            h: 3 + Math.random() * 5,
+            color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+            angle: Math.random() * Math.PI * 2,
+            spin: (Math.random() - 0.5) * 0.18,
+            vx: (Math.random() - 0.5) * 3.5,
+            vy: 0.5 + Math.random() * 3,
+            gravity: 0.08 + Math.random() * 0.05,
+            alpha: 1,
+            fade: 0.008 + Math.random() * 0.006,
+          });
+        }
+
+        if (confettiRAF) cancelAnimationFrame(confettiRAF);
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let alive = false;
+          for (const p of confettiParticles) {
+            if (p.alpha <= 0) continue;
+            alive = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.angle += p.spin;
+            if (p.y > canvas.height * 0.6) p.alpha -= p.fade * 2;
+            else p.alpha -= p.fade * 0.3;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          }
+          if (alive) confettiRAF = requestAnimationFrame(draw);
+          else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        draw();
+      }
+
+      /* ── Cookies ── */
+      function setCookie(n,v,d){let e="";if(d){let t=new Date();t.setTime(t.getTime()+(d*864e5));e="; expires="+t.toUTCString();}document.cookie=n+"="+(v||"")+e+"; path=/";}
+      function getCookie(n){let eq=n+"=",ca=document.cookie.split(';');for(let i=0;i<ca.length;i++){let c=ca[i].trim();if(c.indexOf(eq)===0)return c.substring(eq.length);}return null;}
+      function eraseCookie(n){document.cookie=n+'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';}
+
+      window.addEventListener('DOMContentLoaded', async () => {
+        const usr = getCookie('username');
+        if (usr) {
+          try {
+            const r = await fetch('/refresh', { method: 'POST', credentials: 'include' });
+            if (!r.ok) { eraseCookie('username'); return; }
+            const data = await r.json();
+            accessToken = data.accessToken;
+            currentUser = { username: usr };
+            document.getElementById("authModal").classList.add("hidden");
+            document.getElementById("userInfo").classList.remove("hidden");
+            document.getElementById("loggedUsername").textContent = usr;
+            loadSeats();
+          } catch { eraseCookie('username'); }
+        }
+      });
+
+      function switchTab(tab) {
+        currentTab = tab;
+        hideErr();
+        document.getElementById("authUsername").value = "";
+        document.getElementById("authPassword").value = "";
+        document.getElementById("registerHints").classList.toggle("hidden", tab !== "register");
+        document.getElementById("tabLogin").classList.toggle("active", tab === "login");
+        document.getElementById("tabRegister").classList.toggle("active", tab === "register");
+      }
+
+      function setFilter(f) {
+        currentFilter = f;
+        ['all','vacant','occupied','my'].forEach(b => {
+          document.getElementById('btn-'+b).classList.toggle('active', b === f);
+        });
+        if (seatsData.length) renderTable();
+      }
+
+      async function submitAuth() {
+        const u = document.getElementById("authUsername").value.trim();
+        const p = document.getElementById("authPassword").value;
+        const btn = document.querySelector('.btn-primary');
+        hideErr();
+        if (!u || !p) { showErr("Fill all fields"); return; }
+
+        btn.classList.add('loading');
+        btn.textContent = currentTab === 'login' ? 'Logging in' : 'Registering';
+        progressStart();
+
+        const ep = currentTab === "login" ? "/auth/login" : "/auth/signup";
+        try {
+          const res = await fetch(ep, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u,password:p}) });
+          const data = await res.json();
+          progressDone();
+          btn.classList.remove('loading');
+          btn.textContent = 'Continue →';
+
+          if (currentTab === "register") {
+            if (data.success !== false) { switchTab("login"); showErr("Registered! Now login.", true); }
+            else showErr(data.message || "Error");
+            return;
+          }
+
+          if (!data.accessToken) { showErr(data.message || "Error"); return; }
+
+          accessToken = data.accessToken; currentUser = data.user;
+          setCookie("username", currentUser.username, 7);
+          document.getElementById("authModal").classList.add("hidden");
+          document.getElementById("userInfo").classList.remove("hidden");
+          document.getElementById("loggedUsername").textContent = currentUser.username;
+          loadSeats();
+        } catch(e) {
+          progressDone();
+          btn.classList.remove('loading');
+          btn.textContent = 'Continue →';
+          showErr("Network error");
+        }
+      }
+
+      function showErr(msg, ok=false) {
+        const el = document.getElementById("authError");
+        el.textContent = msg;
+        el.className = "auth-error " + (ok ? "ok" : "err");
+        el.classList.remove("hidden");
+      }
+      function hideErr() {
+        document.getElementById("authError").classList.add("hidden");
+      }
+
+      async function logout() {
+        const lb = document.querySelector('.logout-btn');
+        if (lb) { lb.classList.add('loading'); lb.textContent = 'Logging out…'; }
+        progressStart();
+        try { await fetch('/logout', { method: 'POST', credentials: 'include' }); } catch {}
+        accessToken=null; currentUser=null; seatsData=[];
+        ['username'].forEach(eraseCookie);
+        progressDone();
+        // Reset logout button BEFORE hiding userInfo so next login shows fresh state
+        if (lb) { lb.classList.remove('loading'); lb.textContent = 'Logout'; }
+        document.getElementById("authModal").classList.remove("hidden");
+        document.getElementById("userInfo").classList.add("hidden");
+        document.getElementById("tbl").innerHTML="";
+        document.getElementById("statsBar").style.display="none";
+        document.getElementById("authUsername").value="";
+        document.getElementById("authPassword").value="";
+      }
+
+      async function loadSeats() {
+        progressStart();
+        const res = await fetch("/seats", {
+          headers: {Authorization: "Bearer "+accessToken},
+          credentials: "include"
+        });
+        if (res.status === 401) { progressDone(); logout(); return; }
+        // Pick up rotated access token if server issued a new one
+        const newTok = res.headers.get("X-New-Access-Token");
+        if (newTok) { accessToken = newTok; }
+        seatsData = (await res.json()).sort((a,b)=>a.seat_no-b.seat_no);
+        progressDone();
+        renderTable();
+      }
+
+      function renderTable() {
+        const tbl = document.getElementById("tbl");
+        tbl.innerHTML = "";
+        let tr;
+        let avail=0, taken=0, mine=0;
+
+        for (let i=0; i<seatsData.length; i++) {
+          if (i%8===0) tr = document.createElement("tr");
+          const seat = seatsData[i];
+          const td = document.createElement("td");
+
+          const isMyBooking = seat.isbooked && seat.name === currentUser.username;
+          let isVisible = true;
+          if (currentFilter==='vacant'   && seat.isbooked) isVisible=false;
+          if (currentFilter==='occupied' && !seat.isbooked) isVisible=false;
+          if (currentFilter==='my'       && !isMyBooking) isVisible=false;
+
+          if (!seat.isbooked) avail++; else { taken++; if(isMyBooking) mine++; }
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "seat " + (isVisible ? (seat.isbooked ? "taken" : "avail") : "invisible");
+
+          if (isMyBooking && isVisible) {
+            btn.style.outline = "2px solid var(--white)";
+            btn.style.outlineOffset = "2px";
+          }
+
+          btn.innerHTML = `${seat.seat_no}`;
+
+          if (seat.isbooked && isVisible) {
+            const tip = document.createElement("div");
+            tip.className = "seat-tooltip";
+            tip.innerHTML = isMyBooking
+              ? `<strong>Your seat</strong>`
+              : `Booked`;
+            btn.appendChild(tip);
+          }
+
+          if (!seat.isbooked) {
+            btn.addEventListener("click", async () => {
+              showConfirm(`Seat ${seat.seat_no}`, `Lock in seat #${seat.seat_no}? This can't be undone.`, async () => {
+                btn.classList.add('taken');
+                btn.classList.remove('avail');
+                progressStart();
+                try {
+                  const r = await fetch(`/${seat.id}/${encodeURIComponent(getCookie('username'))}`, {method:"PUT", headers:{Authorization:"Bearer "+accessToken}, credentials:"include"});
+                  const newTok2 = r.headers.get("X-New-Access-Token");
+                  if (newTok2) { accessToken = newTok2; }
+                  const d = await r.json();
+                  progressDone();
+                  if (!d.success) {
+                    showConfirmAlert(d.message || "Booking failed");
+                    btn.classList.remove('taken'); btn.classList.add('avail');
+                  } else {
+                    launchConfetti();
+                    await loadSeats();
+                  }
+                } catch(ex) {
+                  progressDone();
+                  btn.classList.remove('taken'); btn.classList.add('avail');
+                  showConfirmAlert("Network error: "+ex);
+                }
+              }, true);
+            });
+          }
+
+          td.appendChild(btn);
+          tr.appendChild(td);
+          tbl.appendChild(tr);
+        }
+
+        document.getElementById("statAvail").textContent = avail;
+        document.getElementById("statTaken").textContent = taken;
+        document.getElementById("statMine").textContent  = mine;
+        document.getElementById("statsBar").style.display = "flex";
+      }
+
+      let _confirmTimeoutId = null;
+      let _confirmCounterId = null;
+      const CONFIRM_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
+      function showConfirm(title, sub, onYes, withTimeout = false) {
+        const modal = document.getElementById('confirmModal');
+        document.getElementById('confirmTitle').textContent = title;
+        document.getElementById('confirmSub').textContent = sub;
+        modal.classList.remove('hidden');
+
+        const timerEl = document.getElementById('confirmTimer');
+        if (timerEl) timerEl.style.display = withTimeout ? 'block' : 'none';
+
+        const yes = document.getElementById('confirmYes');
+        const no  = document.getElementById('confirmNo');
+
+        clearTimeout(_confirmTimeoutId);
+        clearInterval(_confirmCounterId);
+
+        function cleanup() {
+          clearTimeout(_confirmTimeoutId);
+          clearInterval(_confirmCounterId);
+          if (timerEl) { timerEl.textContent = ''; timerEl.style.display = 'none'; }
+          modal.classList.add('hidden');
+          const newYes = yes.cloneNode(true);
+          const newNo  = no.cloneNode(true);
+          yes.replaceWith(newYes);
+          no.replaceWith(newNo);
+        }
+
+        if (withTimeout) {
+          const deadline = Date.now() + CONFIRM_TIMEOUT_MS;
+          _confirmCounterId = setInterval(() => {
+            const rem = Math.max(0, deadline - Date.now());
+            const m = Math.floor(rem / 60000);
+            const s = Math.floor((rem % 60000) / 1000);
+            if (timerEl) timerEl.textContent = `⏱ Auto-cancel in ${m}:${String(s).padStart(2,'0')}`;
+          }, 1000);
+          _confirmTimeoutId = setTimeout(() => {
+            cleanup();
+          }, CONFIRM_TIMEOUT_MS);
+        }
+
+        document.getElementById('confirmYes').addEventListener('click', () => { cleanup(); onYes(); }, { once: true });
+        document.getElementById('confirmNo').addEventListener('click',  () => { cleanup(); }, { once: true });
+      }
+
+      function showConfirmAlert(msg) {
+        const modal = document.getElementById('confirmModal');
+        document.getElementById('confirmTitle').textContent = 'Notice';
+        document.getElementById('confirmSub').textContent = msg;
+        const timerEl = document.getElementById('confirmTimer');
+        if (timerEl) timerEl.style.display = 'none';
+        modal.classList.remove('hidden');
+
+        const yes = document.getElementById('confirmYes');
+        const no  = document.getElementById('confirmNo');
+        const newYes = yes.cloneNode(true);
+        const newNo  = no.cloneNode(true);
+        yes.replaceWith(newYes);
+        no.replaceWith(newNo);
+
+        newYes.textContent = 'OK';
+        newNo.style.display = 'none';
+        newYes.addEventListener('click', () => {
+          modal.classList.add('hidden');
+          newNo.style.display = '';
+          newYes.textContent = 'Book it!';
+        }, { once: true });
+      }
+
+    </script>
+  </body>
+</html>
