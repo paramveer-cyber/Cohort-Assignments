@@ -1269,6 +1269,10 @@
                 headers: { Authorization: "Bearer " + accessToken },
                 credentials: "include"
               });
+              const newTok = res.headers.get("X-New-Access-Token");
+              if (newTok) { 
+                  accessToken = newTok; 
+              }
               
               if (!res.ok) {
                   allSuccess = false;

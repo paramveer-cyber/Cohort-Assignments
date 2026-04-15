@@ -25,7 +25,15 @@ async function handleLogin(req, res, next){
 async function handleLogout(req, res, next){
     try {
         const token = req.cookies?.refreshToken;
-        await logoutUser(token);
+        
+        if (token) {
+            try {
+                await logoutUser(token);
+            } catch (err) {
+                console.log("Logout notice: Token was already invalid/expired.");
+            }
+        }
+        
         res.clearCookie("refreshToken");
         res.redirect(302, "/");
     } catch (err) {

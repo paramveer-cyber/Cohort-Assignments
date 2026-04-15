@@ -1,6 +1,9 @@
 import pg from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
 import "dotenv/config";
 import ApiError from "../utils/apiError.js";
+import { users } from "./schema.js";
+import { eq } from "drizzle-orm";
 
 const pool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
@@ -9,24 +12,18 @@ const pool = new pg.Pool({
     idleTimeoutMillis: 0,
 });
 
-export async function checkIfUserExists(username) {
-    const sqlQuery = "SELECT 1 FROM users WHERE username=$1 LIMIT 1";
-    const result = await pool.query(sqlQuery, [username]);
+export const db = drizzle(pool);
 
-    return result.rowCount > 0;
+export async function checkIfUserExists(username) {
+    const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result.length > 0;
 }
 
 export async function insertUser(username, password) {
-    const sqlQuery = `
-    INSERT INTO users (username, password)
-    VALUES ($1, $2)
-    RETURNING *;`;
-
     try {
-        const result = await pool.query(sqlQuery, [username, password]);
-        return result.rows[0];
-    }
-    catch (err) {
+        const result = await db.insert(users).values({ username, password }).returning();
+        return result[0];
+    } catch (err) {
         if (err.code === "23505") {
             throw ApiError.conflict("Username already exists!");
         }
@@ -35,23 +32,16 @@ export async function insertUser(username, password) {
 }
 
 export async function getUser(username) {
-    const sqlQuery = `SELECT * FROM users WHERE username=$1 LIMIT 1;`;
-    const result = await pool.query(sqlQuery, [username]);
-    return result.rows[0];
+    const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result[0];
 }
 
 export async function updateRefreshToken(username, refreshToken) {
-    const sqlQuery = `
-        UPDATE users
-        SET refresh_token = $1
-        WHERE username = $2;
-    `;
-    const result = await pool.query(sqlQuery, [refreshToken, username]);
+    const result = await db.update(users).set({ refresh_token: refreshToken }).where(eq(users.username, username));
     if (result.rowCount === 0) {
         throw ApiError.notfound("User not found!");
     }
     return true;
 }
-
 
 export default pool;

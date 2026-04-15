@@ -10,30 +10,30 @@ async function verifyJWT(req, res, next) {
 
     const token = authHeader.split(" ")[1];
 
-    // access
     try {
         const decoded = verifyAccessToken(token);
         req.user = decoded;
         return next();
-    } catch {
-        // expired
-    }
+    } catch {}
 
     const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) {
         return next(ApiError.unauthorized("Access token expired and no refresh token provided"));
     }
 
-    // refresh
+    let decoded;
     try {
-        const decoded = verifyRefreshToken(refreshToken);
+        decoded = verifyRefreshToken(refreshToken);
+    } catch (err) {
+        return next(ApiError.unauthorized("Invalid or expired refresh token"));
+    }
 
+    try {
         const user = await getUser(decoded.name);
         if (!user) {
             return next(ApiError.unauthorized("User not found"));
         }
 
-        // validate
         if (user.refresh_token !== refreshToken) {
             await updateRefreshToken(user.username, null);
             return next(ApiError.unauthorized("Refresh token reuse detected"));
@@ -42,7 +42,6 @@ async function verifyJWT(req, res, next) {
         const newAccessToken = generateAccessToken({ id: user.user_id, name: user.username });
         const newRefreshToken = generateRefreshToken({ id: user.user_id, name: user.username });
 
-        // rotate
         await updateRefreshToken(user.username, newRefreshToken);
 
         res.setHeader("X-New-Access-Token", newAccessToken);
@@ -50,8 +49,8 @@ async function verifyJWT(req, res, next) {
 
         req.user = { id: user.user_id, name: user.username };
         return next();
-    } catch {
-        return next(ApiError.unauthorized("Invalid or expired refresh token"));
+    } catch (err) {
+        return next(err);
     }
 }
 
