@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testing App</title>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card: #171717;
+            --text: #f5f5f5;
+            --muted: #9ca3af;
+            --accent: #7F77DD;
+            --border: #2a2a2a;
+            --success: #1D9E75;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 440px;
+            padding: 16px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .landing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            border-radius: 14px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .landing-card h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .landing-card p {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+
+        .btn:hover {
+            opacity: 0.88;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        .profile-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: var(--accent);
+            padding: 28px 28px 48px;
+            position: relative;
+        }
+
+        .profile-header .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 11px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--accent);
+            position: absolute;
+            bottom: -34px;
+            left: 28px;
+            border: 3px solid var(--card);
+        }
+
+        .profile-body {
+            padding: 48px 28px 28px;
+        }
+
+        .profile-body h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-body .sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 24px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .info-row {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-row .label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .info-row .value {
+            font-size: 13px;
+            color: var(--text);
+            font-family: monospace;
+            max-width: 240px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .token-section {
+            margin-bottom: 24px;
+        }
+
+        .token-section h3 {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 10px;
+        }
+
+        .token-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--muted);
+            word-break: break-all;
+            line-height: 1.6;
+            max-height: 80px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .token-box::after {
+            content: 'click to copy';
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: 10px;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity .2s;
+        }
+
+        .token-box:hover::after {
+            opacity: 1;
+        }
+
+        .token-box.copied::after {
+            content: 'copied!';
+            opacity: 1;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .logout-btn:hover {
+            border-color: #e24b4a44;
+            color: #e24b4a;
+        }
+
+        .error-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px 28px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .error-card h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .error-card p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .loading-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px 28px;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-card p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page active" id="page-landing">
+        <div class="landing-card">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+            </div>
+            <h1>Testing App</h1>
+            <p>A demo client app that authenticates users via ChaiAuth — your own OIDC provider.</p>
+            <button class="btn btn-primary" onclick="startLogin()">Sign in with ChaiAuth</button>
+            <button class="btn btn-ghost" onclick="showInfo()">What is this?</button>
+        </div>
+    </div>
+
+    <div class="page" id="page-loading">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <p id="loading-msg">Exchanging code for tokens...</p>
+        </div>
+    </div>
+
+    <div class="page" id="page-profile">
+        <div class="profile-card">
+            <div class="profile-header">
+                <span class="badge">Authenticated via ChaiAuth</span>
+                <div class="avatar" id="avatar">?</div>
+            </div>
+            <div class="profile-body">
+                <h2 id="profile-username">Loading...</h2>
+                <div class="sub" id="profile-sub"></div>
+
+                <div class="info-grid">
+                    <div class="info-row">
+                        <span class="label">Issued by</span>
+                        <span class="value" id="info-iss"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Audience</span>
+                        <span class="value" id="info-aud"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Expires</span>
+                        <span class="value" id="info-exp"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Scope</span>
+                        <span class="value" id="info-scope"></span>
+                    </div>
+                </div>
+
+                <div class="token-section">
+                    <h3>Access token</h3>
+                    <div class="token-box" id="access-token-box" onclick="copyToken('access')"></div>
+                </div>
+                <div class="token-section">
+                    <h3>ID token</h3>
+                    <div class="token-box" id="id-token-box" onclick="copyToken('id')"></div>
+                </div>
+
+                <button class="logout-btn" onclick="logout()">Sign out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" id="page-error">
+        <div class="error-card">
+            <div class="error-icon">&#9888;</div>
+            <h2>Authentication failed</h2>
+            <p id="error-msg">Something went wrong.</p>
+            <button class="btn btn-primary" onclick="showPage('page-landing')">Try again</button>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            clientId: "38e67f9b-4bee-4732-ba57-306d93c3febc",
+            clientSecret: "thisissupersecret",
+            redirectUri: "http://localhost:3000/callback",
+            chaiAuthBase: "http://localhost:8080",
+            jwksUri: "http://localhost:8080/open-certs",
+            issuer: "http://localhost:8080",
+            scope: "openid profile",
+        };
+
+        let tokens = {};
+        let jwksCache = null;
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function generateRandom(len = 32) {
+            const arr = new Uint8Array(len);
+            crypto.getRandomValues(arr);
+            return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function base64UrlToBase64(input) {
+            const pad = '='.repeat((4 - (input.length % 4)) % 4);
+            return (input + pad).replace(/-/g, '+').replace(/_/g, '/');
+        }
+
+        function base64UrlToBytes(input) {
+            const base64 = base64UrlToBase64(input);
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return bytes;
+        }
+
+        function decodeJwtPart(part) {
+            const json = atob(base64UrlToBase64(part));
+            return JSON.parse(json);
+        }
+
+        async function getJwks() {
+            if (jwksCache) return jwksCache;
+
+            const res = await fetch(CONFIG.jwksUri, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to fetch JWKS (${res.status})`);
+            }
+
+            jwksCache = await res.json();
+            return jwksCache;
+        }
+
+        async function importPublicKeyFromJwk(jwk) {
+            return crypto.subtle.importKey(
+                "jwk",
+                jwk,
+                {
+                    name: "RSASSA-PKCS1-v1_5",
+                    hash: "SHA-256",
+                },
+                false,
+                ["verify"]
+            );
+        }
+
+        async function verifyJwtWithJwks(token, expectedNonce) {
+            const parts = token.split(".");
+            if (parts.length !== 3) throw new Error("Invalid JWT format");
+
+            const [encodedHeader, encodedPayload, encodedSignature] = parts;
+            const header = decodeJwtPart(encodedHeader);
+            const payload = decodeJwtPart(encodedPayload);
+
+            if (header.alg !== "RS256") {
+                throw new Error(`Unexpected JWT alg: ${header.alg}`);
+            }
+
+            const jwks = await getJwks();
+            const jwk = jwks.keys?.find(key => key.kid === header.kid);
+
+            if (!jwk) {
+                throw new Error("No matching public key found in JWKS");
+            }
+
+            const publicKey = await importPublicKeyFromJwk(jwk);
+
+            const signingInput = new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`);
+            const signature = base64UrlToBytes(encodedSignature);
+
+            const isValid = await crypto.subtle.verify(
+                "RSASSA-PKCS1-v1_5",
+                publicKey,
+                signature,
+                signingInput
+            );
+
+            if (!isValid) {
+                throw new Error("Invalid token signature");
+            }
+
+            const now = Math.floor(Date.now() / 1000);
+
+            if (payload.iss !== CONFIG.issuer) {
+                throw new Error("Invalid issuer");
+            }
+
+            const audOk = Array.isArray(payload.aud)
+                ? payload.aud.includes(CONFIG.clientId)
+                : payload.aud === CONFIG.clientId;
+
+            if (!audOk) {
+                throw new Error("Invalid audience");
+            }
+
+            if (typeof payload.exp !== "number" || payload.exp <= now) {
+                throw new Error("Token expired");
+            }
+
+            if (expectedNonce && payload.nonce !== expectedNonce) {
+                throw new Error("Nonce mismatch");
+            }
+
+            return payload;
+        }
+
+        async function startLogin() {
+            const state = generateRandom();
+            const nonce = generateRandom();
+
+            sessionStorage.setItem('oidc_state', state);
+            sessionStorage.setItem('oidc_nonce', nonce);
+
+            const url = new URL(`${CONFIG.chaiAuthBase}/signin`);
+            url.searchParams.set('clientId', CONFIG.clientId);
+            url.searchParams.set('redirect_uri', CONFIG.redirectUri);
+            url.searchParams.set('response_type', 'code');
+            url.searchParams.set('scope', CONFIG.scope);
+            url.searchParams.set('state', state);
+            url.searchParams.set('nonce', nonce);
+
+            window.location.href = url.toString();
+        }
+
+        async function handleCallback() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            const state = params.get('state');
+
+            if (!code) return;
+
+            showPage('page-loading');
+
+            const savedState = sessionStorage.getItem('oidc_state');
+            const savedNonce = sessionStorage.getItem('oidc_nonce');
+
+            if (state !== savedState) {
+                return showError('State mismatch — possible CSRF attack.');
+            }
+
+            sessionStorage.removeItem('oidc_state');
+
+            try {
+                const res = await fetch(`${CONFIG.chaiAuthBase}/token`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        grant_type: 'authorization_code',
+                        code,
+                        redirect_uri: CONFIG.redirectUri,
+                        client_id: CONFIG.clientId,
+                        client_secret: CONFIG.clientSecret,
+                    }),
+                });
+
+                const data = await res.json();
+                if (!res.ok) return showError(data.message || 'Token exchange failed');
+
+                const idPayload = await verifyJwtWithJwks(data.id_token, savedNonce);
+
+                tokens = data;
+
+                sessionStorage.setItem('access_token', data.access_token);
+                sessionStorage.setItem('id_token', data.id_token);
+
+                renderProfile(idPayload, data);
+
+                window.history.replaceState({}, '', window.location.pathname);
+            } catch (err) {
+                showError(err.message || 'Network error');
+            }
+        }
+
+        function renderProfile(id, tokenData) {
+            const username = id.preferred_username || id.sub?.slice(0, 8) || 'User';
+            document.getElementById('avatar').textContent = username[0].toUpperCase();
+            document.getElementById('profile-username').textContent = username;
+            document.getElementById('profile-sub').textContent = `sub: ${id.sub}`;
+            document.getElementById('info-iss').textContent = id.iss;
+            document.getElementById('info-aud').textContent = Array.isArray(id.aud) ? id.aud.join(', ') : id.aud;
+            document.getElementById('info-exp').textContent = new Date(id.exp * 1000).toLocaleTimeString();
+            document.getElementById('info-scope').textContent = tokenData.scope;
+            document.getElementById('access-token-box').textContent = tokenData.access_token;
+            document.getElementById('id-token-box').textContent = tokenData.id_token;
+            showPage('page-profile');
+        }
+
+        function copyToken(type) {
+            const box = document.getElementById(type === 'access' ? 'access-token-box' : 'id-token-box');
+            navigator.clipboard.writeText(box.textContent).then(() => {
+                box.classList.add('copied');
+                setTimeout(() => box.classList.remove('copied'), 1800);
+            });
+        }
+
+        function showError(msg) {
+            document.getElementById('error-msg').textContent = msg;
+            showPage('page-error');
+        }
+
+        function logout() {
+            sessionStorage.removeItem('access_token');
+            sessionStorage.removeItem('id_token');
+            sessionStorage.removeItem('oidc_state');
+            sessionStorage.removeItem('oidc_nonce');
+            tokens = {};
+            showPage('page-landing');
+        }
+
+        function showInfo() {
+            alert('This app redirects you to ChaiAuth (your OIDC server) to log in. After login, ChaiAuth issues an auth code which this app exchanges for an access token and id_token.');
+        }
+
+        async function restoreSession() {
+            const at = sessionStorage.getItem('access_token');
+            const it = sessionStorage.getItem('id_token');
+            const nonce = sessionStorage.getItem('oidc_nonce');
+
+            if (!at || !it) return false;
+
+            try {
+                const id = await verifyJwtWithJwks(it, nonce);
+
+                tokens = { access_token: at, id_token: it, scope: 'openid profile' };
+                renderProfile(id, tokens);
+                return true;
+            } catch (err) {
+                sessionStorage.removeItem('access_token');
+                sessionStorage.removeItem('id_token');
+                return false;
+            }
+        }
+
+        (async () => {
+            if (!(await restoreSession())) {
+                await handleCallback();
+            }
+        })();
+    </script>
+</body>
+
+</html>

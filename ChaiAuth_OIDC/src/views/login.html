@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth</title>
+
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card: #171717;
+            --text: #f5f5f5;
+            --muted: #9ca3af;
+            --accent: #ff7a00;
+            --border: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            width: 100%;
+            padding-top: 3.5%;
+            max-width: 450px;
+            height: 50vh;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .toggle {
+            display: flex;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .toggle button {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .toggle button.active {
+            background: var(--accent);
+            color: black;
+            font-weight: 500;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #0f0f0f;
+            color: var(--text);
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+        }
+
+        button.submit {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent);
+            color: black;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button.submit:hover {
+            opacity: 0.9;
+        }
+
+        .footer {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.8);
+            border: 1px solid var(--accent);
+            color: black;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="title">Sign in to {{client_name}} using ChaiAuth</div>
+
+        <div class="toggle">
+            <button id="loginTab" class="active">Login</button>
+            <button id="registerTab">Register</button>
+        </div>
+        <div id="errorBox" class="error hidden"></div>
+        <form id="authForm">
+            <input type="text" id="username" placeholder="Username" required />
+            <input type="password" id="password" placeholder="Password" required />
+
+            <input type="hidden" id="state_token" />
+
+            <button class="submit" type="submit">Login</button>
+        </form>
+
+        <div class="footer">
+            Minimal. Secure. Yours.
+        </div>
+    </div>
+
+    <script>
+        const loginTab = document.getElementById("loginTab");
+        const registerTab = document.getElementById("registerTab");
+        const form = document.getElementById("authForm");
+        const submitBtn = form.querySelector(".submit");
+
+        const errorBox = document.getElementById("errorBox");
+
+        function clearError() {
+            errorBox.textContent = "";
+            errorBox.classList.add("hidden");
+        }
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.classList.remove("hidden");
+            setTimeout(clearError, 3000)
+        }
+
+        let mode = "login";
+
+        loginTab.onclick = () => {
+            mode = "login";
+            loginTab.classList.add("active");
+            registerTab.classList.remove("active");
+            submitBtn.textContent = "Login";
+        };
+
+        registerTab.onclick = () => {
+            mode = "register";
+            registerTab.classList.add("active");
+            loginTab.classList.remove("active");
+            submitBtn.textContent = "Register";
+        };
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const params = new URLSearchParams(window.location.search);
+            const clientId = params.get("clientId");
+            const redirect_uri = params.get("redirect_uri");
+            const state = params.get("state");
+            const nonce = params.get("nonce");
+            const scope = params.get("scope") || "openid";
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (mode === "login") {
+                const res = await fetch("/signin", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password, clientId, redirect_uri, state, nonce, scope })
+                });
+                const data = await res.json();
+                if (!res.ok) return showError(data.message || "Login failed");
+                if (data.redirect) window.location.href = data.redirect;
+            }
+            else{
+                fetch('/auth/signup', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                })
+                .then(async (res)=>{
+                    const data = await res.json();
+                    console.log("data: ", data);
+                    if (!res.ok) {
+                        console.log(data);
+                        throw new Error(data.message || "Request failed");
+                    }
+                    if (data.success) {
+                        loginTab.click();
+                        console.log(data);
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                    showError(err || "Something went wrong");
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>
