@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #000;
+  color: #f5e5e5;
+}
+
+.container {
+  min-height: 100vh;
+  padding: 30px 20px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #ff6b6b;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page {
+  color: #e0a3a3;
+  font-size: 0.9rem;
+}
+
+.card {
+  background: #0a0a0a;
+  border: 1px solid #663333;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  border-color: #ff6b6b;
+  transform: translateY(-3px);
+}
+
+h2 {
+  margin: 0 0 10px;
+  color: #ff9e9e;
+  font-size: 1rem;
+}
+
+p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #e8bcbc;
+  line-height: 1.4;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #222;
+  margin: 12px 0;
+}
+
+.status {
+  text-align: center;
+  color: #ff6b6b;
+}
+
+.error {
+  text-align: center;
+  color: #ff4d4d;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: 1px solid #cc5555;
+  background: #000;
+  color: #ff9e9e;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #ff6b6b;
+  color: #000;
+  border-color: #ff6b6b;
+}

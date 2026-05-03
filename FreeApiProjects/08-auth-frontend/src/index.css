@@ -1,0 +1,77 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-bottom: 20px;
+  color: #ff6a00;
+  font-size: 2rem;
+}
+
+.card {
+  background: #0a0a0a;
+  border: 1px solid #ff6a00;
+  padding: 20px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 8px;
+  background: #000;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+input:focus {
+  outline: none;
+  border-color: #ff6a00;
+}
+
+.btn {
+  padding: 10px;
+  border: 1px solid #ff6a00;
+  background: #000;
+  color: #ff6a00;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn:hover {
+  background: #ff6a00;
+  color: #000;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.switch {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.switch span {
+  color: #ff6a00;
+  cursor: pointer;
+}
+
+.status {
+  margin-top: 10px;
+  color: #aaa;
+  text-align: center;
+}

@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #000;
+  color: #e5e5e5;
+}
+
+.container {
+  min-height: 100vh;
+  padding: 30px 20px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #bfbfbf;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.card {
+  background: #0a0a0a;
+  border: 1px solid #333;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  border-color: #888;
+  transform: translateY(-3px);
+}
+
+h2 {
+  margin: 0 0 10px;
+  color: #d4d4d4;
+  font-size: 1rem;
+}
+
+p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #cfcfcf;
+  line-height: 1.4;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #222;
+  margin: 12px 0;
+}
+
+.status {
+  text-align: center;
+  color: #aaa;
+}
+
+.error {
+  text-align: center;
+  color: #ff4d4d;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: 1px solid #666;
+  background: #000;
+  color: #ccc;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #ccc;
+  color: #000;
+  border-color: #ccc;
+}
