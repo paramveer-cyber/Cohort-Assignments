@@ -1,0 +1,16 @@
+{
+  "name": "million-checkboxes",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.3.2",
+    "jose": "^5.9.6",
+    "ws": "^8.18.0"
+  }
+}

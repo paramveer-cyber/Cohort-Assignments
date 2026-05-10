@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MILLION CHECKBOXES</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DIN+Condensed:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <header id="header">
+    <div class="header-left">
+      <div class="wordmark">
+        <span class="wordmark-primary">MILLION</span>
+        <span class="wordmark-rule"></span>
+        <span class="wordmark-secondary">CHECKBOXES</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="stat-block">
+        <span class="stat-value" id="checked-count">0</span>
+        <span class="stat-label">CHECKED</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <span class="stat-value" id="user-count">0</span>
+        <span class="stat-label">ONLINE</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <span class="stat-value" id="ping-val">—</span>
+        <span class="stat-label">MS PING</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div id="conn-indicator" class="conn-indicator" data-state="connecting">
+        <span class="conn-dot"></span>
+        <span class="conn-text">CONNECTING</span>
+      </div>
+      <div id="auth-area"></div>
+    </div>
+  </header>
+
+  <div id="progress-bar-wrap">
+    <div id="progress-bar" style="width:0%"></div>
+    <span id="progress-label">0 / 1,000,000</span>
+  </div>
+
+  <main id="main">
+    <div id="loading-screen">
+      <div class="loading-inner">
+        <div class="loading-title">LOADING GRID</div>
+        <div class="loading-track"><div class="loading-fill" id="loading-fill"></div></div>
+        <div class="loading-pct" id="loading-pct">0%</div>
+      </div>
+    </div>
+
+    <div id="grid-wrap" class="hidden">
+      <div id="grid-scroller">
+        <div id="grid-spacer"></div>
+        <div id="grid-rows"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer">
+    <div class="footer-badges">
+      <span class="badge" id="badge-ws" data-on="false">WS</span>
+      <span class="badge" id="badge-oidc" data-on="false">OIDC</span>
+      <span class="badge" id="badge-redis" data-on="true">REDIS</span>
+    </div>
+    <div class="footer-activity">
+      <span class="activity-label">ACTIVITY</span>
+      <div id="activity-feed"></div>
+    </div>
+    <div class="footer-copy">1,000,000 CELLS · REAL-TIME</div>
+  </footer>
+
+  <div id="toast-root"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
