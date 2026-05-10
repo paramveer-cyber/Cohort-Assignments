@@ -1,16 +1,14 @@
 import { verifyAccessToken } from "../utils/jwt.utils.js";
 import ApiError from "../utils/apiError.js";
-
-const ADMIN = "Paramveer"; // I added this just for fun:) can be ignored as ofcourse in realworld scenario we would check role of user and not just the name
+import { Role } from "../constants/roles.js";
 
 export function verifyAdmin(req, res, next) {
     const header = req.headers.authorization;
     if (!header?.startsWith("Bearer ")) return next(ApiError.unauthorized("Missing token"));
 
     try {
-        const token = header.split(" ")[1];
-        const decoded = verifyAccessToken(token);
-        if (decoded.name !== ADMIN) return next(ApiError.unauthorized("Forbidden"));
+        const decoded = verifyAccessToken(header.split(" ")[1]);
+        if (decoded.role !== Role.ADMIN) return next(ApiError.forbidden("Admin access required"));
         req.user = decoded;
         next();
     } catch {
