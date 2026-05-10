@@ -1,6 +1,7 @@
 # Million Checkboxes
 
 Real-time collaborative grid of 1,000,000 checkboxes. Built with Node.js, Express, WebSockets, Redis, and ChaiAuth OIDC. Designed with Bauhaus principles.
+Live: [Link](https://millioncheckboxes-5m73.onrender.com/)
 
 ---
 
