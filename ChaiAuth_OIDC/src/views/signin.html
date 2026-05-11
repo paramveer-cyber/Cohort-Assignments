@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,21 +9,28 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
         :root {
-            --black:   #0a0a0a;
-            --white:   #f5f0e8;
-            --red:     #d62828;
-            --blue:    #1a3a6b;
-            --yellow:  #f4d03f;
-            --gray:    #1a1a1a;
-            --gray2:   #242424;
-            --muted:   #6b6b6b;
-            --border:  #2e2e2e;
-            --input-bg:#111;
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+            --input-bg: #111;
         }
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        html, body {
+        html,
+        body {
             min-height: 100%;
             background: var(--black);
             color: var(--white);
@@ -47,40 +55,55 @@
             pointer-events: none;
             z-index: 0;
         }
+
         .page-geo .g-circle {
             position: absolute;
-            top: -120px; left: -120px;
-            width: 480px; height: 480px;
+            top: -120px;
+            left: -120px;
+            width: 480px;
+            height: 480px;
             border-radius: 50%;
             background: var(--blue);
             opacity: 0.25;
         }
+
         .page-geo .g-circle-sm {
             position: absolute;
-            bottom: 60px; right: -60px;
-            width: 220px; height: 220px;
+            bottom: 60px;
+            right: -60px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             background: var(--yellow);
             opacity: 0.1;
         }
+
         .page-geo .g-bar-h {
             position: absolute;
-            top: 38%; left: 0;
-            width: 200px; height: 6px;
+            top: 38%;
+            left: 0;
+            width: 200px;
+            height: 6px;
             background: var(--red);
             opacity: 0.35;
         }
+
         .page-geo .g-bar-v {
             position: absolute;
-            top: 0; right: 18%;
-            width: 6px; height: 45%;
+            top: 0;
+            right: 18%;
+            width: 6px;
+            height: 45%;
             background: var(--red);
             opacity: 0.2;
         }
+
         .page-geo .g-rect {
             position: absolute;
-            bottom: -40px; right: 120px;
-            width: 140px; height: 140px;
+            bottom: -40px;
+            right: 120px;
+            width: 140px;
+            height: 140px;
             background: var(--yellow);
             opacity: 0.07;
         }
@@ -95,22 +118,27 @@
             border: 1px solid var(--border);
             border-radius: 4px;
             padding: 40px;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
         }
 
         /* Yellow corner accent */
         .card::before {
             content: '';
             position: absolute;
-            top: 0; right: 0;
-            width: 48px; height: 48px;
+            top: 0;
+            right: 0;
+            width: 48px;
+            height: 48px;
             background: var(--yellow);
         }
+
         .card::after {
             content: '';
             position: absolute;
-            bottom: 0; left: 0;
-            width: 24px; height: 24px;
+            bottom: 0;
+            left: 0;
+            width: 24px;
+            height: 24px;
             background: var(--red);
         }
 
@@ -184,7 +212,9 @@
             color: var(--white);
         }
 
-        .tab-btn:not(.active):hover { color: var(--white); }
+        .tab-btn:not(.active):hover {
+            color: var(--white);
+        }
 
         /* ── Alerts ──────────────────────────────────── */
         .alert {
@@ -195,9 +225,22 @@
             margin-bottom: 16px;
             display: none;
         }
-        .alert.visible { display: block; }
-        .alert-error   { background: rgba(214,40,40,0.15); border: 1px solid rgba(214,40,40,0.4); color: #f87171; }
-        .alert-success { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.3);  color: #86efac; }
+
+        .alert.visible {
+            display: block;
+        }
+
+        .alert-error {
+            background: rgba(214, 40, 40, 0.15);
+            border: 1px solid rgba(214, 40, 40, 0.4);
+            color: #f87171;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
 
         /* ── Step indicator (register only) ──────────── */
         .step-indicator {
@@ -206,21 +249,35 @@
             gap: 8px;
             margin-bottom: 20px;
         }
-        .step-indicator.visible { display: flex; }
+
+        .step-indicator.visible {
+            display: flex;
+        }
 
         .step-pip {
-            width: 24px; height: 24px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: var(--border);
             color: var(--muted);
             font-size: 11px;
             font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
             transition: background 0.2s, color 0.2s;
         }
-        .step-pip.done  { background: var(--red); color: var(--white); }
-        .step-pip.active { background: var(--yellow); color: var(--black); }
+
+        .step-pip.done {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .step-pip.active {
+            background: var(--yellow);
+            color: var(--black);
+        }
 
         .step-line {
             flex: 1;
@@ -238,7 +295,10 @@
         .field-wrap {
             margin-bottom: 16px;
         }
-        .field-wrap:last-child { margin-bottom: 0; }
+
+        .field-wrap:last-child {
+            margin-bottom: 0;
+        }
 
         .field-label {
             display: block;
@@ -276,10 +336,20 @@
             transition: border-color 0.15s;
             resize: none;
         }
-        input::placeholder, textarea::placeholder { color: var(--muted); }
-        input:focus, textarea:focus { border-color: var(--red); }
 
-        textarea { height: 72px; }
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--muted);
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--red);
+        }
+
+        textarea {
+            height: 72px;
+        }
 
         .field-row {
             display: grid;
@@ -304,9 +374,19 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-        .btn-submit:hover:not(:disabled)  { background: #b71c1c; }
-        .btn-submit:active:not(:disabled) { background: #8b0000; }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-submit:hover:not(:disabled) {
+            background: #b71c1c;
+        }
+
+        .btn-submit:active:not(:disabled) {
+            background: #8b0000;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .btn-secondary {
             width: 100%;
@@ -324,7 +404,11 @@
             cursor: pointer;
             transition: border-color 0.15s, color 0.15s;
         }
-        .btn-secondary:hover { border-color: var(--muted); color: var(--white); }
+
+        .btn-secondary:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
 
         /* ── Footer ──────────────────────────────────── */
         .card-footer {
@@ -335,7 +419,8 @@
         }
 
         .footer-dot {
-            width: 8px; height: 8px;
+            width: 8px;
+            height: 8px;
             background: var(--yellow);
             border-radius: 50%;
             flex-shrink: 0;
@@ -347,309 +432,322 @@
         }
 
         /* ── Utility ─────────────────────────────────── */
-        .hidden { display: none !important; }
+        .hidden {
+            display: none !important;
+        }
     </style>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 </head>
+
 <body>
 
-<div class="page">
-    <!-- Background geometry -->
-    <div class="page-geo">
-        <div class="g-circle"></div>
-        <div class="g-circle-sm"></div>
-        <div class="g-bar-h"></div>
-        <div class="g-bar-v"></div>
-        <div class="g-rect"></div>
-    </div>
-
-    <!-- Auth card -->
-    <div class="card">
-        <div class="card-header">
-            <div class="brand">ChaiAuth</div>
-            <div class="client-label">Authorizing access to</div>
-            <div class="client-name">{{client_name}}</div>
-            <div class="client-divider"></div>
+    <div class="page">
+        <!-- Background geometry -->
+        <div class="page-geo">
+            <div class="g-circle"></div>
+            <div class="g-circle-sm"></div>
+            <div class="g-bar-h"></div>
+            <div class="g-bar-v"></div>
+            <div class="g-rect"></div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" id="loginTab">Sign In</button>
-            <button class="tab-btn"        id="registerTab">Create Account</button>
-        </div>
-
-        <div class="alert alert-error"   id="errorBar"></div>
-        <div class="alert alert-success" id="successBar"></div>
-
-        <!-- Step indicator (register mode only) -->
-        <div class="step-indicator" id="stepIndicator">
-            <div class="step-pip active" id="pip1">1</div>
-            <div class="step-line"></div>
-            <div class="step-pip" id="pip2">2</div>
-            <span class="step-label" id="stepLabel">Account credentials</span>
-        </div>
-
-        <!-- Step 1: credentials (login + register) -->
-        <div id="step1Fields">
-            <div class="field-wrap">
-                <label class="field-label" for="username">Username</label>
-                <input type="text" id="username" autocomplete="username" placeholder="your_username" />
+        <!-- Auth card -->
+        <div class="card">
+            <div class="card-header">
+                <img src="/icon.png" alt="Logo" width="48" height="48" style="object-fit:contain;display:block;">
+                <div class="brand">ChaiAuth</div>
+                <div class="client-label">Authorizing access to</div>
+                <div class="client-name">{{client_name}}</div>
+                <div class="client-divider"></div>
             </div>
-            <div class="field-wrap">
-                <label class="field-label" for="password">Password</label>
-                <input type="password" id="password" autocomplete="current-password" placeholder="••••••••" />
-            </div>
-        </div>
 
-        <!-- Step 2: optional profile (register only) -->
-        <div id="step2Fields" class="hidden">
-            <div class="field-wrap">
-                <label class="field-label" for="display_name">Display name <span class="field-hint">optional</span></label>
-                <input type="text" id="display_name" autocomplete="name" placeholder="How you appear to others" maxlength="100" />
+            <div class="tabs">
+                <button class="tab-btn active" id="loginTab">Sign In</button>
+                <button class="tab-btn" id="registerTab">Create Account</button>
             </div>
-            <div class="field-wrap">
-                <label class="field-label" for="email">Email <span class="field-hint">optional</span></label>
-                <input type="email" id="email" autocomplete="email" placeholder="you@example.com" />
+
+            <div class="alert alert-error" id="errorBar"></div>
+            <div class="alert alert-success" id="successBar"></div>
+
+            <!-- Step indicator (register mode only) -->
+            <div class="step-indicator" id="stepIndicator">
+                <div class="step-pip active" id="pip1">1</div>
+                <div class="step-line"></div>
+                <div class="step-pip" id="pip2">2</div>
+                <span class="step-label" id="stepLabel">Account credentials</span>
             </div>
-            <div class="field-row">
+
+            <!-- Step 1: credentials (login + register) -->
+            <div id="step1Fields">
                 <div class="field-wrap">
-                    <label class="field-label" for="organization">Org / School <span class="field-hint">optional</span></label>
-                    <input type="text" id="organization" placeholder="e.g. Acme Corp" maxlength="100" />
+                    <label class="field-label" for="username">Username</label>
+                    <input type="text" id="username" autocomplete="username" placeholder="your_username" />
                 </div>
                 <div class="field-wrap">
-                    <label class="field-label" for="avatar_url">Avatar URL <span class="field-hint">optional</span></label>
-                    <input type="url" id="avatar_url" placeholder="https://..." />
+                    <label class="field-label" for="password">Password</label>
+                    <input type="password" id="password" autocomplete="current-password" placeholder="••••••••" />
                 </div>
             </div>
-            <div class="field-wrap">
-                <label class="field-label" for="bio">Short bio <span class="field-hint">optional · 280 chars</span></label>
-                <textarea id="bio" placeholder="A sentence about yourself…" maxlength="280"></textarea>
+
+            <!-- Step 2: optional profile (register only) -->
+            <div id="step2Fields" class="hidden">
+                <div class="field-wrap">
+                    <label class="field-label" for="display_name">Display name <span
+                            class="field-hint">optional</span></label>
+                    <input type="text" id="display_name" autocomplete="name" placeholder="How you appear to others"
+                        maxlength="100" />
+                </div>
+                <div class="field-wrap">
+                    <label class="field-label" for="email">Email <span class="field-hint">optional</span></label>
+                    <input type="email" id="email" autocomplete="email" placeholder="you@example.com" />
+                </div>
+                <div class="field-row">
+                    <div class="field-wrap">
+                        <label class="field-label" for="organization">Org / School <span
+                                class="field-hint">optional</span></label>
+                        <input type="text" id="organization" placeholder="e.g. Acme Corp" maxlength="100" />
+                    </div>
+                    <div class="field-wrap">
+                        <label class="field-label" for="avatar_url">Avatar URL <span
+                                class="field-hint">optional</span></label>
+                        <input type="url" id="avatar_url" placeholder="https://..." />
+                    </div>
+                </div>
+                <div class="field-wrap">
+                    <label class="field-label" for="bio">Short bio <span class="field-hint">optional · 280
+                            chars</span></label>
+                    <textarea id="bio" placeholder="A sentence about yourself…" maxlength="280"></textarea>
+                </div>
+            </div>
+
+            <!-- Primary action -->
+            <button class="btn-submit" id="submitBtn">Sign In</button>
+            <!-- Back button (step 2 only) -->
+            <button class="btn-secondary hidden" id="backBtn">Back</button>
+
+            <div class="card-footer">
+                <div class="footer-dot"></div>
+                <span class="footer-text">Secured by ChaiAuth &mdash; OAuth 2.1 / OIDC</span>
             </div>
         </div>
-
-        <!-- Primary action -->
-        <button class="btn-submit" id="submitBtn">Sign In</button>
-        <!-- Back button (step 2 only) -->
-        <button class="btn-secondary hidden" id="backBtn">Back</button>
-
-        <div class="card-footer">
-            <div class="footer-dot"></div>
-            <span class="footer-text">Secured by ChaiAuth &mdash; OAuth 2.1 / OIDC</span>
-        </div>
     </div>
-</div>
 
-<script>
-(function () {
-    const loginTab     = document.getElementById("loginTab");
-    const registerTab  = document.getElementById("registerTab");
-    const submitBtn    = document.getElementById("submitBtn");
-    const backBtn      = document.getElementById("backBtn");
-    const errorBar     = document.getElementById("errorBar");
-    const successBar   = document.getElementById("successBar");
-    const stepIndicator = document.getElementById("stepIndicator");
-    const step1Fields  = document.getElementById("step1Fields");
-    const step2Fields  = document.getElementById("step2Fields");
-    const pip1         = document.getElementById("pip1");
-    const pip2         = document.getElementById("pip2");
-    const stepLabel    = document.getElementById("stepLabel");
+    <script>
+        (function () {
+            const loginTab = document.getElementById("loginTab");
+            const registerTab = document.getElementById("registerTab");
+            const submitBtn = document.getElementById("submitBtn");
+            const backBtn = document.getElementById("backBtn");
+            const errorBar = document.getElementById("errorBar");
+            const successBar = document.getElementById("successBar");
+            const stepIndicator = document.getElementById("stepIndicator");
+            const step1Fields = document.getElementById("step1Fields");
+            const step2Fields = document.getElementById("step2Fields");
+            const pip1 = document.getElementById("pip1");
+            const pip2 = document.getElementById("pip2");
+            const stepLabel = document.getElementById("stepLabel");
 
-    let mode = "login";   // "login" | "register"
-    let step = 1;         // 1 | 2  (register only)
+            let mode = "login";   // "login" | "register"
+            let step = 1;         // 1 | 2  (register only)
 
-    // ── Helpers ──────────────────────────────────────
+            // ── Helpers ──────────────────────────────────────
 
-    function showError(msg) {
-        successBar.classList.remove("visible");
-        errorBar.textContent = msg;
-        errorBar.classList.add("visible");
-        setTimeout(() => errorBar.classList.remove("visible"), 5000);
-    }
+            function showError(msg) {
+                successBar.classList.remove("visible");
+                errorBar.textContent = msg;
+                errorBar.classList.add("visible");
+                setTimeout(() => errorBar.classList.remove("visible"), 5000);
+            }
 
-    function showSuccess(msg) {
-        errorBar.classList.remove("visible");
-        successBar.textContent = msg;
-        successBar.classList.add("visible");
-    }
+            function showSuccess(msg) {
+                errorBar.classList.remove("visible");
+                successBar.textContent = msg;
+                successBar.classList.add("visible");
+            }
 
-    function clearAlerts() {
-        errorBar.classList.remove("visible");
-        successBar.classList.remove("visible");
-    }
+            function clearAlerts() {
+                errorBar.classList.remove("visible");
+                successBar.classList.remove("visible");
+            }
 
-    function val(id) {
-        const el = document.getElementById(id);
-        return el ? el.value.trim() : "";
-    }
+            function val(id) {
+                const el = document.getElementById(id);
+                return el ? el.value.trim() : "";
+            }
 
-    // ── Mode switching ────────────────────────────────
+            // ── Mode switching ────────────────────────────────
 
-    function setMode(m) {
-        mode = m;
-        step = 1;
-        clearAlerts();
+            function setMode(m) {
+                mode = m;
+                step = 1;
+                clearAlerts();
 
-        if (m === "login") {
-            loginTab.classList.add("active");
-            registerTab.classList.remove("active");
-            submitBtn.textContent = "Sign In";
-            document.getElementById("password").setAttribute("autocomplete", "current-password");
-            stepIndicator.classList.remove("visible");
-            step2Fields.classList.add("hidden");
-            step1Fields.classList.remove("hidden");
-            backBtn.classList.add("hidden");
-        } else {
-            registerTab.classList.add("active");
-            loginTab.classList.remove("active");
-            submitBtn.textContent = "Continue";
-            document.getElementById("password").setAttribute("autocomplete", "new-password");
-            stepIndicator.classList.add("visible");
-            setStep(1);
-        }
-    }
+                if (m === "login") {
+                    loginTab.classList.add("active");
+                    registerTab.classList.remove("active");
+                    submitBtn.textContent = "Sign In";
+                    document.getElementById("password").setAttribute("autocomplete", "current-password");
+                    stepIndicator.classList.remove("visible");
+                    step2Fields.classList.add("hidden");
+                    step1Fields.classList.remove("hidden");
+                    backBtn.classList.add("hidden");
+                } else {
+                    registerTab.classList.add("active");
+                    loginTab.classList.remove("active");
+                    submitBtn.textContent = "Continue";
+                    document.getElementById("password").setAttribute("autocomplete", "new-password");
+                    stepIndicator.classList.add("visible");
+                    setStep(1);
+                }
+            }
 
-    function setStep(s) {
-        step = s;
-        clearAlerts();
+            function setStep(s) {
+                step = s;
+                clearAlerts();
 
-        if (s === 1) {
-            step1Fields.classList.remove("hidden");
-            step2Fields.classList.add("hidden");
-            backBtn.classList.add("hidden");
-            submitBtn.textContent = "Continue";
-            pip1.className = "step-pip active";
-            pip2.className = "step-pip";
-            stepLabel.textContent = "Account credentials";
-        } else {
-            step1Fields.classList.add("hidden");
-            step2Fields.classList.remove("hidden");
-            backBtn.classList.remove("hidden");
-            submitBtn.textContent = "Create Account";
-            pip1.className = "step-pip done";
-            pip1.textContent = "✓";
-            pip2.className = "step-pip active";
-            stepLabel.textContent = "Profile info (optional)";
-        }
-    }
+                if (s === 1) {
+                    step1Fields.classList.remove("hidden");
+                    step2Fields.classList.add("hidden");
+                    backBtn.classList.add("hidden");
+                    submitBtn.textContent = "Continue";
+                    pip1.className = "step-pip active";
+                    pip2.className = "step-pip";
+                    stepLabel.textContent = "Account credentials";
+                } else {
+                    step1Fields.classList.add("hidden");
+                    step2Fields.classList.remove("hidden");
+                    backBtn.classList.remove("hidden");
+                    submitBtn.textContent = "Create Account";
+                    pip1.className = "step-pip done";
+                    pip1.textContent = "✓";
+                    pip2.className = "step-pip active";
+                    stepLabel.textContent = "Profile info (optional)";
+                }
+            }
 
-    loginTab.onclick    = () => setMode("login");
-    registerTab.onclick = () => setMode("register");
-    backBtn.onclick     = () => setStep(1);
+            loginTab.onclick = () => setMode("login");
+            registerTab.onclick = () => setMode("register");
+            backBtn.onclick = () => setStep(1);
 
-    // ── OIDC params ───────────────────────────────────
+            // ── OIDC params ───────────────────────────────────
 
-    function getOidcParams() {
-        const p = new URLSearchParams(window.location.search);
-        return {
-            clientId:              p.get("clientId")              || "{{clientId}}",
-            redirect_uri:          p.get("redirect_uri")          || "{{redirect_uri}}",
-            scope:                 p.get("scope")                 || "{{scope}}" || "openid",
-            state:                 p.get("state")                 || "{{state}}",
-            nonce:                 p.get("nonce")                 || "{{nonce}}",
-            code_challenge:        p.get("code_challenge")        || "{{code_challenge}}",
-            code_challenge_method: p.get("code_challenge_method") || "{{code_challenge_method}}",
-        };
-    }
+            function getOidcParams() {
+                const p = new URLSearchParams(window.location.search);
+                return {
+                    clientId: p.get("clientId") || "{{clientId}}",
+                    redirect_uri: p.get("redirect_uri") || "{{redirect_uri}}",
+                    scope: p.get("scope") || "{{scope}}" || "openid",
+                    state: p.get("state") || "{{state}}",
+                    nonce: p.get("nonce") || "{{nonce}}",
+                    code_challenge: p.get("code_challenge") || "{{code_challenge}}",
+                    code_challenge_method: p.get("code_challenge_method") || "{{code_challenge_method}}",
+                };
+            }
 
-    // ── Submit handler ────────────────────────────────
+            // ── Submit handler ────────────────────────────────
 
-    submitBtn.onclick = async () => {
-        const username = val("username");
-        const password = document.getElementById("password").value;
+            submitBtn.onclick = async () => {
+                const username = val("username");
+                const password = document.getElementById("password").value;
 
-        if (mode === "login") {
-            await doLogin(username, password);
-            return;
-        }
+                if (mode === "login") {
+                    await doLogin(username, password);
+                    return;
+                }
 
-        // Register mode
-        if (step === 1) {
-            if (!username || !password) return showError("Username and password are required.");
-            // Minimal client-side check before advancing
-            if (username.length < 2) return showError("Username must be at least 2 characters.");
-            if (password.length < 8) return showError("Password must be at least 8 characters.");
-            setStep(2);
-            return;
-        }
+                // Register mode
+                if (step === 1) {
+                    if (!username || !password) return showError("Username and password are required.");
+                    // Minimal client-side check before advancing
+                    if (username.length < 2) return showError("Username must be at least 2 characters.");
+                    if (password.length < 8) return showError("Password must be at least 8 characters.");
+                    setStep(2);
+                    return;
+                }
 
-        // Step 2 — submit
-        await doRegister(username, password);
-    };
-
-    async function doLogin(username, password) {
-        if (!username || !password) return showError("Username and password are required.");
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Signing in…";
-
-        try {
-            const params = getOidcParams();
-            const body = { username, password, ...params };
-            if (!body.code_challenge)        delete body.code_challenge;
-            if (!body.code_challenge_method) delete body.code_challenge_method;
-            if (!body.state)  delete body.state;
-            if (!body.nonce)  delete body.nonce;
-
-            const res  = await fetch("/signin", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "Login failed");
-            if (data.redirect) window.location.href = data.redirect;
-        } catch (err) {
-            showError(err.message || "Something went wrong");
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Sign In";
-        }
-    }
-
-    async function doRegister(username, password) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Creating account…";
-
-        try {
-            const payload = {
-                username,
-                password,
-                display_name: val("display_name") || undefined,
-                email:        val("email")        || undefined,
-                avatar_url:   val("avatar_url")   || undefined,
-                bio:          val("bio")          || undefined,
-                organization: val("organization") || undefined,
+                // Step 2 — submit
+                await doRegister(username, password);
             };
-            // Strip undefined keys
-            Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
-            const res  = await fetch("/auth/signup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
+            async function doLogin(username, password) {
+                if (!username || !password) return showError("Username and password are required.");
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Signing in…";
+
+                try {
+                    const params = getOidcParams();
+                    const body = { username, password, ...params };
+                    if (!body.code_challenge) delete body.code_challenge;
+                    if (!body.code_challenge_method) delete body.code_challenge_method;
+                    if (!body.state) delete body.state;
+                    if (!body.nonce) delete body.nonce;
+
+                    const res = await fetch("/signin", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || "Login failed");
+                    if (data.redirect) window.location.href = data.redirect;
+                } catch (err) {
+                    showError(err.message || "Something went wrong");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Sign In";
+                }
+            }
+
+            async function doRegister(username, password) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Creating account…";
+
+                try {
+                    const payload = {
+                        username,
+                        password,
+                        display_name: val("display_name") || undefined,
+                        email: val("email") || undefined,
+                        avatar_url: val("avatar_url") || undefined,
+                        bio: val("bio") || undefined,
+                        organization: val("organization") || undefined,
+                    };
+                    // Strip undefined keys
+                    Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
+
+                    const res = await fetch("/auth/signup", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || "Registration failed");
+
+                    showSuccess("Account created — signing you in…");
+                    // Auto-login after signup
+                    setTimeout(() => {
+                        setMode("login");
+                        document.getElementById("username").value = username;
+                        document.getElementById("password").value = "";
+                    }, 1200);
+                } catch (err) {
+                    showError(err.message || "Something went wrong");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Create Account";
+                }
+            }
+
+            // Enter key support
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") submitBtn.click();
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "Registration failed");
-
-            showSuccess("Account created — signing you in…");
-            // Auto-login after signup
-            setTimeout(() => {
-                setMode("login");
-                document.getElementById("username").value = username;
-                document.getElementById("password").value = "";
-            }, 1200);
-        } catch (err) {
-            showError(err.message || "Something went wrong");
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Create Account";
-        }
-    }
-
-    // Enter key support
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") submitBtn.click();
-    });
-})();
-</script>
+        })();
+    </script>
 
 </body>
+
 </html>

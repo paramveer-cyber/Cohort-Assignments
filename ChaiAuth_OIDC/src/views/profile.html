@@ -683,6 +683,9 @@
             }
         }
     </style>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 </head>
 
 <body>
@@ -690,7 +693,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-brand">
-                <div class="brand-mark"></div>
+                <img src="/icon.png" alt="Logo" width="48" height="48" style="object-fit:contain;display:block;">
                 <span class="brand-name">ChaiAuth</span>
             </a>
         </div>
@@ -854,7 +857,6 @@
                                     <div class="pw-strength-fill" id="pwStrengthFill"
                                         style="width:0;background:var(--red)"></div>
                                 </div>
-                                <div class="pw-strength-label" id="pwStrengthLabel">—</div>
                             </div>
                             <div class="field-wrap">
                                 <label class="field-label" for="confirmPassword">Confirm Password</label>
@@ -1118,7 +1120,6 @@
                 finally { btn.disabled = false; btn.textContent = 'Update Password'; }
             };
 
-            // ── Refresh token ──
             el('refreshTokenBtn').onclick = async () => {
                 try {
                     const res = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });

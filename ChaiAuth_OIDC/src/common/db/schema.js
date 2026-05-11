@@ -17,6 +17,7 @@ export const users = pgTable("users", {
 
 export const clients = pgTable("clients", {
     client_id: uuid("client_id").defaultRandom().primaryKey(),
+    owner_id: uuid("owner_id").notNull().references(() => users.user_id).default("368d68ff-a360-47c7-a9c5-54f4d2910202"),
     client_name: varchar("client_name", { length: 100 }).notNull(),
     client_secret: text("client_secret"),
     client_type: varchar("client_type", { length: 20 }).notNull(),

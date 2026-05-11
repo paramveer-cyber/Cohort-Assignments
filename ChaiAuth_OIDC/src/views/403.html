@@ -137,33 +137,14 @@
             text-decoration: none;
         }
 
-        .nav-logo-mark {
-            width: 32px;
-            height: 32px;
-            background: var(--red);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .site-logo,
+        .brand-mark,
+        .login-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            display: block;
         }
-
-        .nav-logo-mark::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 10px;
-            height: 10px;
-            background: var(--yellow);
-        }
-
-        .nav-logo-mark svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--white);
-        }
-
         .nav-name {
             font-size: 14px;
             font-weight: 900;
@@ -443,6 +424,9 @@
             }
         }
     </style>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 </head>
 
 <body>
@@ -463,9 +447,7 @@
     <nav>
         <a href="/" class="nav-brand">
             <div class="nav-logo-mark">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
+                <img src="/icon.png" alt="ChaiAuth" class="site-logo">
             </div>
             <span class="nav-name">ChaiAuth</span>
         </a>

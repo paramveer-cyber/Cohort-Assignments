@@ -22,14 +22,12 @@ app.use(express.json({ limit: "64kb" }));
 app.use(express.urlencoded({ extended: true, limit: "64kb" }));
 app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, "public")));
 app.get("/health", (_, res) => res.status(200).end());
 
 app.use(oidcRoutes);
-
 app.use("/auth", authRoutes);
-
 app.use(clientsRoutes);
-
 app.use(viewsRoutes);
 
 app.use((req, res) => {

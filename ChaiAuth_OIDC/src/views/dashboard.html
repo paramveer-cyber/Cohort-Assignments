@@ -589,6 +589,14 @@
             display: block;
         }
 
+        .dev-only {
+            display: none;
+        }
+
+        .dev-only.visible {
+            display: block;
+        }
+
         .alert-bar {
             padding: 12px 20px;
             display: flex;
@@ -675,6 +683,9 @@
             }
         }
     </style>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 </head>
 
 <body>
@@ -682,7 +693,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-brand">
-                <div class="brand-mark"></div>
+                <img src="/icon.png" alt="Logo" width="48" height="48" style="object-fit:contain;display:block;">
                 <span class="brand-name">ChaiAuth</span>
             </a>
         </div>
@@ -706,8 +717,8 @@
                 Profile
             </a>
 
-            <div class="nav-section-label admin-only" id="adminNavLabel">Admin</div>
-            <a href="/dashboard/clients" class="nav-item admin-only" id="clientsNavItem">
+            <div class="nav-section-label dev-only" id="adminNavLabel">Developer</div>
+            <a href="/dashboard/clients" class="nav-item dev-only" id="clientsNavItem">
                 <svg viewBox="0 0 16 16" fill="none">
                     <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
                     <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
@@ -715,7 +726,7 @@
                 Clients
                 <span class="nav-badge" id="clientBadge">—</span>
             </a>
-            <a href="/dashboard/clients/new" class="nav-item admin-only" id="newClientNavItem">
+            <a href="/dashboard/clients/new" class="nav-item dev-only" id="newClientNavItem">
                 <svg viewBox="0 0 16 16" fill="none">
                     <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
                     <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
@@ -801,7 +812,7 @@
                 </div>
             </div>
 
-            <div class="quick-actions admin-only" id="quickActions">
+            <div class="quick-actions dev-only" id="quickActions">
                 <a href="/dashboard/clients/new" class="quick-action">
                     <div class="qa-icon">
                         <svg viewBox="0 0 16 16" fill="none">
@@ -853,7 +864,7 @@
             </div>
 
             <div class="two-col">
-                <div class="panel admin-only" id="recentClientsPanel">
+                <div class="panel dev-only" id="recentClientsPanel">
                     <div class="panel-header">
                         <span class="panel-title">Recent Clients</span>
                         <a href="/dashboard/clients" class="panel-action">View All →</a>
@@ -915,6 +926,9 @@
             }
 
             function el(id) { return document.getElementById(id); }
+            function showDevUI() {
+                document.querySelectorAll('.dev-only').forEach(e => e.classList.add('visible'));
+            }
             function showAdminUI() {
                 document.querySelectorAll('.admin-only').forEach(e => e.classList.add('visible'));
             }
@@ -931,19 +945,24 @@
                 el('greetName').textContent = user.display_name || user.name || 'there';
 
                 const isAdmin = user.role === 'admin';
+                const isDev = user.role === 'developer' || isAdmin;
+
                 el('pageSubText').textContent = isAdmin
                     ? 'ChaiAuth admin workspace — full access enabled.'
-                    : 'Your ChaiAuth account overview.';
+                    : isDev
+                        ? 'Your developer workspace — manage your OIDC applications.'
+                        : 'Your ChaiAuth account overview.';
 
+                if (isDev) showDevUI();
                 if (isAdmin) showAdminUI();
 
                 el('authError').classList.add('hidden');
 
-                if (isAdmin) {
+                if (isDev) {
                     loadClients(token);
                 } else {
                     el('statClients').outerHTML = '<div class="stat-card-value" id="statClients">—</div>';
-                    el('statClientsSub').textContent = 'Admin access required';
+                    el('statClientsSub').textContent = 'Developer access required';
                 }
 
                 renderAccountInfo(user);

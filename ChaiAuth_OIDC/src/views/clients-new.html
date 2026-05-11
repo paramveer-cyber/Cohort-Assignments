@@ -1007,6 +1007,9 @@
             }
         }
     </style>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 </head>
 
 <body>
@@ -1014,8 +1017,8 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-brand">
-                <div class="brand-mark"></div>
-                <span class="brand-name">ChaiAuth</span>
+                <img src="/icon.png" alt="Logo" width="48" height="48" style="object-fit:contain;display:block;"> <span
+                    class="brand-name">ChaiAuth</span>
             </a>
         </div>
         <nav class="sidebar-nav">
@@ -1064,7 +1067,7 @@
                 <div class="user-avatar" id="userAvatar">A</div>
                 <div>
                     <div class="user-name" id="userName">Admin</div>
-                    <div class="user-role">ADMIN</div>
+                    <div class="user-role" id="userRole">—</div>
                 </div>
             </div>
             <a href="#" class="btn-logout" id="logoutBtn">Sign Out</a>
@@ -1367,10 +1370,11 @@
             const token = getToken();
             const user = getUser();
             if (!token || !user) { redirectToLogin(); return; }
-            if (user.role !== 'admin') { window.location.href = '/dashboard'; return; }
+            if (user.role !== 'admin' && user.role !== 'developer') { window.location.href = '/dashboard'; return; }
 
             el('userAvatar').textContent = user.name?.[0]?.toUpperCase() ?? 'A';
-            el('userName').textContent = user.name ?? 'Admin';
+            el('userName').textContent = user.name ?? 'User';
+            el('userRole').textContent = user.role?.toUpperCase() ?? 'USER';
 
             el('logoutBtn').onclick = async (e) => {
                 e.preventDefault();

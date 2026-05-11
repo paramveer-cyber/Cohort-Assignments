@@ -74,6 +74,17 @@ export async function updateUserRole(userId, role) {
     return true;
 }
 
+export async function getAllUsers() {
+    return db.select({
+        user_id: users.user_id,
+        username: users.username,
+        display_name: users.display_name,
+        email: users.email,
+        role: users.role,
+        created_at: users.created_at,
+    }).from(users);
+}
+
 export async function checkIfClientExists(clientId) {
     const result = await db.select().from(clients).where(eq(clients.client_id, clientId)).limit(1);
     return result.length > 0;
@@ -85,8 +96,9 @@ export async function returnClient(clientId) {
     return result[0];
 }
 
-export async function insertClient({ clientName, clientSecret, clientType, redirectUris, allowedScopes, pkceRequired }) {
+export async function insertClient({ ownerId, clientName, clientSecret, clientType, redirectUris, allowedScopes, pkceRequired }) {
     const result = await db.insert(clients).values({
+        owner_id: ownerId,
         client_name: clientName,
         client_secret: clientSecret || null,
         client_type: clientType,
@@ -95,6 +107,19 @@ export async function insertClient({ clientName, clientSecret, clientType, redir
         pkce_required: pkceRequired ?? (clientType === "public"),
     }).returning();
     return result[0];
+}
+
+export async function getClientsByOwner(ownerId) {
+    return db.select({
+        client_id: clients.client_id,
+        owner_id: clients.owner_id,
+        client_name: clients.client_name,
+        client_type: clients.client_type,
+        client_redirect_uris: clients.client_redirect_uris,
+        allowed_scopes: clients.allowed_scopes,
+        pkce_required: clients.pkce_required,
+        created_at: clients.created_at,
+    }).from(clients).where(eq(clients.owner_id, ownerId));
 }
 
 export async function insertAuthCode({
