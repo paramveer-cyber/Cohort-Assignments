@@ -28,10 +28,15 @@ export function handleJwks(req, res) {
 
 export async function handleLoginSubmit(req, res, next) {
     try {
-        const { username, password, clientId, redirect_uri, scope, state, nonce, code_challenge, code_challenge_method } = req.body;
+        const {
+            username, password,
+            clientId, redirect_uri, scope, state, nonce,
+            code_challenge, code_challenge_method,
+        } = req.body;
 
         if (!username || !password) return next(ApiError.badRequest("Missing credentials"));
         if (!clientId || !redirect_uri) return next(ApiError.badRequest("Missing OIDC params"));
+        if (!state) return next(ApiError.badRequest("state parameter is required"));
 
         const { user } = await loginUser(username, password);
 

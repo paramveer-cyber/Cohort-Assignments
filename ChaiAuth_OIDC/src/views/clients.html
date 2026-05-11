@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiAuth | Client Management</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --gray3: #2e2e2e;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+            --input-bg: #111;
+            --success: #22c55e;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: var(--gray);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--red);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .brand-mark::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            background: var(--yellow);
+        }
+
+        .brand-name {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            padding: 12px 20px 6px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--gray2);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background: var(--gray2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: var(--red);
+        }
+
+        .nav-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--yellow);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 8px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: var(--black);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content {
+            padding: 32px;
+            flex: 1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            padding: 9px 18px;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #b71c1c;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: none;
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background: rgba(214, 40, 40, 0.15);
+            border-color: var(--red);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 10px;
+        }
+
+        .btn-xs {
+            padding: 4px 9px;
+            font-size: 10px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .alert-error {
+            background: rgba(214, 40, 40, 0.1);
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 6px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        .page-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .search-input-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--gray);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 9px 12px 9px 36px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .search-input::placeholder {
+            color: var(--muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--red);
+        }
+
+        .filter-select {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 12px;
+            padding: 9px 12px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: var(--red);
+        }
+
+        .stats-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .strip-stat {
+            background: var(--gray);
+            padding: 16px 20px;
+        }
+
+        .strip-stat-value {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        .strip-stat-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .clients-table-wrap {
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .clients-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .clients-table th {
+            background: var(--gray);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .clients-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .clients-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .clients-table tr:hover td {
+            background: var(--gray);
+        }
+
+        .clients-table tbody tr {
+            transition: background 0.1s;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .type-confidential {
+            background: rgba(26, 58, 107, 0.4);
+            color: #90cdf4;
+            border: 1px solid rgba(26, 58, 107, 0.6);
+        }
+
+        .type-public {
+            background: rgba(244, 208, 63, 0.1);
+            color: var(--yellow);
+            border: 1px solid rgba(244, 208, 63, 0.3);
+        }
+
+        .scope-pill {
+            display: inline-block;
+            padding: 1px 6px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            margin-right: 3px;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .pkce-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pkce-yes {
+            color: var(--success);
+        }
+
+        .pkce-no {
+            color: var(--muted);
+        }
+
+        .empty-table {
+            padding: 60px 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            background: var(--gray);
+        }
+
+        .empty-geo {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .empty-geo-rect {
+            position: absolute;
+            inset: 0;
+            background: var(--gray2);
+            border: 1px solid var(--border);
+        }
+
+        .empty-geo-accent {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 14px;
+            height: 14px;
+            background: var(--yellow);
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .empty-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .skeleton {
+            background: var(--gray2);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: .4
+            }
+
+            50% {
+                opacity: .8
+            }
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            max-width: 420px;
+            width: 100%;
+            position: relative;
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--yellow);
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: -0.01em;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .modal-body strong {
+            color: var(--white);
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .stats-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .clients-table-wrap {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <div class="brand-mark"></div>
+                <span class="brand-name">ChaiAuth</span>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a href="/dashboard" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="1" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="/dashboard/profile" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Profile
+            </a>
+            <div class="nav-section-label">Admin</div>
+            <a href="/dashboard/clients" class="nav-item active">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                Clients
+            </a>
+            <a href="/dashboard/clients/new" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                New Client
+            </a>
+            <div class="nav-section-label">Docs</div>
+            <a href="/.well-known/openid-configuration" target="_blank" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L1 4v5c0 3.5 3 6 7 7 4-1 7-3.5 7-7V4L8 1z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                OIDC Discovery
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div>
+                    <div class="user-name" id="userName">Admin</div>
+                    <div class="user-role">ADMIN</div>
+                </div>
+            </div>
+            <a href="#" class="btn-logout" id="logoutBtn">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <span class="topbar-title">Client Management</span>
+            <div class="topbar-right">
+                <a href="/dashboard" class="btn btn-outline btn-sm">← Dashboard</a>
+                <a href="/dashboard/clients/new" class="btn btn-primary btn-sm">+ New Client</a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="alert alert-error hidden" id="errorAlert">
+                <span id="errorMsg"></span>
+            </div>
+            <div class="alert alert-success hidden" id="successAlert">
+                <span id="successMsg"></span>
+            </div>
+
+            <div class="page-header">
+                <div>
+                    <div class="page-eyebrow">Admin Panel</div>
+                    <h1 class="page-title">Registered Clients</h1>
+                    <p class="page-sub">Manage OIDC client applications and their configurations.</p>
+                </div>
+            </div>
+
+            <div class="stats-strip">
+                <div class="strip-stat">
+                    <div class="strip-stat-value" id="totalCount">—</div>
+                    <div class="strip-stat-label">Total Clients</div>
+                </div>
+                <div class="strip-stat">
+                    <div class="strip-stat-value" id="confCount">—</div>
+                    <div class="strip-stat-label">Confidential</div>
+                </div>
+                <div class="strip-stat">
+                    <div class="strip-stat-value" id="pubCount">—</div>
+                    <div class="strip-stat-label">Public</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search clients…" />
+                </div>
+                <select class="filter-select" id="typeFilter">
+                    <option value="">All types</option>
+                    <option value="confidential">Confidential</option>
+                    <option value="public">Public</option>
+                </select>
+            </div>
+
+            <div id="tableContainer">
+                <div class="clients-table-wrap">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Type</th>
+                                <th>Scopes</th>
+                                <th>PKCE</th>
+                                <th>Client ID</th>
+                                <th>Created</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody">
+                            <tr>
+                                <td colspan="7">
+                                    <div class="skeleton" style="height:48px;width:100%"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-backdrop hidden" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Delete Client</div>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="deleteClientName">this client</strong>?
+                This action cannot be undone and will invalidate all existing tokens.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-sm" id="deleteCancelBtn">Cancel</button>
+                <button class="btn btn-danger btn-sm" id="deleteConfirmBtn">Delete Client</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const ACCESS_KEY = 'chai_access';
+            const USER_KEY = 'chai_user';
+
+            function getToken() { return localStorage.getItem(ACCESS_KEY); }
+            function getUser() { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; } }
+            function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+            function el(id) { return document.getElementById(id); }
+
+            // ── Shared API helper ─────────────────────────────────────────────
+            async function apiFetch(url, opts = {}) {
+                const token = getToken();
+                opts.headers = { ...(opts.headers || {}), ...(token ? { 'Authorization': `Bearer ${token}` } : {}) };
+                opts.credentials = opts.credentials || 'include';
+                const res = await fetch(url, opts);
+                const newToken = res.headers.get('X-New-Access-Token');
+                if (newToken) localStorage.setItem(ACCESS_KEY, newToken);
+                return res;
+            }
+
+            function redirectToLogin() {
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/auth/login?next=/dashboard/clients';
+            }
+
+            function showError(msg) {
+                el('errorMsg').textContent = msg;
+                el('errorAlert').classList.remove('hidden');
+                el('successAlert').classList.add('hidden');
+                setTimeout(() => el('errorAlert').classList.add('hidden'), 5000);
+            }
+            function showSuccess(msg) {
+                el('successMsg').textContent = msg;
+                el('successAlert').classList.remove('hidden');
+                el('errorAlert').classList.add('hidden');
+                setTimeout(() => el('successAlert').classList.add('hidden'), 4000);
+            }
+
+            let allClients = [];
+            let deleteTarget = null;
+
+            async function init() {
+                const token = getToken();
+                const user = getUser();
+                if (!token || !user) { redirectToLogin(); return; }
+                if (user.role !== 'admin') { window.location.href = '/dashboard'; return; }
+
+                el('userAvatar').textContent = user.name?.[0]?.toUpperCase() ?? 'A';
+                el('userName').textContent = user.name ?? 'Admin';
+
+                el('logoutBtn').onclick = async (e) => {
+                    e.preventDefault();
+                    await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                    localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                    window.location.href = '/';
+                };
+
+                await loadClients(token);
+
+                el('searchInput').addEventListener('input', renderTable);
+                el('typeFilter').addEventListener('change', renderTable);
+
+                el('deleteCancelBtn').onclick = () => { el('deleteModal').classList.add('hidden'); deleteTarget = null; };
+                el('deleteConfirmBtn').onclick = () => doDelete(token);
+            }
+
+            async function loadClients(token) {
+                try {
+                    const res = await apiFetch('/clients');
+                    if (res.status === 401 || res.status === 403) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    allClients = data.data ?? [];
+                    updateStats();
+                    renderTable();
+                } catch {
+                    showError('Failed to load clients. Check your connection.');
+                }
+            }
+
+            function updateStats() {
+                el('totalCount').textContent = allClients.length;
+                el('confCount').textContent = allClients.filter(c => c.client_type === 'confidential').length;
+                el('pubCount').textContent = allClients.filter(c => c.client_type === 'public').length;
+            }
+
+            function renderTable() {
+                const q = el('searchInput').value.toLowerCase();
+                const type = el('typeFilter').value;
+                const filtered = allClients.filter(c => {
+                    const nameMatch = c.client_name.toLowerCase().includes(q) || c.client_id.toLowerCase().includes(q);
+                    const typeMatch = !type || c.client_type === type;
+                    return nameMatch && typeMatch;
+                });
+
+                const tbody = el('clientsTableBody');
+                if (!filtered.length) {
+                    tbody.innerHTML = `
+<tr><td colspan="7">
+<div class="empty-table">
+<div class="empty-geo"><div class="empty-geo-rect"></div><div class="empty-geo-accent"></div></div>
+<div class="empty-title">${allClients.length ? 'No clients match' : 'No clients yet'}</div>
+<div class="empty-sub">${allClients.length ? 'Try a different search or filter.' : 'Register your first OIDC application.'}</div>
+<a href="/dashboard/clients/new" class="btn btn-primary btn-sm">Register Client</a>
+</div>
+</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = filtered.map(c => {
+                    const scopes = (c.allowed_scopes || '').split(' ').map(s =>
+                        `<span class="scope-pill">${escHtml(s)}</span>`
+                    ).join('');
+                    const shortId = c.client_id.slice(0, 8) + '…';
+                    const created = c.created_at ? new Date(c.created_at).toLocaleDateString() : '—';
+
+                    return `
+<tr>
+<td><strong>${escHtml(c.client_name)}</strong></td>
+<td><span class="type-badge type-${c.client_type}">${c.client_type}</span></td>
+<td>${scopes}</td>
+<td>
+<span class="pkce-badge ${c.pkce_required ? 'pkce-yes' : 'pkce-no'}">
+${c.pkce_required
+                            ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 6l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Required'
+                            : '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M4 4l4 4M8 4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Optional'}
+</span>
+</td>
+<td><span style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted)">${escHtml(shortId)}</span></td>
+<td style="color:var(--muted);font-size:12px">${created}</td>
+<td>
+<div class="action-group">
+<a href="/dashboard/clients/${c.client_id}" class="btn btn-outline btn-xs">View</a>
+<button class="btn btn-danger btn-xs" onclick="window._deleteClient('${escHtml(c.client_id)}','${escHtml(c.client_name)}')">Delete</button>
+</div>
+</td>
+</tr>`;
+                }).join('');
+            }
+
+            window._deleteClient = function (id, name) {
+                deleteTarget = { id, name };
+                el('deleteClientName').textContent = name;
+                el('deleteModal').classList.remove('hidden');
+            };
+
+            async function doDelete(token) {
+                if (!deleteTarget) return;
+                el('deleteConfirmBtn').disabled = true;
+                el('deleteConfirmBtn').textContent = 'Deleting…';
+                try {
+                    const res = await apiFetch(`/clients/${deleteTarget.id}`, {
+                        method: 'DELETE',
+                    });
+                    if (!res.ok) {
+                        const d = await res.json().catch(() => ({}));
+                        throw new Error(d.message || 'Delete failed');
+                    }
+                    allClients = allClients.filter(c => c.client_id !== deleteTarget.id);
+                    updateStats();
+                    renderTable();
+                    showSuccess(`Client "${deleteTarget.name}" deleted.`);
+                    el('deleteModal').classList.add('hidden');
+                    deleteTarget = null;
+                } catch (err) {
+                    showError(err.message || 'Failed to delete client.');
+                } finally {
+                    el('deleteConfirmBtn').disabled = false;
+                    el('deleteConfirmBtn').textContent = 'Delete Client';
+                }
+            }
+
+            init();
+        })();
+    </script>
+
+</body>
+
+</html>

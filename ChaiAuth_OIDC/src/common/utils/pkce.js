@@ -27,7 +27,10 @@ export function verifyCodeVerifier({ codeVerifier, codeChallenge, codeChallengeM
             .update(codeVerifier)
             .digest("base64url");
 
-        if (!crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(codeChallenge))) {
+        const a = Buffer.from(computed.padEnd(128, "\0"));
+        const b = Buffer.from(codeChallenge.padEnd(128, "\0"));
+
+        if (computed.length !== codeChallenge.length || !crypto.timingSafeEqual(a, b)) {
             throw ApiError.unauthorized("PKCE verification failed");
         }
         return true;

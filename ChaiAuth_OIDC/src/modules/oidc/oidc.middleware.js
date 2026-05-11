@@ -2,13 +2,26 @@ import ApiError from "../../common/utils/apiError.js";
 import { checkIfClientExists, returnClient } from "../../common/db/db.js";
 import { validatePkceParams } from "../../common/utils/pkce.js";
 
+export function escapeHtml(str) {
+    if (typeof str !== "string") return "";
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;");
+}
+
 export async function validateAuthRequest(req, res, next) {
     try {
-        const { clientId, redirect_uri, response_type } = req.query;
+        const { clientId, redirect_uri, response_type, state } = req.query;
 
         if (!clientId)      return next(ApiError.badRequest("Missing clientId"));
         if (!redirect_uri)  return next(ApiError.badRequest("Missing redirect_uri"));
         if (response_type !== "code") return next(ApiError.badRequest("response_type must be 'code'"));
+
+        if (!state) return next(ApiError.badRequest("state parameter is required"));
+        if (redirect_uri.includes("#")) return next(ApiError.badRequest("redirect_uri must not contain a fragment"));
 
         const exists = await checkIfClientExists(clientId);
         if (!exists) return next(ApiError.notfound("Unknown client"));
@@ -20,14 +33,8 @@ export async function validateAuthRequest(req, res, next) {
 
         const { code_challenge, code_challenge_method } = req.query;
 
-        if (client.pkce_required) {
-            try {
-                validatePkceParams({ codeChallenge: code_challenge, codeChallengeMethod: code_challenge_method });
-            } catch (err) {
-                return next(err);
-            }
-        } else if (code_challenge) {
-            // PKCE optional but provided — validate it if present
+        // Validate PKCE if required OR if optionally provided
+        if (client.pkce_required || code_challenge) {
             try {
                 validatePkceParams({ codeChallenge: code_challenge, codeChallengeMethod: code_challenge_method });
             } catch (err) {

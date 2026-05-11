@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiAuth | Identity Infrastructure for Modern Applications</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --red-dark: #8b0000;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --gray3: #2e2e2e;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 clamp(1rem, 3vw, 3rem);
+            height: 3.75rem;
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-mark {
+            width: 2rem;
+            height: 2rem;
+            background: var(--red);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-mark::after {
+            content: '';
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            width: 0.625rem;
+            height: 0.625rem;
+            background: var(--yellow);
+        }
+
+        .nav-logo-mark svg {
+            width: 1.125rem;
+            height: 1.125rem;
+            fill: var(--white);
+        }
+
+        .nav-name {
+            font-size: 0.875rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-outline {
+            padding: 0.5625rem 1.25rem;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .btn-primary {
+            padding: 0.625rem 1.375rem;
+            background: var(--red);
+            color: var(--white);
+            border: 1px solid var(--red);
+        }
+
+        .btn-primary:hover {
+            background: #b71c1c;
+            border-color: #b71c1c;
+        }
+
+        .btn-xl {
+            padding: 1rem 2.25rem;
+            font-size: 0.75rem;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 3.75rem clamp(1.5rem, 4vw, 3rem) 0;
+        }
+
+        .hero-geo {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .geo-circle-lg {
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            border: 1px solid rgba(26, 58, 107, 0.3);
+        }
+
+        .geo-circle-md {
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: var(--blue);
+            opacity: 0.15;
+        }
+
+        .geo-circle-sm {
+            position: absolute;
+            bottom: 80px;
+            left: 5%;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--yellow);
+            opacity: 0.06;
+        }
+
+        .geo-bar-h {
+            position: absolute;
+            top: 42%;
+            left: 0;
+            width: 30%;
+            height: 4px;
+            background: var(--red);
+            opacity: 0.25;
+        }
+
+        .geo-bar-v {
+            position: absolute;
+            top: 0;
+            left: 55%;
+            width: 4px;
+            height: 35%;
+            background: var(--yellow);
+            opacity: 0.15;
+        }
+
+        .geo-rect-lg {
+            position: absolute;
+            bottom: -60px;
+            right: 15%;
+            width: 200px;
+            height: 200px;
+            background: var(--red);
+            opacity: 0.04;
+        }
+
+        .geo-dot-grid {
+            position: absolute;
+            top: 120px;
+            left: 55%;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+        }
+
+        .geo-dot-grid span {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--muted);
+            opacity: 0.3;
+            display: block;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            padding-top: clamp(3rem, 8vh, 6rem);
+            padding-bottom: clamp(3rem, 8vh, 6rem);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            margin-bottom: 2rem;
+            padding: 0.4375rem 0.875rem 0.4375rem 0.4375rem;
+            background: var(--gray);
+            border: 1px solid var(--border);
+        }
+
+        .badge-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background: var(--yellow);
+            flex-shrink: 0;
+        }
+
+        .badge-text {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .hero-title {
+            font-size: clamp(2.75rem, 7vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title .accent-red { color: var(--red); }
+        .hero-title .accent-yellow { color: var(--yellow); }
+
+        .hero-sub {
+            font-size: clamp(0.9375rem, 1.5vw, 1.125rem);
+            font-weight: 400;
+            color: var(--muted);
+            line-height: 1.65;
+            max-width: 540px;
+            margin-bottom: 3rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 4.5rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 0;
+            border-top: 1px solid var(--border);
+            padding-top: 2.5rem;
+        }
+
+        .stat {
+            padding-right: 2.5rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .stat:last-child {
+            border-right: none;
+            padding-right: 0;
+            padding-left: 2.5rem;
+        }
+
+        .stat:nth-child(2) {
+            padding: 0 2.5rem;
+        }
+
+        .stat-value {
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 0.375rem;
+        }
+
+        .stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        section {
+            padding: clamp(4rem, 10vw, 7.5rem) clamp(1.5rem, 4vw, 3rem);
+        }
+
+        .section-label {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 1.5rem;
+            height: 2px;
+            background: var(--red);
+            display: block;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 3.25rem);
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-sub {
+            font-size: 1.0625rem;
+            color: var(--muted);
+            line-height: 1.65;
+            max-width: 520px;
+        }
+
+        .marquee-wrap {
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 0;
+            background: var(--gray);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 3rem;
+            animation: marquee 24s linear infinite;
+            width: max-content;
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .marquee-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            background: var(--red);
+            flex-shrink: 0;
+        }
+
+        .marquee-text {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        #features {
+            background: var(--gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            margin-top: 4.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .feature-card {
+            background: var(--gray);
+            padding: 2.5rem;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .feature-card:hover {
+            background: var(--gray2);
+        }
+
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .feature-icon-shape {
+            width: 2.5rem;
+            height: 2.5rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .feature-icon-accent {
+            width: 1rem;
+            height: 1rem;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        .feature-name {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.75rem;
+            color: var(--white);
+        }
+
+        .feature-desc {
+            font-size: 0.875rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            margin-top: 1.25rem;
+            padding: 0.25rem 0.625rem;
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--yellow);
+            border: 1px solid rgba(244, 208, 63, 0.2);
+            background: rgba(244, 208, 63, 0.05);
+        }
+
+        #standards {
+            position: relative;
+        }
+
+        .standards-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start;
+            margin-top: 4.5rem;
+        }
+
+        .standard-item {
+            display: flex;
+            gap: 1.25rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .standard-item:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .standard-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            color: var(--red);
+            width: 2rem;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .standard-name {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
+            color: var(--white);
+        }
+
+        .standard-desc {
+            font-size: 0.8125rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .standards-visual {
+            position: sticky;
+            top: 6.25rem;
+        }
+
+        .flow-diagram {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .flow-diagram::before {
+            content: 'OAUTH 2.1 / PKCE FLOW';
+            position: absolute;
+            top: -0.625rem;
+            left: 1.25rem;
+            background: var(--gray);
+            padding: 0 0.5rem;
+            font-size: 0.5625rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .flow-step:last-child {
+            border-bottom: none;
+        }
+
+        .flow-step-num {
+            width: 1.75rem;
+            height: 1.75rem;
+            background: var(--black);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6875rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        .flow-step-num.active {
+            background: var(--red);
+            border-color: var(--red);
+            color: var(--white);
+        }
+
+        .flow-step-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .flow-step-label .highlight {
+            color: var(--yellow);
+        }
+
+        .flow-arrow {
+            margin-left: 1.75rem;
+            padding: 0.25rem 0;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6875rem;
+            color: var(--red);
+            opacity: 0.5;
+        }
+
+        #devex {
+            background: var(--gray);
+            border-top: 1px solid var(--border);
+        }
+
+        .devex-points-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 28rem));
+            gap: 3rem 4rem;
+            margin-top: 4.5rem;
+        }
+
+        .devex-points {
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+        }
+
+        .devex-point {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .devex-point-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            min-width: 2.5rem;
+            background: var(--black);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .devex-point-icon svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .devex-point-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .devex-point-desc {
+            font-size: 0.875rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        #integrations {
+            background: var(--black);
+            border-top: 1px solid var(--border);
+        }
+
+        .integ-inner {
+            max-width: 53.75rem;
+        }
+
+        .integ-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            margin: 2.5rem 0 0;
+        }
+
+        .integ-tab {
+            padding: 0.375rem 0.875rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+            font-family: inherit;
+        }
+
+        .integ-tab:hover {
+            color: var(--white);
+            border-color: #555;
+        }
+
+        .integ-tab.active {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+
+        .integ-panels {
+            margin-top: 1.25rem;
+        }
+
+        .integ-panel {
+            display: none;
+        }
+
+        .integ-panel.active {
+            display: block;
+        }
+
+        .integ-block {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .integ-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.625rem 1rem;
+            border-bottom: 1px solid var(--border);
+            min-height: 2.75rem;
+        }
+
+        .integ-block-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.6875rem;
+            color: var(--muted);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .integ-block-header-left span.file-path {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .integ-block-header .lang-badge {
+            background: var(--black);
+            border: 1px solid var(--border);
+            padding: 0.125rem 0.5rem;
+            font-size: 0.625rem;
+            letter-spacing: 0.07em;
+            color: var(--white);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .integ-copy {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.625rem;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            padding: 0.3125rem 0.75rem;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            font-family: inherit;
+            flex-shrink: 0;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        .integ-copy:hover { color: var(--white); border-color: #555; }
+        .integ-copy.copied { color: #68d391; border-color: #68d391; }
+
+        .integ-code {
+            padding: 1.25rem;
+            font-family: 'DM Mono', 'Fira Code', monospace;
+            font-size: 0.75rem;
+            line-height: 1.9;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--white);
+            display: block;
+        }
+
+        .integ-code .c  { color: #4a5568; }
+        .integ-code .k  { color: var(--yellow); }
+        .integ-code .s  { color: #68d391; }
+        .integ-code .v  { color: #90cdf4; }
+        .integ-code .fn { color: var(--red); }
+        .integ-code .p  { color: #b794f4; }
+
+        #cta {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-geo {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .cta-circle {
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: var(--blue);
+            opacity: 0.08;
+        }
+
+        .cta-rect {
+            position: absolute;
+            bottom: -40px;
+            left: 5%;
+            width: 120px;
+            height: 120px;
+            background: var(--red);
+            opacity: 0.06;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 40rem;
+        }
+
+        .cta-title {
+            font-size: clamp(2.25rem, 5vw, 4rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-sub {
+            font-size: 1.0625rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            max-width: 27.5rem;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem clamp(1.5rem, 4vw, 3rem);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-mark {
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--red);
+            position: relative;
+        }
+
+        .footer-logo-mark::after {
+            content: '';
+            position: absolute;
+            top: -0.1875rem;
+            right: -0.1875rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            background: var(--yellow);
+        }
+
+        .footer-name {
+            font-size: 0.8125rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .footer-tagline {
+            font-size: 0.75rem;
+            color: var(--muted);
+            line-height: 1.5;
+            max-width: 15rem;
+        }
+
+        .footer-col-title {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .footer-col-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }
+
+        .footer-col-links a {
+            font-size: 0.8125rem;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .footer-col-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copy {
+            font-size: 0.6875rem;
+            color: var(--muted);
+        }
+
+        .footer-spec {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .spec-pill {
+            padding: 0.1875rem 0.5rem;
+            background: var(--gray);
+            border: 1px solid var(--border);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--muted);
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(2rem);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-up-delay-1 { transition-delay: 0.1s; }
+        .fade-up-delay-2 { transition-delay: 0.2s; }
+        .fade-up-delay-3 { transition-delay: 0.3s; }
+
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .standards-visual {
+                display: none;
+            }
+
+            .standards-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .devex-points-row {
+                grid-template-columns: 1fr;
+                max-width: 38rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                gap: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+
+            .stat {
+                border-right: none;
+                padding-right: 0;
+            }
+
+            .stat:last-child {
+                padding-left: 0;
+            }
+
+            .stat:nth-child(2) {
+                padding: 0;
+                border-right: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .devex-points-row {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .integ-tabs {
+                gap: 0.25rem;
+            }
+
+            .integ-tab {
+                padding: 0.3125rem 0.625rem;
+                font-size: 0.625rem;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cta-actions {
+                flex-direction: column;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .integ-block-header {
+                flex-wrap: wrap;
+            }
+
+            .integ-block-header-left {
+                order: 1;
+                flex-basis: 100%;
+            }
+
+            .integ-copy {
+                order: 0;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">
+            <div class="nav-logo-mark">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.09v7.82L12 19.82 4 15.91V8.09L12 4.18z" />
+                </svg>
+            </div>
+            <span class="nav-name">ChaiAuth</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#standards">Standards</a></li>
+            <li><a href="#devex">Developer</a></li>
+            <li><a href="/.well-known/openid-configuration" target="_blank">OIDC Config</a></li>
+        </ul>
+
+        <div class="nav-cta">
+            <a href="/auth/login" class="btn btn-outline">Sign In</a>
+            <a href="/dashboard" class="btn btn-primary">Dashboard</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-geo">
+            <div class="geo-circle-lg"></div>
+            <div class="geo-circle-md"></div>
+            <div class="geo-circle-sm"></div>
+            <div class="geo-bar-h"></div>
+            <div class="geo-bar-v"></div>
+            <div class="geo-rect-lg"></div>
+            <div class="geo-dot-grid" id="dotGrid"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-badge fade-up">
+                <div class="badge-dot"></div>
+                <span class="badge-text">OAuth 2.1 &nbsp;·&nbsp; OpenID Connect &nbsp;·&nbsp; PKCE</span>
+            </div>
+
+            <h1 class="hero-title fade-up fade-up-delay-1">
+                Identity<br>
+                infrastructure<br>
+                <span class="accent-red">built</span> to<br>
+                <span class="accent-yellow">last.</span>
+            </h1>
+
+            <p class="hero-sub fade-up fade-up-delay-2">
+                ChaiAuth is a standards-compliant OIDC provider for teams who demand control over their authentication
+                stack — no third-party dependencies, no vendor lock-in.
+            </p>
+
+            <div class="hero-actions fade-up fade-up-delay-3">
+                <a href="/dashboard" class="btn btn-primary btn-xl">Open Dashboard</a>
+                <a href="/.well-known/openid-configuration" class="btn btn-outline btn-xl" target="_blank">
+                    View Discovery Endpoint
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">OAuth<span style="color:var(--red)"> 2.1</span></div>
+                    <div class="stat-label">Specification</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">PKCE<span style="color:var(--yellow)"> +</span></div>
+                    <div class="stat-label">Flow Security</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">RS<span style="color:var(--red)">256</span></div>
+                    <div class="stat-label">Token Signing</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee-wrap">
+        <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
+
+    <section id="features">
+        <div class="section-label">Core Capabilities</div>
+        <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+        <p class="section-sub">Built for teams that want production-grade auth without the SaaS overhead. Deploy
+            anywhere, own everything.</p>
+
+        <div class="features-grid">
+            <div class="feature-card fade-up">
+                <div class="feature-icon">
+                    <svg class="feature-icon-shape" viewBox="0 0 40 40" fill="none">
+                        <rect width="40" height="40" fill="#1a3a6b" opacity="0.3" />
+                        <path d="M20 8L8 14v12l12 6 12-6V14L20 8z" stroke="#f5f0e8" stroke-width="1.5" fill="none" />
+                    </svg>
+                    <svg class="feature-icon-accent" viewBox="0 0 16 16" fill="none">
+                        <rect width="16" height="16" fill="#d62828" />
+                    </svg>
+                </div>
+                <div class="feature-name">OIDC Discovery</div>
+                <div class="feature-desc">Full OpenID Connect Discovery support with JWKS endpoint, metadata, and
+                    standards-compliant well-known configuration.</div>
+                <span class="feature-tag">RFC 8414</span>
+            </div>
+
+            <div class="feature-card fade-up fade-up-delay-1">
+                <div class="feature-icon">
+                    <svg class="feature-icon-shape" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="20" fill="#d62828" opacity="0.15" />
+                        <circle cx="20" cy="20" r="10" stroke="#d62828" stroke-width="1.5" fill="none" />
+                        <circle cx="20" cy="20" r="3" fill="#d62828" />
+                    </svg>
+                    <svg class="feature-icon-accent" viewBox="0 0 16 16" fill="none">
+                        <rect width="16" height="16" fill="#f4d03f" />
+                    </svg>
+                </div>
+                <div class="feature-name">PKCE Enforcement</div>
+                <div class="feature-desc">Mandatory PKCE for public clients. SHA-256 code challenge method prevents
+                    authorization code interception attacks.</div>
+                <span class="feature-tag">OAuth 2.1</span>
+            </div>
+
+            <div class="feature-card fade-up fade-up-delay-2">
+                <div class="feature-icon">
+                    <svg class="feature-icon-shape" viewBox="0 0 40 40" fill="none">
+                        <rect x="4" y="4" width="32" height="32" fill="#f4d03f" opacity="0.1" />
+                        <rect x="10" y="16" width="20" height="14" stroke="#f4d03f" stroke-width="1.5" fill="none" />
+                        <path d="M14 16v-4a6 6 0 0112 0v4" stroke="#f4d03f" stroke-width="1.5" fill="none" />
+                    </svg>
+                    <svg class="feature-icon-accent" viewBox="0 0 16 16" fill="none">
+                        <rect width="16" height="16" fill="#1a3a6b" />
+                    </svg>
+                </div>
+                <div class="feature-name">Confidential &amp; Public Clients</div>
+                <div class="feature-desc">Register any client type. Confidential clients use secrets, public clients use
+                    PKCE. Full redirect URI validation.</div>
+                <span class="feature-tag">RFC 6749</span>
+            </div>
+
+            <div class="feature-card fade-up">
+                <div class="feature-icon">
+                    <svg class="feature-icon-shape" viewBox="0 0 40 40" fill="none">
+                        <rect y="10" width="40" height="4" fill="#d62828" opacity="0.4" />
+                        <rect y="18" width="30" height="4" fill="#d62828" opacity="0.25" />
+                        <rect y="26" width="20" height="4" fill="#d62828" opacity="0.15" />
+                    </svg>
+                    <svg class="feature-icon-accent" viewBox="0 0 16 16" fill="none">
+                        <rect width="16" height="16" fill="#f4d03f" />
+                    </svg>
+                </div>
+                <div class="feature-name">RS256 Signed JWTs</div>
+                <div class="feature-desc">Access tokens and ID tokens signed with RSA-256. Auto-generated key pairs with
+                    JWKS exposure for client verification.</div>
+                <span class="feature-tag">RFC 7519</span>
+            </div>
+
+            <div class="feature-card fade-up fade-up-delay-1">
+                <div class="feature-icon">
+                    <svg class="feature-icon-shape" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="16" fill="none" stroke="#1a3a6b" stroke-width="2" />
+                        <path d="M12 20h16M20 12v16" stroke="#f5f0e8" stroke-width="1.5" />
+                    </svg>
+                    <svg class="feature-icon-accent" viewBox="0 0 16 16" fill="none">
+                        <rect width="16" height="16" fill="#d62828" />
+                    </svg>
+                </div>
+                <div class="feature-name">Token Refresh &amp; Rotation</div>
+                <div class="feature-desc">Secure refresh token rotation with reuse detection. Automatic invalidation on
+                    replay attacks for maximum session security.</div>
+                <span class="feature-tag">RFC 6749 §6</span>
+            </div>
+
+            <div class="feature-card fade-up fade-up-delay-2">
+                <div class="feature-icon">
+                    <svg class="feature-icon-shape" viewBox="0 0 40 40" fill="none">
+                        <rect x="4" y="4" width="14" height="14" fill="none" stroke="#f4d03f" stroke-width="1.5" />
+                        <rect x="22" y="4" width="14" height="14" fill="#d62828" opacity="0.3" />
+                        <rect x="4" y="22" width="14" height="14" fill="#1a3a6b" opacity="0.4" />
+                        <rect x="22" y="22" width="14" height="14" fill="none" stroke="#f5f0e8" stroke-width="1.5"
+                            opacity="0.3" />
+                    </svg>
+                    <svg class="feature-icon-accent" viewBox="0 0 16 16" fill="none">
+                        <rect width="16" height="16" fill="#1a3a6b" />
+                    </svg>
+                </div>
+                <div class="feature-name">Admin Client Management</div>
+                <div class="feature-desc">Full-featured admin panel. Create, configure, and manage OIDC clients without
+                    touching a terminal or writing curl commands.</div>
+                <span class="feature-tag">Role-Based</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="standards">
+        <div class="section-label">Security &amp; Standards</div>
+        <h2 class="section-title">Protocols that<br>security teams trust.</h2>
+
+        <div class="standards-layout">
+            <div class="standards-list">
+                <div class="standard-item fade-up">
+                    <div class="standard-num">01</div>
+                    <div class="standard-content">
+                        <div class="standard-name">OpenID Connect Core 1.0</div>
+                        <div class="standard-desc">Full implementation of the OIDC authorization code flow. ID tokens,
+                            UserInfo claims, and discovery metadata included.</div>
+                    </div>
+                </div>
+                <div class="standard-item fade-up">
+                    <div class="standard-num">02</div>
+                    <div class="standard-content">
+                        <div class="standard-name">OAuth 2.1 Draft</div>
+                        <div class="standard-desc">Built on the latest OAuth 2.1 draft consolidating security best
+                            practices — PKCE mandatory, implicit flow removed.</div>
+                    </div>
+                </div>
+                <div class="standard-item fade-up">
+                    <div class="standard-num">03</div>
+                    <div class="standard-content">
+                        <div class="standard-name">RFC 7519 — JSON Web Tokens</div>
+                        <div class="standard-desc">Compact, URL-safe tokens with RSA-256 signatures. Structured claims
+                            with expiry, nonce binding, and audience validation.</div>
+                    </div>
+                </div>
+                <div class="standard-item fade-up">
+                    <div class="standard-num">04</div>
+                    <div class="standard-content">
+                        <div class="standard-name">RFC 7636 — PKCE</div>
+                        <div class="standard-desc">Code verifier and S256 challenge protect against authorization code
+                            interception. Required for all public clients.</div>
+                    </div>
+                </div>
+                <div class="standard-item fade-up">
+                    <div class="standard-num">05</div>
+                    <div class="standard-content">
+                        <div class="standard-name">RFC 7517 — JSON Web Key Sets</div>
+                        <div class="standard-desc">Public keys exposed via JWKS endpoint for transparent, standard token
+                            verification by any compliant client library.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="standards-visual">
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-step-num active">1</div>
+                        <div class="flow-step-label">Client → <span class="highlight">/authorize</span> + code_challenge</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">2</div>
+                        <div class="flow-step-label">User authenticates via <span class="highlight">/signin</span></div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">3</div>
+                        <div class="flow-step-label">Server issues <span class="highlight">auth_code</span> → redirect</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">4</div>
+                        <div class="flow-step-label">Client → <span class="highlight">/token</span> + code_verifier</div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">5</div>
+                        <div class="flow-step-label">Server verifies PKCE → issues <span class="highlight">JWT</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="devex">
+        <div class="section-label">Developer Experience</div>
+        <h2 class="section-title">Integrate in minutes,<br>not days.</h2>
+
+        <div class="devex-points-row">
+            <div class="devex-point fade-up">
+                <div class="devex-point-icon">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="6" stroke="#d62828" stroke-width="1.5" />
+                        <path d="M5.5 8l2 2 3-3" stroke="#d62828" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="devex-point-title">Standard-compatible</div>
+                    <div class="devex-point-desc">Works with any OIDC-compliant library. NextAuth.js, Passport.js,
+                        Auth.js — they all speak the same protocol.</div>
+                </div>
+            </div>
+
+            <div class="devex-point fade-up fade-up-delay-1">
+                <div class="devex-point-icon">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <rect x="2" y="2" width="12" height="12" stroke="#f4d03f" stroke-width="1.5" fill="none" />
+                        <path d="M6 8h4M8 6v4" stroke="#f4d03f" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="devex-point-title">Admin Panel for Everything</div>
+                    <div class="devex-point-desc">Register clients, configure scopes, manage redirect URIs,
+                        regenerate secrets — all from a clean UI. Zero curl required.</div>
+                </div>
+            </div>
+
+            <div class="devex-point fade-up fade-up-delay-2">
+                <div class="devex-point-icon">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <path d="M2 8h3l2-5 3 10 2-5 1 0h1" stroke="#1a3a6b" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="devex-point-title">Self-hosted &amp; Observable</div>
+                    <div class="devex-point-desc">Run on any Node.js host. Postgres-backed. All auth events stay in
+                        your infrastructure — no data leaves your stack.</div>
+                </div>
+            </div>
+
+            <div class="devex-point fade-up fade-up-delay-3">
+                <div class="devex-point-icon">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <path d="M8 2v4l3 3" stroke="#d62828" stroke-width="1.5" stroke-linecap="round" />
+                        <circle cx="8" cy="8" r="6" stroke="#d62828" stroke-width="1.5" fill="none" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="devex-point-title">Rate Limited by Default</div>
+                    <div class="devex-point-desc">All sensitive endpoints have sensible rate limits built in.
+                        Brute-force and credential-stuffing protection out of the box.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="integrations">
+        <div class="section-label">Plug-and-Play</div>
+        <h2 class="section-title">Copy. Paste. Done.</h2>
+        <p class="section-sub">Production-ready snippets for every major stack. All examples use standard OIDC — no vendor lock-in.</p>
+
+        <div class="integ-tabs" role="tablist">
+            <button class="integ-tab active" role="tab" data-tab="nextjs">Next.js</button>
+            <button class="integ-tab" role="tab" data-tab="react">React</button>
+            <button class="integ-tab" role="tab" data-tab="express">Express</button>
+            <button class="integ-tab" role="tab" data-tab="vue">Vue</button>
+            <button class="integ-tab" role="tab" data-tab="angular">Angular</button>
+            <button class="integ-tab" role="tab" data-tab="vanilla">Vanilla JS</button>
+            <button class="integ-tab" role="tab" data-tab="nodejs">Node.js</button>
+            <button class="integ-tab" role="tab" data-tab="fastify">Fastify</button>
+        </div>
+
+        <div class="integ-panels">
+
+            <div class="integ-panel active" id="tab-nextjs">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">next.js</span>
+                            <span class="file-path">app/api/auth/[...nextauth]/route.js · NextAuth v5</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> NextAuth <span class="k">from</span> <span class="s">"next-auth"</span>;
+
+<span class="k">export const</span> { handlers, auth, signIn, signOut } = <span class="fn">NextAuth</span>({
+  providers: [{
+    id:            <span class="s">"chaiauth"</span>,
+    name:          <span class="s">"ChaiAuth"</span>,
+    type:          <span class="s">"oidc"</span>,
+    issuer:        <span class="v">process.env.CHAIAUTH_ISSUER</span>,
+    clientId:      <span class="v">process.env.CHAIAUTH_CLIENT_ID</span>,
+    clientSecret:  <span class="v">process.env.CHAIAUTH_CLIENT_SECRET</span>,
+    checks:        [<span class="s">"pkce"</span>, <span class="s">"state"</span>],
+  }],
+});</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-react">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">react</span>
+                            <span class="file-path">src/auth.js · oidc-client-ts</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> { UserManager } <span class="k">from</span> <span class="s">"oidc-client-ts"</span>;
+
+<span class="k">export const</span> userManager = <span class="k">new</span> <span class="fn">UserManager</span>({
+  authority:              <span class="s">"https://auth.yourapp.com"</span>,
+  client_id:              <span class="s">"YOUR_CLIENT_ID"</span>,
+  redirect_uri:           <span class="s">`${window.location.origin}/callback`</span>,
+  scope:                  <span class="s">"openid profile email"</span>,
+  response_type:          <span class="s">"code"</span>,
+  automaticSilentRenew:   <span class="p">true</span>,
+});
+
+<span class="k">export const</span> login = () =&gt; userManager.<span class="fn">signinRedirect</span>();
+<span class="k">export const</span> handleCallback = () =&gt; userManager.<span class="fn">signinRedirectCallback</span>();
+<span class="k">export const</span> getUser = () =&gt; userManager.<span class="fn">getUser</span>();</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-express">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">express</span>
+                            <span class="file-path">app.js · passport-openidconnect</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> passport  <span class="k">from</span> <span class="s">"passport"</span>;
+<span class="k">import</span> { Strategy } <span class="k">from</span> <span class="s">"passport-openidconnect"</span>;
+
+passport.<span class="fn">use</span>(<span class="k">new</span> <span class="fn">Strategy</span>({
+  issuer:              <span class="s">"https://auth.yourapp.com"</span>,
+  authorizationURL:    <span class="s">"https://auth.yourapp.com/signin"</span>,
+  tokenURL:            <span class="s">"https://auth.yourapp.com/token"</span>,
+  userInfoURL:         <span class="s">"https://auth.yourapp.com/userinfo"</span>,
+  clientID:            <span class="v">process.env.CLIENT_ID</span>,
+  clientSecret:        <span class="v">process.env.CLIENT_SECRET</span>,
+  callbackURL:         <span class="s">"/auth/callback"</span>,
+  scope:               [<span class="s">"openid"</span>, <span class="s">"profile"</span>, <span class="s">"email"</span>],
+}, (<span class="v">issuer</span>, <span class="v">profile</span>, <span class="v">done</span>) =&gt; <span class="fn">done</span>(<span class="p">null</span>, profile)));
+
+app.<span class="fn">get</span>(<span class="s">"/login"</span>, passport.<span class="fn">authenticate</span>(<span class="s">"openidconnect"</span>));
+app.<span class="fn">get</span>(<span class="s">"/auth/callback"</span>, passport.<span class="fn">authenticate</span>(<span class="s">"openidconnect"</span>, {
+  successRedirect: <span class="s">"/dashboard"</span>,
+  failureRedirect: <span class="s">"/login"</span>,
+}));</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-vue">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">vue</span>
+                            <span class="file-path">src/composables/useAuth.js · oidc-client-ts</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> { ref } <span class="k">from</span> <span class="s">"vue"</span>;
+<span class="k">import</span> { UserManager } <span class="k">from</span> <span class="s">"oidc-client-ts"</span>;
+
+<span class="k">const</span> mgr = <span class="k">new</span> <span class="fn">UserManager</span>({
+  authority:    <span class="s">"https://auth.yourapp.com"</span>,
+  client_id:    <span class="s">"YOUR_CLIENT_ID"</span>,
+  redirect_uri: <span class="s">`${window.location.origin}/callback`</span>,
+  scope:        <span class="s">"openid profile email"</span>,
+  response_type:<span class="s">"code"</span>,
+});
+
+<span class="k">export function</span> <span class="fn">useAuth</span>() {
+  <span class="k">const</span> user = <span class="fn">ref</span>(<span class="p">null</span>);
+
+  <span class="k">async function</span> <span class="fn">init</span>() { user.value = <span class="k">await</span> mgr.<span class="fn">getUser</span>(); }
+
+  <span class="k">const</span> login  = () =&gt; mgr.<span class="fn">signinRedirect</span>();
+  <span class="k">const</span> logout = () =&gt; mgr.<span class="fn">signoutRedirect</span>();
+
+  <span class="k">return</span> { user, init, login, logout };
+}</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-angular">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">angular</span>
+                            <span class="file-path">auth.config.ts · angular-oauth2-oidc</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> { AuthConfig } <span class="k">from</span> <span class="s">"angular-oauth2-oidc"</span>;
+
+<span class="k">export const</span> authConfig: AuthConfig = {
+  issuer:                <span class="s">"https://auth.yourapp.com"</span>,
+  clientId:              <span class="s">"YOUR_CLIENT_ID"</span>,
+  redirectUri:           <span class="s">`${window.location.origin}/callback`</span>,
+  scope:                 <span class="s">"openid profile email"</span>,
+  responseType:          <span class="s">"code"</span>,
+  useSilentRefresh:      <span class="p">true</span>,
+  showDebugInformation:  <span class="p">false</span>,
+};
+
+<span class="k">constructor</span>(private oauthService: OAuthService) {
+  oauthService.<span class="fn">configure</span>(authConfig);
+  oauthService.loadDiscoveryDocumentAndTryLogin().<span class="fn">then</span>(() =&gt; {
+    <span class="k">if</span> (!oauthService.hasValidIdToken()) oauthService.<span class="fn">initCodeFlow</span>();
+  });
+}</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-vanilla">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">vanilla js</span>
+                            <span class="file-path">auth.js · no dependencies</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">const</span> AUTH    = <span class="s">"https://auth.yourapp.com"</span>;
+<span class="k">const</span> CLIENT = <span class="s">"YOUR_CLIENT_ID"</span>;
+<span class="k">const</span> CB     = <span class="s">`${location.origin}/callback`</span>;
+
+<span class="k">async function</span> <span class="fn">login</span>() {
+  <span class="k">const</span> verifier  = <span class="fn">pkceVerifier</span>();
+  <span class="k">const</span> challenge = <span class="k">await</span> <span class="fn">pkceChallenge</span>(verifier);
+  <span class="k">const</span> state     = <span class="fn">crypto</span>.randomUUID();
+  sessionStorage.<span class="fn">setItem</span>(<span class="s">"pkce_v"</span>, verifier);
+  sessionStorage.<span class="fn">setItem</span>(<span class="s">"state"</span>, state);
+  location.href = <span class="s">`${AUTH}/signin?client_id=${CLIENT}&amp;redirect_uri=${encodeURIComponent(CB)}&amp;response_type=code&amp;scope=openid+profile&amp;state=${state}&amp;code_challenge=${challenge}&amp;code_challenge_method=S256`</span>;
+}
+
+<span class="k">async function</span> <span class="fn">handleCallback</span>() {
+  <span class="k">const</span> p    = <span class="k">new</span> <span class="fn">URLSearchParams</span>(location.search);
+  <span class="k">const</span> code = p.<span class="fn">get</span>(<span class="s">"code"</span>);
+  <span class="k">const</span> res  = <span class="k">await</span> <span class="fn">fetch</span>(<span class="s">`${AUTH}/token`</span>, {
+    method: <span class="s">"POST"</span>, headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/x-www-form-urlencoded"</span> },
+    body: <span class="k">new</span> <span class="fn">URLSearchParams</span>({ grant_type: <span class="s">"authorization_code"</span>, code,
+           client_id: CLIENT, redirect_uri: CB, code_verifier: sessionStorage.<span class="fn">getItem</span>(<span class="s">"pkce_v"</span>) }),
+  });
+  <span class="k">const</span> tokens = <span class="k">await</span> res.<span class="fn">json</span>();
+  localStorage.<span class="fn">setItem</span>(<span class="s">"access_token"</span>, tokens.access_token);
+}</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-nodejs">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">node.js</span>
+                            <span class="file-path">auth.js · openid-client</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> { Issuer } <span class="k">from</span> <span class="s">"openid-client"</span>;
+
+<span class="k">const</span> issuer = <span class="k">await</span> Issuer.<span class="fn">discover</span>(<span class="s">"https://auth.yourapp.com"</span>);
+<span class="k">const</span> client = <span class="k">new</span> issuer.<span class="fn">Client</span>({
+  client_id:     <span class="v">process.env.CLIENT_ID</span>,
+  client_secret: <span class="v">process.env.CLIENT_SECRET</span>,
+  redirect_uris: [<span class="s">"https://yourapp.com/callback"</span>],
+  response_types:[<span class="s">"code"</span>],
+});
+
+<span class="k">const</span> { code_verifier, code_challenge } = generators.<span class="fn">codeChallenge</span>();
+<span class="k">const</span> url = client.<span class="fn">authorizationUrl</span>({
+  scope: <span class="s">"openid profile email"</span>,
+  code_challenge, code_challenge_method: <span class="s">"S256"</span>,
+  state: generators.<span class="fn">state</span>(),
+});
+
+<span class="k">const</span> params = client.<span class="fn">callbackParams</span>(req);
+<span class="k">const</span> tokens = <span class="k">await</span> client.<span class="fn">oauthCallback</span>(redirectUri, params, { code_verifier });</code>
+                </div>
+            </div>
+
+            <div class="integ-panel" id="tab-fastify">
+                <div class="integ-block">
+                    <div class="integ-block-header">
+                        <div class="integ-block-header-left">
+                            <span class="lang-badge">fastify</span>
+                            <span class="file-path">app.js · @fastify/oauth2</span>
+                        </div>
+                        <button class="integ-copy" onclick="copySnippet(this)">Copy</button>
+                    </div>
+                    <code class="integ-code"><span class="k">import</span> fastifyOAuth2 <span class="k">from</span> <span class="s">"@fastify/oauth2"</span>;
+
+app.<span class="fn">register</span>(fastifyOAuth2, {
+  name:         <span class="s">"chaiAuth"</span>,
+  credentials:  { client: { id: <span class="v">CLIENT_ID</span>, secret: <span class="v">CLIENT_SECRET</span> } },
+  startRedirectPath: <span class="s">"/login"</span>,
+  callbackUri:       <span class="s">"https://yourapp.com/callback"</span>,
+  discovery:    { issuer: <span class="s">"https://auth.yourapp.com"</span> },
+  scope:        [<span class="s">"openid"</span>, <span class="s">"profile"</span>, <span class="s">"email"</span>],
+  pkce:         <span class="s">"S256"</span>,
+});
+
+app.<span class="fn">get</span>(<span class="s">"/callback"</span>, <span class="k">async</span> (req, reply) =&gt; {
+  <span class="k">const</span> tokens = <span class="k">await</span> app.chaiAuth.<span class="fn">getAccessTokenFromAuthorizationCodeFlow</span>(req);
+  reply.<span class="fn">send</span>({ access_token: tokens.token.access_token });
+});</code>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="cta">
+        <div class="cta-geo">
+            <div class="cta-circle"></div>
+            <div class="cta-rect"></div>
+        </div>
+        <div class="cta-content">
+            <div class="section-label">Get Started</div>
+            <h2 class="cta-title">Auth your way.<br><span style="color:var(--red)">Own</span> it.</h2>
+            <p class="cta-sub">Stop duct-taping third-party auth SDKs. ChaiAuth puts you in control —
+                standards-compliant, self-hosted, and designed to scale.</p>
+            <div class="cta-actions">
+                <a href="/dashboard" class="btn btn-primary btn-xl">Open Dashboard</a>
+                <a href="/.well-known/openid-configuration" class="btn btn-outline btn-xl" target="_blank">OIDC Discovery</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="/" class="footer-logo">
+                    <div class="footer-logo-mark"></div>
+                    <span class="footer-name">ChaiAuth</span>
+                </a>
+                <p class="footer-tagline">Identity infrastructure for modern applications. Standards-compliant.
+                    Self-hosted. Yours.</p>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Product</div>
+                <ul class="footer-col-links">
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/dashboard/clients">Client Management</a></li>
+                    <li><a href="/dashboard/profile">Profile</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Protocol</div>
+                <ul class="footer-col-links">
+                    <li><a href="/.well-known/openid-configuration" target="_blank">OIDC Discovery</a></li>
+                    <li><a href="/open-certs" target="_blank">JWKS Endpoint</a></li>
+                    <li><a href="#standards">Standards</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Account</div>
+                <ul class="footer-col-links">
+                    <li><a href="/auth/login">Sign In</a></li>
+                    <li><a href="/auth/login#register">Create Account</a></li>
+                    <li><a href="/auth/logout">Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; 2025 ChaiAuth. Built with care and cryptography.</span>
+            <div class="footer-spec">
+                <span class="spec-pill">OAuth 2.1</span>
+                <span class="spec-pill">OIDC</span>
+                <span class="spec-pill">RS256</span>
+                <span class="spec-pill">PKCE</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const grid = document.getElementById('dotGrid');
+            for (let i = 0; i < 30; i++) {
+                const span = document.createElement('span');
+                grid.appendChild(span);
+            }
+
+            const items = [
+                'OpenID Connect', 'OAuth 2.1', 'PKCE Enforced', 'RS256 Tokens',
+                'JWKS Discovery', 'Refresh Rotation', 'Admin Dashboard', 'Self-Hosted',
+                'Rate Limited', 'Confidential Clients', 'Public Clients', 'Scope Control'
+            ];
+            const track = document.getElementById('marqueeTrack');
+            const doubled = [...items, ...items];
+            doubled.forEach(text => {
+                const div = document.createElement('div');
+                div.className = 'marquee-item';
+                div.innerHTML = `<div class="marquee-dot"></div><span class="marquee-text">${text}</span>`;
+                track.appendChild(div);
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        observer.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+            setTimeout(() => {
+                document.querySelectorAll('.hero .fade-up').forEach(el => el.classList.add('visible'));
+            }, 50);
+
+            document.querySelectorAll('.integ-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.integ-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.integ-panel').forEach(p => p.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+                });
+            });
+        })();
+
+        function copySnippet(btn) {
+            const code = btn.closest('.integ-block').querySelector('.integ-code');
+            navigator.clipboard.writeText(code.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>

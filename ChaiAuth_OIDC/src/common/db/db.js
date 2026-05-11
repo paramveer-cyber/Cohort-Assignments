@@ -68,15 +68,6 @@ export async function updateRefreshToken(username, refreshToken) {
     return true;
 }
 
-export async function updateRefreshTokenById(userId, refreshToken) {
-    const result = await db
-        .update(users)
-        .set({ refresh_token: refreshToken })
-        .where(eq(users.user_id, userId));
-    if (result.rowCount === 0) throw ApiError.notfound("User not found!");
-    return true;
-}
-
 export async function updateUserRole(userId, role) {
     const result = await db.update(users).set({ role }).where(eq(users.user_id, userId));
     if (result.rowCount === 0) throw ApiError.notfound("User not found!");

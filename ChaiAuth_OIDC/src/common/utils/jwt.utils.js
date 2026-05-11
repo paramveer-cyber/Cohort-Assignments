@@ -32,9 +32,3 @@ export function signOidcToken(payload, expiresIn) {
     });
 }
 
-export function verifyOidcToken(token) {
-    return jwt.verify(token, getPublicKey(), {
-        algorithms: ["RS256"],
-        issuer: ISSUER,
-    });
-}

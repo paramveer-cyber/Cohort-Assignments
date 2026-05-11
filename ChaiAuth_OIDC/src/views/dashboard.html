@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiAuth | Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --gray3: #2e2e2e;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+            --input-bg: #111;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: var(--gray);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--red);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .brand-mark::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            background: var(--yellow);
+        }
+
+        .brand-name {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            padding: 12px 20px 6px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--gray2);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background: var(--gray2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: var(--red);
+        }
+
+        .nav-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            padding: 2px 7px;
+            background: var(--red);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--white);
+            border-radius: 2px;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--yellow);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 8px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: var(--black);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .content {
+            padding: 32px;
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        .page-sub {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--gray);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+        .stat-card-red::after {
+            background: var(--red);
+        }
+
+        .stat-card-yellow::after {
+            background: var(--yellow);
+        }
+
+        .stat-card-blue::after {
+            background: var(--blue);
+        }
+
+        .stat-card-green::after {
+            background: var(--success);
+        }
+
+        .stat-card-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .stat-card-value {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .stat-loading {
+            width: 48px;
+            height: 36px;
+            background: var(--gray3);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0.4;
+            }
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: var(--gray);
+            border: 1px solid var(--border);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .panel-action {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .panel-action:hover {
+            color: var(--white);
+        }
+
+        .panel-body {
+            padding: 20px;
+        }
+
+        .client-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .client-row:last-child {
+            border-bottom: none;
+        }
+
+        .client-type-tag {
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0;
+        }
+
+        .tag-confidential {
+            background: var(--blue);
+        }
+
+        .tag-public {
+            background: var(--yellow);
+        }
+
+        .client-name-text {
+            font-size: 13px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .client-id-text {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .client-row-action {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .client-row-action:hover {
+            color: var(--white);
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .empty-geo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+
+        .empty-geo-rect {
+            position: absolute;
+            inset: 0;
+            background: var(--gray2);
+            border: 1px solid var(--border);
+        }
+
+        .empty-geo-accent {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            background: var(--yellow);
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .empty-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .quick-action {
+            background: var(--gray);
+            padding: 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: background 0.15s;
+        }
+
+        .quick-action:hover {
+            background: var(--gray2);
+        }
+
+        .qa-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--black);
+            border: 1px solid var(--border);
+        }
+
+        .qa-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .qa-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 2px;
+        }
+
+        .qa-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .admin-only {
+            display: none;
+        }
+
+        .admin-only.visible {
+            display: block;
+        }
+
+        .alert-bar {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .alert-error {
+            background: rgba(214, 40, 40, 0.1);
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            padding: 9px 18px;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #b71c1c;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <div class="brand-mark"></div>
+                <span class="brand-name">ChaiAuth</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a href="/dashboard" class="nav-item active">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="1" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="/dashboard/profile" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Profile
+            </a>
+
+            <div class="nav-section-label admin-only" id="adminNavLabel">Admin</div>
+            <a href="/dashboard/clients" class="nav-item admin-only" id="clientsNavItem">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                Clients
+                <span class="nav-badge" id="clientBadge">—</span>
+            </a>
+            <a href="/dashboard/clients/new" class="nav-item admin-only" id="newClientNavItem">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                New Client
+            </a>
+
+            <div class="nav-section-label">Docs</div>
+            <a href="/.well-known/openid-configuration" target="_blank" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L1 4v5c0 3.5 3 6 7 7 4-1 7-3.5 7-7V4L8 1z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                OIDC Discovery
+            </a>
+            <a href="/open-certs" target="_blank" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="2" y="2" width="12" height="12" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                JWKS Keys
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">?</div>
+                <div>
+                    <div class="user-name" id="userName">Loading…</div>
+                    <div class="user-role" id="userRole">—</div>
+                </div>
+            </div>
+            <a href="#" class="btn-logout" id="logoutBtn">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <span class="topbar-title">Dashboard</span>
+            <div class="topbar-right">
+                <div class="topbar-status">
+                    <div class="status-dot"></div>
+                    <span id="systemStatus">System nominal</span>
+                </div>
+                <a href="/" class="btn btn-outline btn-sm">← Home</a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="alert-bar alert-error hidden" id="authError">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v4M8 10.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span id="authErrorMsg">Authentication required. Please sign in.</span>
+            </div>
+
+            <div class="page-header">
+                <div class="page-eyebrow">Overview</div>
+                <h1 class="page-title">Welcome back, <span id="greetName">…</span></h1>
+                <p class="page-sub" id="pageSubText">Loading your workspace…</p>
+            </div>
+
+            <div class="stats-row" id="statsRow">
+                <div class="stat-card stat-card-red">
+                    <div class="stat-card-label">Registered Clients</div>
+                    <div class="stat-loading" id="statClients"></div>
+                    <div class="stat-card-sub" id="statClientsSub" style="margin-top:8px"></div>
+                </div>
+                <div class="stat-card stat-card-yellow">
+                    <div class="stat-card-label">Auth Provider</div>
+                    <div class="stat-card-value">OIDC</div>
+                    <div class="stat-card-sub">OpenID Connect 1.0</div>
+                </div>
+                <div class="stat-card stat-card-blue">
+                    <div class="stat-card-label">Token Algorithm</div>
+                    <div class="stat-card-value">RS256</div>
+                    <div class="stat-card-sub">RSA + SHA-256</div>
+                </div>
+                <div class="stat-card stat-card-green">
+                    <div class="stat-card-label">PKCE</div>
+                    <div class="stat-card-value">S256</div>
+                    <div class="stat-card-sub">Required on public clients</div>
+                </div>
+            </div>
+
+            <div class="quick-actions admin-only" id="quickActions">
+                <a href="/dashboard/clients/new" class="quick-action">
+                    <div class="qa-icon">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <rect x="2" y="2" width="12" height="12" stroke="var(--yellow)" stroke-width="1.5" />
+                            <path d="M8 5v6M5 8h6" stroke="var(--yellow)" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="qa-title">Register Client</div>
+                        <div class="qa-sub">Add a new OIDC application</div>
+                    </div>
+                </a>
+                <a href="/dashboard/clients" class="quick-action">
+                    <div class="qa-icon">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <rect x="1" y="3" width="14" height="10" stroke="var(--red)" stroke-width="1.5" />
+                            <path d="M5 7h6M5 10h3" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="qa-title">Manage Clients</div>
+                        <div class="qa-sub">View, edit, and configure</div>
+                    </div>
+                </a>
+                <a href="/.well-known/openid-configuration" target="_blank" class="quick-action">
+                    <div class="qa-icon">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <path d="M8 1L1 4v5c0 3.5 3 6 7 7 4-1 7-3.5 7-7V4L8 1z" stroke="var(--muted)"
+                                stroke-width="1.5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="qa-title">OIDC Discovery</div>
+                        <div class="qa-sub">View provider metadata</div>
+                    </div>
+                </a>
+                <a href="/open-certs" target="_blank" class="quick-action">
+                    <div class="qa-icon">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <rect x="2" y="2" width="12" height="12" stroke="var(--muted)" stroke-width="1.5" />
+                            <path d="M5 8l2 2 4-4" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="qa-title">JWKS Endpoint</div>
+                        <div class="qa-sub">Public key set</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="two-col">
+                <div class="panel admin-only" id="recentClientsPanel">
+                    <div class="panel-header">
+                        <span class="panel-title">Recent Clients</span>
+                        <a href="/dashboard/clients" class="panel-action">View All →</a>
+                    </div>
+                    <div class="panel-body" id="recentClientsList">
+                        <div class="empty-state">
+                            <div class="stat-loading" style="width:100%; height:80px; background:var(--gray2)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Your Account</span>
+                        <a href="/dashboard/profile" class="panel-action">Edit →</a>
+                    </div>
+                    <div class="panel-body" id="accountInfoBody">
+                        <div class="stat-loading" style="width:100%; height:120px; background:var(--gray2)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Protocol Endpoints</span>
+                </div>
+                <div class="panel-body">
+                    <div id="endpointList"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            const ACCESS_KEY = 'chai_access';
+            const USER_KEY = 'chai_user';
+
+            function getToken() { return localStorage.getItem(ACCESS_KEY); }
+            function getUser() {
+                try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; }
+            }
+
+            // ── Shared API helper: picks up rotated tokens automatically ──────
+            async function apiFetch(url, opts = {}) {
+                const token = getToken();
+                opts.headers = { ...(opts.headers || {}), ...(token ? { 'Authorization': `Bearer ${token}` } : {}) };
+                opts.credentials = opts.credentials || 'include';
+                const res = await fetch(url, opts);
+                const newToken = res.headers.get('X-New-Access-Token');
+                if (newToken) localStorage.setItem(ACCESS_KEY, newToken);
+                return res;
+            }
+
+            function redirectToLogin() {
+                localStorage.removeItem(ACCESS_KEY);
+                localStorage.removeItem(USER_KEY);
+                window.location.href = '/auth/login?next=/dashboard';
+            }
+
+            function el(id) { return document.getElementById(id); }
+            function showAdminUI() {
+                document.querySelectorAll('.admin-only').forEach(e => e.classList.add('visible'));
+            }
+
+            async function init() {
+                const token = getToken();
+                const user = getUser();
+
+                if (!token || !user) { redirectToLogin(); return; }
+
+                el('userAvatar').textContent = user.name?.[0]?.toUpperCase() ?? '?';
+                el('userName').textContent = user.name ?? 'Unknown';
+                el('userRole').textContent = user.role?.toUpperCase() ?? 'USER';
+                el('greetName').textContent = user.display_name || user.name || 'there';
+
+                const isAdmin = user.role === 'admin';
+                el('pageSubText').textContent = isAdmin
+                    ? 'ChaiAuth admin workspace — full access enabled.'
+                    : 'Your ChaiAuth account overview.';
+
+                if (isAdmin) showAdminUI();
+
+                el('authError').classList.add('hidden');
+
+                if (isAdmin) {
+                    loadClients(token);
+                } else {
+                    el('statClients').outerHTML = '<div class="stat-card-value" id="statClients">—</div>';
+                    el('statClientsSub').textContent = 'Admin access required';
+                }
+
+                renderAccountInfo(user);
+                renderEndpoints();
+
+                el('logoutBtn').onclick = async (e) => {
+                    e.preventDefault();
+                    await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                    localStorage.removeItem(ACCESS_KEY);
+                    localStorage.removeItem(USER_KEY);
+                    window.location.href = '/';
+                };
+            }
+
+            async function loadClients(token) {
+                try {
+                    const res = await apiFetch('/clients');
+                    if (res.status === 401 || res.status === 403) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    const list = data.data ?? [];
+
+                    el('clientBadge').textContent = list.length;
+
+                    el('statClients').outerHTML = `<div class="stat-card-value" id="statClients">${list.length}</div>`;
+                    el('statClientsSub').textContent = `${list.filter(c => c.client_type === 'confidential').length} confidential · ${list.filter(c => c.client_type === 'public').length} public`;
+
+                    renderRecentClients(list.slice(-5).reverse());
+                } catch {
+                    el('statClients').outerHTML = '<div class="stat-card-value" id="statClients">—</div>';
+                    el('statClientsSub').textContent = 'Error loading data';
+                }
+            }
+
+            function renderRecentClients(clients) {
+                const container = el('recentClientsList');
+                if (!clients.length) {
+                    container.innerHTML = `
+<div class="empty-state">
+<div class="empty-geo"><div class="empty-geo-rect"></div><div class="empty-geo-accent"></div></div>
+<div class="empty-title">No clients yet</div>
+<div class="empty-sub">Register your first OIDC application to get started.</div>
+<a href="/dashboard/clients/new" class="btn btn-primary btn-sm">Register Client</a>
+</div>`;
+                    return;
+                }
+                container.innerHTML = clients.map(c => `
+<div class="client-row">
+<div class="client-type-tag ${c.client_type === 'confidential' ? 'tag-confidential' : 'tag-public'}"></div>
+<span class="client-name-text">${escHtml(c.client_name)}</span>
+<span class="client-id-text">${c.client_type}</span>
+<a href="/dashboard/clients/${c.client_id}" class="client-row-action">View →</a>
+</div>
+`).join('');
+            }
+
+            function renderAccountInfo(user) {
+                el('accountInfoBody').innerHTML = `
+<div style="display:flex;flex-direction:column;gap:12px;">
+${row('Username', user.name)}
+${row('Role', `<span style="color:var(--yellow);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:0.1em">${user.role}</span>`)}
+${row('User ID', `<span style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted)">${user.id ?? '—'}</span>`)}
+</div>
+<div style="margin-top:20px;">
+<a href="/dashboard/profile" class="btn btn-outline btn-sm">Edit Profile</a>
+</div>
+`;
+            }
+
+            function row(label, value) {
+                return `
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+<span style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">${label}</span>
+<span style="font-size:13px;font-weight:600">${value}</span>
+</div>`;
+            }
+
+            function renderEndpoints() {
+                const base = window.location.origin;
+                const endpoints = [
+                    { name: 'Authorization', url: `${base}/signin`, method: 'GET' },
+                    { name: 'Token Exchange', url: `${base}/token`, method: 'POST' },
+                    { name: 'Sign In Page', url: `${base}/signin`, method: 'GET' },
+                    { name: 'OIDC Discovery', url: `${base}/.well-known/openid-configuration`, method: 'GET' },
+                    { name: 'JWKS Keys', url: `${base}/open-certs`, method: 'GET' },
+                ];
+                el('endpointList').innerHTML = endpoints.map(ep => `
+<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+<span style="font-family:DM Mono,monospace;font-size:9px;font-weight:700;padding:2px 6px;background:${ep.method === 'POST' ? 'rgba(214,40,40,0.15)' : 'rgba(26,58,107,0.3)'};color:${ep.method === 'POST' ? 'var(--red)' : '#90cdf4'};letter-spacing:0.08em">${ep.method}</span>
+<span style="font-size:13px;font-weight:600;flex:1">${ep.name}</span>
+<a href="${ep.url}" target="_blank" style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">${ep.url}</a>
+</div>
+`).join('');
+            }
+
+            function escHtml(str) {
+                return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            }
+
+            init();
+        })();
+    </script>
+
+</body>
+
+</html>

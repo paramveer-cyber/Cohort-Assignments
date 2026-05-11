@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChaiAuth — Sign in to {{client_name}}</title>
+    <title>ChaiAuth | Sign In</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
@@ -106,6 +106,27 @@
             opacity: 0.07;
         }
 
+        .back-link {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .back-link:hover {
+            color: var(--white);
+        }
+
         .card {
             position: relative;
             z-index: 1;
@@ -118,7 +139,6 @@
             box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
         }
 
-        /* Yellow corner accent */
         .card::before {
             content: '';
             position: absolute;
@@ -429,6 +449,13 @@
 
 <body>
 
+    <a href="/" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        Home
+    </a>
+
     <div class="page">
         <div class="page-geo">
             <div class="g-circle"></div>
@@ -441,8 +468,8 @@
         <div class="card">
             <div class="card-header">
                 <div class="brand">ChaiAuth</div>
-                <div class="client-label">Authorizing access to</div>
-                <div class="client-name">{{client_name}}</div>
+                <div class="client-label">Account access</div>
+                <div class="client-name">Sign in to continue</div>
                 <div class="client-divider"></div>
             </div>
 
@@ -485,9 +512,9 @@
                 </div>
                 <div class="field-row">
                     <div class="field-wrap">
-                        <label class="field-label" for="organization">Org / School <span
+                        <label class="field-label" for="organization">Org <span
                                 class="field-hint">optional</span></label>
-                        <input type="text" id="organization" placeholder="e.g. Acme Corp" maxlength="100" />
+                        <input type="text" id="organization" placeholder="Acme Corp" maxlength="100" />
                     </div>
                     <div class="field-wrap">
                         <label class="field-label" for="avatar_url">Avatar URL <span
@@ -527,9 +554,17 @@
             const pip2 = document.getElementById("pip2");
             const stepLabel = document.getElementById("stepLabel");
 
+            const ACCESS_KEY = 'chai_access';
+            const USER_KEY = 'chai_user';
+
             let mode = "login";
             let step = 1;
 
+            const nextUrl = new URLSearchParams(window.location.search).get('next') || '/dashboard';
+
+            if (window.location.hash === '#register') {
+                setTimeout(() => setMode('register'), 0);
+            }
 
             function showError(msg) {
                 successBar.classList.remove("visible");
@@ -553,7 +588,6 @@
                 const el = document.getElementById(id);
                 return el ? el.value.trim() : "";
             }
-
 
             function setMode(m) {
                 mode = m;
@@ -607,21 +641,6 @@
             registerTab.onclick = () => setMode("register");
             backBtn.onclick = () => setStep(1);
 
-
-            function getOidcParams() {
-                const p = new URLSearchParams(window.location.search);
-                return {
-                    clientId: p.get("clientId") || "{{clientId}}",
-                    redirect_uri: p.get("redirect_uri") || "{{redirect_uri}}",
-                    scope: p.get("scope") || "{{scope}}" || "openid",
-                    state: p.get("state") || "{{state}}",
-                    nonce: p.get("nonce") || "{{nonce}}",
-                    code_challenge: p.get("code_challenge") || "{{code_challenge}}",
-                    code_challenge_method: p.get("code_challenge_method") || "{{code_challenge_method}}",
-                };
-            }
-
-
             submitBtn.onclick = async () => {
                 const username = val("username");
                 const password = document.getElementById("password").value;
@@ -631,17 +650,14 @@
                     return;
                 }
 
-                // Register mode
                 if (step === 1) {
                     if (!username || !password) return showError("Username and password are required.");
-                    // Minimal client-side check before advancing
                     if (username.length < 2) return showError("Username must be at least 2 characters.");
                     if (password.length < 8) return showError("Password must be at least 8 characters.");
                     setStep(2);
                     return;
                 }
 
-                // Step 2 — submit
                 await doRegister(username, password);
             };
 
@@ -652,21 +668,31 @@
                 submitBtn.textContent = "Signing in…";
 
                 try {
-                    const params = getOidcParams();
-                    const body = { username, password, ...params };
-                    if (!body.code_challenge) delete body.code_challenge;
-                    if (!body.code_challenge_method) delete body.code_challenge_method;
-                    if (!body.state) delete body.state;
-                    if (!body.nonce) delete body.nonce;
-
-                    const res = await fetch("/signin", {
+                    const res = await fetch("/auth/login", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body),
+                        body: JSON.stringify({ username, password }),
                     });
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.message || "Login failed");
-                    if (data.redirect) window.location.href = data.redirect;
+
+                    localStorage.setItem(ACCESS_KEY, data.data.accessToken);
+                    // Normalize user object to match JWT payload shape used across pages
+                    const rawUser = data.data.user;
+                    const normalizedUser = {
+                        id: rawUser.user_id ?? rawUser.id,
+                        name: rawUser.username ?? rawUser.name,
+                        display_name: rawUser.display_name || rawUser.username || rawUser.name,
+                        email: rawUser.email,
+                        avatar_url: rawUser.avatar_url,
+                        bio: rawUser.bio,
+                        organization: rawUser.organization,
+                        role: rawUser.role,
+                        created_at: rawUser.created_at,
+                    };
+                    localStorage.setItem(USER_KEY, JSON.stringify(normalizedUser));
+
+                    window.location.href = nextUrl;
                 } catch (err) {
                     showError(err.message || "Something went wrong");
                 } finally {
@@ -689,7 +715,6 @@
                         bio: val("bio") || undefined,
                         organization: val("organization") || undefined,
                     };
-                    // Strip undefined keys
                     Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
                     const res = await fetch("/auth/signup", {
@@ -701,7 +726,6 @@
                     if (!res.ok) throw new Error(data.message || "Registration failed");
 
                     showSuccess("Account created — signing you in…");
-                    // Auto-login after signup
                     setTimeout(() => {
                         setMode("login");
                         document.getElementById("username").value = username;
@@ -715,7 +739,6 @@
                 }
             }
 
-            // Enter key support
             document.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") submitBtn.click();
             });

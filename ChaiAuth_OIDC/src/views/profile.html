@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiAuth — Your Profile</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --gray3: #2e2e2e;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+            --input-bg: #111;
+            --success: #22c55e;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: var(--gray);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--red);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .brand-mark::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            background: var(--yellow);
+        }
+
+        .brand-name {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            padding: 12px 20px 6px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--gray2);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background: var(--gray2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: var(--red);
+        }
+
+        .nav-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            padding: 2px 7px;
+            background: var(--red);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--white);
+            border-radius: 2px;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--yellow);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 8px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        /* ── Layout ── */
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: var(--black);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content {
+            padding: 40px 48px;
+            flex: 1;
+            max-width: 960px;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            padding: 9px 18px;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #b71c1c;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: none;
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background: rgba(214, 40, 40, 0.1);
+            border-color: var(--red);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 10px;
+        }
+
+        /* ── Alerts ── */
+        .alert {
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .alert-error {
+            background: rgba(214, 40, 40, 0.1);
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── Profile Header ── */
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 28px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 36px;
+        }
+
+        .avatar-block {
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .avatar-xl {
+            width: 80px;
+            height: 80px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--white);
+            position: relative;
+        }
+
+        .avatar-xl::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: var(--yellow);
+        }
+
+        .avatar-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .profile-identity {
+            flex: 1;
+        }
+
+        .profile-display-name {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .profile-username {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .profile-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .profile-role-badge {
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: rgba(214, 40, 40, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(214, 40, 40, 0.3);
+        }
+
+        .role-user {
+            background: rgba(26, 58, 107, 0.3);
+            color: #90cdf4;
+            border: 1px solid rgba(26, 58, 107, 0.5);
+        }
+
+        .profile-org {
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-email {
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-bio {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-top: 10px;
+            max-width: 500px;
+        }
+
+        /* ── Content Grid ── */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 700px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Panels ── */
+        .panel {
+            background: var(--gray);
+            border: 1px solid var(--border);
+        }
+
+        .panel-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .panel-body {
+            padding: 24px;
+        }
+
+        .panel-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ── Form Fields ── */
+        .field-wrap {
+            margin-bottom: 18px;
+        }
+
+        .field-wrap:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+            line-height: 1.5;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color 0.15s;
+            border-radius: 0;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--muted);
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--red);
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── Info Rows ── */
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-key {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            width: 120px;
+            flex-shrink: 0;
+            padding-top: 1px;
+        }
+
+        .info-val {
+            flex: 1;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        /* ── Password Strength ── */
+        .pw-strength-bar {
+            height: 3px;
+            background: var(--border);
+            margin-top: 8px;
+        }
+
+        .pw-strength-fill {
+            height: 3px;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .pw-strength-label {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── Token Info ── */
+        .token-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .dot-green {
+            background: var(--success);
+        }
+
+        .dot-yellow {
+            background: var(--yellow);
+        }
+
+        .dot-red {
+            background: var(--red);
+        }
+
+        /* ── Skeleton ── */
+        .skeleton {
+            background: var(--gray2);
+            animation: shimmer 1.5s infinite;
+            display: block;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: .4
+            }
+
+            50% {
+                opacity: .8
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <div class="brand-mark"></div>
+                <span class="brand-name">ChaiAuth</span>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a href="/dashboard" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="1" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="/dashboard/profile" class="nav-item active">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Profile
+            </a>
+            <div class="nav-section-label admin-only" id="adminNavLabel" style="display:none">Admin</div>
+            <a href="/dashboard/clients" class="nav-item admin-only" id="clientsNav" style="display:none">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                Clients
+            </a>
+            <a href="/dashboard/clients/new" class="nav-item admin-only" id="newClientNav" style="display:none">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                New Client
+            </a>
+            <div class="nav-section-label">Docs</div>
+            <a href="/.well-known/openid-configuration" target="_blank" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L1 4v5c0 3.5 3 6 7 7 4-1 7-3.5 7-7V4L8 1z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                OIDC Discovery
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="sidebarAvatar">?</div>
+                <div>
+                    <div class="user-name" id="sidebarName">—</div>
+                    <div class="user-role" id="sidebarRole">—</div>
+                </div>
+            </div>
+            <a href="#" class="btn-logout" id="logoutBtn">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <span class="topbar-title">Your Profile</span>
+            <div class="topbar-right">
+                <a href="/dashboard" class="btn btn-outline btn-sm">← Dashboard</a>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <div class="alert alert-error hidden" id="errorAlert">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v4M8 10.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span id="errorMsg"></span>
+            </div>
+            <div class="alert alert-success hidden" id="successAlert">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span id="successMsg"></span>
+            </div>
+
+            <!-- ── Profile Header ── -->
+            <div class="profile-header" id="profileHeader">
+                <div class="avatar-block">
+                    <div class="avatar-xl" id="avatarXl">?</div>
+                </div>
+                <div class="profile-identity">
+                    <div class="profile-display-name skeleton" style="height:28px;width:200px;margin-bottom:8px"
+                        id="displayNameEl"></div>
+                    <div class="profile-username skeleton" style="height:16px;width:140px;margin-bottom:12px"
+                        id="usernameEl"></div>
+                    <div class="profile-meta" id="metaEl"></div>
+                    <div class="profile-bio hidden" id="bioEl"></div>
+                </div>
+            </div>
+
+            <!-- ── Grid ── -->
+            <div class="profile-grid">
+
+                <!-- Edit Profile -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Edit Profile</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="field-wrap">
+                            <label class="field-label" for="editDisplayName">Display Name</label>
+                            <input type="text" id="editDisplayName" maxlength="100"
+                                placeholder="How you appear to others" />
+                        </div>
+                        <div class="field-wrap">
+                            <label class="field-label" for="editEmail">Email</label>
+                            <input type="email" id="editEmail" placeholder="you@example.com" />
+                        </div>
+                        <div class="field-wrap">
+                            <label class="field-label" for="editOrg">Organization</label>
+                            <input type="text" id="editOrg" maxlength="100" placeholder="Your company or team" />
+                        </div>
+                        <div class="field-wrap">
+                            <label class="field-label" for="editAvatarUrl">Avatar URL</label>
+                            <input type="url" id="editAvatarUrl" placeholder="https://..." />
+                            <span class="field-hint">Direct image URL. Square image works best.</span>
+                        </div>
+                        <div class="field-wrap">
+                            <label class="field-label" for="editBio">Bio</label>
+                            <textarea id="editBio" maxlength="280" placeholder="A sentence about yourself…"></textarea>
+                            <span class="field-hint"><span id="bioCount">0</span> / 280 characters</span>
+                        </div>
+                        <button class="btn btn-primary" id="saveProfileBtn" style="width:100%;margin-top:8px">Save
+                            Profile</button>
+                    </div>
+                </div>
+
+                <!-- Account Info -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Account Info</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="accountInfoRows">
+                            <div class="skeleton" style="height:120px"></div>
+                        </div>
+
+                        <div style="height:24px"></div>
+
+                        <!-- Change Password -->
+                        <div style="border-top:1px solid var(--border);padding-top:20px">
+                            <div
+                                style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">
+                                Change Password</div>
+                            <div class="field-wrap">
+                                <label class="field-label" for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="••••••••"
+                                    autocomplete="current-password" />
+                            </div>
+                            <div class="field-wrap">
+                                <label class="field-label" for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" placeholder="••••••••"
+                                    autocomplete="new-password" />
+                                <div class="pw-strength-bar">
+                                    <div class="pw-strength-fill" id="pwStrengthFill"
+                                        style="width:0;background:var(--red)"></div>
+                                </div>
+                                <div class="pw-strength-label" id="pwStrengthLabel">—</div>
+                            </div>
+                            <div class="field-wrap">
+                                <label class="field-label" for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" placeholder="••••••••"
+                                    autocomplete="new-password" />
+                            </div>
+                            <button class="btn btn-outline" id="changePasswordBtn" style="width:100%">Update
+                                Password</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Token Status (full width) -->
+                <div class="panel panel-full">
+                    <div class="panel-header">
+                        <span class="panel-title">Session & Token Status</span>
+                    </div>
+                    <div class="panel-body">
+                        <div
+                            style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
+                            <div style="background:var(--black);padding:20px">
+                                <div
+                                    style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">
+                                    Session</div>
+                                <div class="token-status" id="sessionStatus">
+                                    <div class="status-dot dot-green"></div>
+                                    <span style="font-size:13px;font-weight:600">Active</span>
+                                </div>
+                            </div>
+                            <div style="background:var(--black);padding:20px">
+                                <div
+                                    style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">
+                                    Access Token</div>
+                                <div class="token-status">
+                                    <div class="status-dot dot-green"></div>
+                                    <span style="font-size:13px;font-weight:600">Valid</span>
+                                </div>
+                            </div>
+                            <div style="background:var(--black);padding:20px">
+                                <div
+                                    style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">
+                                    Auth Method</div>
+                                <div
+                                    style="font-size:13px;font-weight:700;font-family:'DM Mono',monospace;color:var(--white)">
+                                    Password</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px;display:flex;gap:12px">
+                            <button class="btn btn-outline btn-sm" id="refreshTokenBtn">Refresh Token</button>
+                            <button class="btn btn-danger btn-sm" id="signOutAllBtn">Sign Out Everywhere</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /profile-grid -->
+
+        </div><!-- /content -->
+    </main>
+
+    <script>
+        (function () {
+            const ACCESS_KEY = 'chai_access';
+            const USER_KEY = 'chai_user';
+            function getToken() { return localStorage.getItem(ACCESS_KEY); }
+            function getUser() { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; } }
+            function el(id) { return document.getElementById(id); }
+            function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+            // ── Shared API helper ─────────────────────────────────────────────
+            async function apiFetch(url, opts = {}) {
+                const token = getToken();
+                opts.headers = { ...(opts.headers || {}), ...(token ? { 'Authorization': `Bearer ${token}` } : {}) };
+                opts.credentials = opts.credentials || 'include';
+                const res = await fetch(url, opts);
+                const newToken = res.headers.get('X-New-Access-Token');
+                if (newToken) localStorage.setItem(ACCESS_KEY, newToken);
+                return res;
+            }
+
+            function redirectToLogin() {
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/auth/login?next=/dashboard/profile';
+            }
+
+            function showError(msg) { el('errorMsg').textContent = msg; el('errorAlert').classList.remove('hidden'); el('successAlert').classList.add('hidden'); setTimeout(() => el('errorAlert').classList.add('hidden'), 6000); }
+            function showSuccess(msg) { el('successMsg').textContent = msg; el('successAlert').classList.remove('hidden'); el('errorAlert').classList.add('hidden'); setTimeout(() => el('successAlert').classList.add('hidden'), 5000); }
+
+            const token = getToken(), user = getUser();
+            if (!token || !user) { redirectToLogin(); return; }
+
+            // Show admin nav items
+            if (user.role === 'admin') {
+                ['adminNavLabel', 'clientsNav', 'newClientNav'].forEach(id => { const e = el(id); if (e) e.style.display = ''; });
+            }
+
+            // Sidebar
+            el('sidebarAvatar').textContent = user.name?.[0]?.toUpperCase() ?? '?';
+            el('sidebarName').textContent = user.name ?? '—';
+            el('sidebarRole').textContent = (user.role ?? 'user').toUpperCase();
+
+            el('logoutBtn').onclick = async (e) => {
+                e.preventDefault();
+                await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/';
+            };
+
+            // ── Load user profile ──
+            async function loadProfile() {
+                try {
+                    const res = await apiFetch('/auth/me');
+                    if (res.status === 401) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    const profile = data.data ?? data;
+                    renderProfile(profile);
+                } catch {
+                    // Fall back to localStorage user
+                    renderProfile(user);
+                }
+            }
+
+            function renderProfile(profile) {
+                // Header
+                const displayName = profile.display_name || profile.name || 'No Name Set';
+                const initial = displayName[0]?.toUpperCase() ?? '?';
+
+                if (profile.avatar_url) {
+                    const img = document.createElement('img');
+                    img.src = profile.avatar_url;
+                    img.className = 'avatar-img';
+                    img.onerror = () => { img.replaceWith(makeAvatarDiv(initial)); };
+                    el('avatarXl').replaceWith(img);
+                } else {
+                    el('avatarXl').textContent = initial;
+                }
+
+                const dnEl = el('displayNameEl');
+                dnEl.className = 'profile-display-name';
+                dnEl.textContent = displayName;
+
+                const unEl = el('usernameEl');
+                unEl.className = 'profile-username';
+                unEl.textContent = '@' + (profile.name ?? profile.username ?? '—');
+
+                const meta = el('metaEl');
+                const roleCls = profile.role === 'admin' ? 'role-admin' : 'role-user';
+                let metaHtml = `<span class="profile-role-badge ${roleCls}">${escHtml(profile.role ?? 'user')}</span>`;
+                if (profile.organization) metaHtml += `<span class="profile-org"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="4" width="10" height="7" stroke="currentColor" stroke-width="1.2"/><path d="M4 4V3a2 2 0 014 0v1" stroke="currentColor" stroke-width="1.2"/></svg>${escHtml(profile.organization)}</span>`;
+                if (profile.email) metaHtml += `<span class="profile-email"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="3" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1 4l5 4 5-4" stroke="currentColor" stroke-width="1.2"/></svg>${escHtml(profile.email)}</span>`;
+                meta.innerHTML = metaHtml;
+
+                if (profile.bio) {
+                    el('bioEl').textContent = profile.bio;
+                    el('bioEl').classList.remove('hidden');
+                }
+
+                // Account info rows
+                const created = profile.created_at ? new Date(profile.created_at).toLocaleDateString() : '—';
+                el('accountInfoRows').innerHTML = [
+                    ['User ID', `<code style="font-family:DM Mono,monospace;font-size:11px">${escHtml(profile.id ?? profile.user_id ?? '—')}</code>`],
+                    ['Username', escHtml(profile.name ?? '—')],
+                    ['Role', `<span style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:0.1em;color:${profile.role === 'admin' ? '#f87171' : '#90cdf4'}">${profile.role ?? 'user'}</span>`],
+                    ['Joined', created],
+                ].map(([k, v]) => `
+    <div class="info-row">
+      <div class="info-key">${k}</div>
+      <div class="info-val">${v}</div>
+    </div>
+  `).join('');
+
+                // Populate edit fields
+                el('editDisplayName').value = profile.display_name ?? '';
+                el('editEmail').value = profile.email ?? '';
+                el('editOrg').value = profile.organization ?? '';
+                el('editAvatarUrl').value = profile.avatar_url ?? '';
+                el('editBio').value = profile.bio ?? '';
+                el('bioCount').textContent = (profile.bio ?? '').length;
+            }
+
+            function makeAvatarDiv(initial) {
+                const d = document.createElement('div');
+                d.className = 'avatar-xl';
+                d.id = 'avatarXl';
+                d.textContent = initial;
+                return d;
+            }
+
+            // Bio character counter
+            el('editBio').addEventListener('input', () => {
+                el('bioCount').textContent = el('editBio').value.length;
+            });
+
+            // Password strength
+            el('newPassword').addEventListener('input', () => {
+                const pw = el('newPassword').value;
+                let score = 0;
+                if (pw.length >= 8) score++;
+                if (pw.length >= 12) score++;
+                if (/[A-Z]/.test(pw)) score++;
+                if (/[0-9]/.test(pw)) score++;
+                if (/[^A-Za-z0-9]/.test(pw)) score++;
+                const pct = (score / 5 * 100) + '%';
+                const colors = ['', 'var(--red)', '#f59e0b', 'var(--yellow)', 'var(--success)'];
+                const labels = ['', 'Very weak', 'Weak', 'Good', 'Strong', 'Very strong'];
+                el('pwStrengthFill').style.width = score ? pct : '0';
+                el('pwStrengthFill').style.background = colors[Math.min(score, 4)] || 'var(--red)';
+                el('pwStrengthLabel').textContent = score ? labels[Math.min(score, 5)] : '—';
+                el('pwStrengthLabel').style.color = score >= 3 ? 'var(--success)' : 'var(--muted)';
+            });
+
+            // ── Save Profile ──
+            el('saveProfileBtn').onclick = async () => {
+                const btn = el('saveProfileBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+                const payload = {};
+                const dn = el('editDisplayName').value.trim(); if (dn) payload.display_name = dn;
+                const em = el('editEmail').value.trim(); if (em) payload.email = em;
+                const org = el('editOrg').value.trim(); if (org) payload.organization = org;
+                const av = el('editAvatarUrl').value.trim(); if (av) payload.avatar_url = av;
+                const bio = el('editBio').value.trim(); if (bio) payload.bio = bio;
+
+                try {
+                    const res = await apiFetch('/auth/me', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (res.status === 401) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Update failed');
+                    // Update local cache — keep normalized shape
+                    const rawUpdated = data.data ?? data;
+                    const updated = {
+                        ...user,
+                        display_name: rawUpdated.display_name ?? payload.display_name ?? user.display_name,
+                        email: rawUpdated.email ?? payload.email ?? user.email,
+                        avatar_url: rawUpdated.avatar_url ?? payload.avatar_url ?? user.avatar_url,
+                        bio: rawUpdated.bio ?? payload.bio ?? user.bio,
+                        organization: rawUpdated.organization ?? payload.organization ?? user.organization,
+                    };
+                    localStorage.setItem(USER_KEY, JSON.stringify(updated));
+                    renderProfile(updated);
+                    showSuccess('Profile updated successfully.');
+                } catch (e) { showError(e.message || 'Failed to update profile.'); }
+                finally { btn.disabled = false; btn.textContent = 'Save Profile'; }
+            };
+
+            // ── Change Password ──
+            el('changePasswordBtn').onclick = async () => {
+                const btn = el('changePasswordBtn'); btn.disabled = true; btn.textContent = 'Updating…';
+                const current = el('currentPassword').value;
+                const pw = el('newPassword').value;
+                const confirm = el('confirmPassword').value;
+                if (!current || !pw) { showError('Both current and new password are required.'); btn.disabled = false; btn.textContent = 'Update Password'; return; }
+                if (pw.length < 8) { showError('New password must be at least 8 characters.'); btn.disabled = false; btn.textContent = 'Update Password'; return; }
+                if (pw !== confirm) { showError('New passwords do not match.'); btn.disabled = false; btn.textContent = 'Update Password'; return; }
+                try {
+                    const res = await apiFetch('/auth/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ current_password: current, new_password: pw }) });
+                    if (res.status === 401) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Password change failed');
+                    el('currentPassword').value = ''; el('newPassword').value = ''; el('confirmPassword').value = '';
+                    el('pwStrengthFill').style.width = '0'; el('pwStrengthLabel').textContent = '—';
+                    showSuccess('Password changed successfully.');
+                } catch (e) { showError(e.message || 'Failed to change password.'); }
+                finally { btn.disabled = false; btn.textContent = 'Update Password'; }
+            };
+
+            // ── Refresh token ──
+            el('refreshTokenBtn').onclick = async () => {
+                try {
+                    const res = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message);
+                    if (data.data?.accessToken) localStorage.setItem(ACCESS_KEY, data.data.accessToken);
+                    showSuccess('Session token refreshed.');
+                } catch (e) { showError(e.message || 'Could not refresh token.'); }
+            };
+
+            // ── Sign out everywhere ──
+            el('signOutAllBtn').onclick = async () => {
+                if (!confirm('Sign out from all sessions?')) return;
+                await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/';
+            };
+
+            loadProfile();
+        })();
+    </script>
+</body>
+
+</html>

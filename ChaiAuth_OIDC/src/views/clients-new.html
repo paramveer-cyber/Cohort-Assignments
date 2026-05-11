@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiAuth | Register New Client</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --red-dark: #8b0000;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --gray3: #2e2e2e;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+            --input-bg: #111;
+            --success: #22c55e;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: var(--gray);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--red);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .brand-mark::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            background: var(--yellow);
+        }
+
+        .brand-name {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            padding: 12px 20px 6px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--gray2);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background: var(--gray2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: var(--red);
+        }
+
+        .nav-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--yellow);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 8px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        /* ── Main ── */
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: var(--black);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            padding: 9px 18px;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #b71c1c;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 10px;
+        }
+
+        .btn-ghost {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.15s;
+        }
+
+        .btn-ghost:hover {
+            color: var(--white);
+        }
+
+        /* ── Content ── */
+        .content {
+            padding: 40px 48px;
+            flex: 1;
+            max-width: 900px;
+        }
+
+        .page-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .page-sub {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        /* ── Step Progress ── */
+        .wizard-steps {
+            display: flex;
+            align-items: center;
+            margin-bottom: 48px;
+            gap: 0;
+        }
+
+        .wstep {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .wstep-num {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: var(--gray);
+            transition: all 0.25s;
+        }
+
+        .wstep.active .wstep-num {
+            background: var(--red);
+            border-color: var(--red);
+            color: var(--white);
+        }
+
+        .wstep.done .wstep-num {
+            background: var(--gray3);
+            border-color: var(--gray3);
+            color: var(--muted);
+        }
+
+        .wstep-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            transition: color 0.25s;
+        }
+
+        .wstep.active .wstep-label {
+            color: var(--white);
+        }
+
+        .wstep-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            margin: 0 12px;
+        }
+
+        /* ── Form Layout ── */
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-heading {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 6px;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .field-wrap {
+            margin-bottom: 20px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+
+        .field-required {
+            color: var(--red);
+            margin-left: 2px;
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            line-height: 1.5;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color 0.15s;
+            border-radius: 0;
+            appearance: none;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--muted);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--red);
+        }
+
+        input.field-error,
+        select.field-error,
+        textarea.field-error {
+            border-color: var(--red);
+        }
+
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ── Type Selector ── */
+        .type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .type-option {
+            background: var(--gray);
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.15s;
+        }
+
+        .type-option:hover {
+            background: var(--gray2);
+        }
+
+        .type-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .type-option.selected {
+            background: var(--gray2);
+        }
+
+        .type-option.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .type-label {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .type-dot {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+        }
+
+        .type-dot-conf {
+            background: #90cdf4;
+        }
+
+        .type-dot-pub {
+            background: var(--yellow);
+        }
+
+        .type-desc {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .type-badge {
+            margin-top: 12px;
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .badge-conf {
+            background: rgba(26, 58, 107, 0.4);
+            color: #90cdf4;
+            border: 1px solid rgba(26, 58, 107, 0.5);
+        }
+
+        .badge-pub {
+            background: rgba(244, 208, 63, 0.1);
+            color: var(--yellow);
+            border: 1px solid rgba(244, 208, 63, 0.3);
+        }
+
+        /* ── Toggle Switches ── */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toggle-row:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .toggle-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .toggle-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--gray3);
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 3px;
+            top: 3px;
+            background: var(--muted);
+            transition: 0.2s;
+        }
+
+        .toggle input:checked+.toggle-slider {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        .toggle input:checked+.toggle-slider::before {
+            transform: translateX(18px);
+            background: var(--white);
+        }
+
+        /* ── URI Tag Input ── */
+        .tag-input-wrap {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 8px;
+            min-height: 48px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: flex-start;
+            cursor: text;
+            transition: border-color 0.15s;
+        }
+
+        .tag-input-wrap:focus-within {
+            border-color: var(--red);
+        }
+
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray2);
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--white);
+        }
+
+        .tag-chip-remove {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s;
+        }
+
+        .tag-chip-remove:hover {
+            color: var(--red);
+        }
+
+        .tag-real-input {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            outline: none;
+            flex: 1;
+            min-width: 180px;
+            padding: 3px 4px;
+        }
+
+        .tag-real-input::placeholder {
+            color: var(--muted);
+        }
+
+        /* ── Scope Checkboxes ── */
+        .scope-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .scope-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+
+        .scope-check:hover {
+            border-color: var(--muted);
+        }
+
+        .scope-check input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--red);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .scope-check-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            transition: color 0.15s;
+        }
+
+        .scope-check:has(input:checked) {
+            border-color: rgba(214, 40, 40, 0.4);
+        }
+
+        .scope-check:has(input:checked) .scope-check-label {
+            color: var(--white);
+        }
+
+        /* ── Grant Type Checkboxes ── */
+        .grant-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Alerts ── */
+        .alert {
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .alert-error {
+            background: rgba(214, 40, 40, 0.1);
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── Form Nav ── */
+        .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Success Screen ── */
+        .success-screen {
+            display: none;
+        }
+
+        .success-screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-geo {
+            width: 72px;
+            height: 72px;
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .success-geo-base {
+            position: absolute;
+            inset: 0;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .success-geo-accent {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: var(--yellow);
+        }
+
+        .success-geo-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .success-sub {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .cred-box {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .cred-box::before {
+            content: 'KEEP THESE SAFE — NOT SHOWN AGAIN';
+            display: block;
+            padding: 8px 16px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--yellow);
+            background: rgba(244, 208, 63, 0.06);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cred-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cred-row:last-child {
+            border-bottom: none;
+        }
+
+        .cred-key {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .cred-val {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--white);
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .cred-copy {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .cred-copy:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .cred-copy.copied {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .success-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+
+            .scope-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .type-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .scope-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .wizard-steps .wstep-label {
+                display: none;
+            }
+
+            .wizard-steps .wstep-line {
+                margin: 0 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <div class="brand-mark"></div>
+                <span class="brand-name">ChaiAuth</span>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a href="/dashboard" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="1" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="/dashboard/profile" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Profile
+            </a>
+            <div class="nav-section-label">Admin</div>
+            <a href="/dashboard/clients" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                Clients
+            </a>
+            <a href="/dashboard/clients/new" class="nav-item active">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                New Client
+            </a>
+            <div class="nav-section-label">Docs</div>
+            <a href="/.well-known/openid-configuration" target="_blank" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L1 4v5c0 3.5 3 6 7 7 4-1 7-3.5 7-7V4L8 1z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                OIDC Discovery
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div>
+                    <div class="user-name" id="userName">Admin</div>
+                    <div class="user-role">ADMIN</div>
+                </div>
+            </div>
+            <a href="#" class="btn-logout" id="logoutBtn">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <span class="topbar-title">Register New Client</span>
+            <div class="topbar-right">
+                <a href="/dashboard/clients" class="btn btn-outline btn-sm">← Back to Clients</a>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- Alerts -->
+            <div class="alert alert-error hidden" id="errorAlert">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v4M8 10.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span id="errorMsg"></span>
+            </div>
+
+            <!-- Header -->
+            <div id="formHeader">
+                <div class="page-eyebrow">Admin Panel</div>
+                <h1 class="page-title">Register OIDC Client</h1>
+                <p class="page-sub">Configure a new application to authenticate users via ChaiAuth.</p>
+
+                <!-- Step Progress -->
+                <div class="wizard-steps" id="wizardSteps">
+                    <div class="wstep active" id="ws1">
+                        <div class="wstep-num">1</div>
+                        <div class="wstep-label">Basics</div>
+                    </div>
+                    <div class="wstep-line"></div>
+                    <div class="wstep active" id="ws2" style="opacity:0.4">
+                        <div class="wstep-num">2</div>
+                        <div class="wstep-label">Auth Config</div>
+                    </div>
+                    <div class="wstep-line"></div>
+                    <div class="wstep active" id="ws3" style="opacity:0.4">
+                        <div class="wstep-num">3</div>
+                        <div class="wstep-label">Review</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Step 1: Basics ── -->
+            <div class="form-section active" id="step1">
+                <div class="section-heading">Application Identity</div>
+                <div class="section-desc">Set the name and type for this OIDC client. These determine how it
+                    authenticates and what credentials it needs.</div>
+
+                <div class="field-wrap">
+                    <label class="field-label" for="clientName">Application Name <span
+                            class="field-required">*</span></label>
+                    <input type="text" id="clientName" placeholder="e.g. My Web App, Mobile Dashboard"
+                        maxlength="120" />
+                    <span class="field-hint">A human-readable name for this client. Shown on the consent screen.</span>
+                </div>
+
+                <div class="field-wrap">
+                    <label class="field-label">Client Type <span class="field-required">*</span></label>
+                    <div class="type-selector" id="typeSelector">
+                        <label class="type-option selected" id="typeConfLabel">
+                            <input type="radio" name="clientType" value="confidential" checked />
+                            <div class="type-label">
+                                <div class="type-dot type-dot-conf"></div>
+                                Confidential
+                            </div>
+                            <div class="type-desc">Server-side apps that can keep a secret. Uses client_id +
+                                client_secret for token requests.</div>
+                            <span class="type-badge badge-conf">Recommended</span>
+                        </label>
+                        <label class="type-option" id="typePubLabel">
+                            <input type="radio" name="clientType" value="public" />
+                            <div class="type-label">
+                                <div class="type-dot type-dot-pub"></div>
+                                Public
+                            </div>
+                            <div class="type-desc">Native/SPA apps that can't hold secrets. PKCE required. No client
+                                secret issued.</div>
+                            <span class="type-badge badge-pub">PKCE Required</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field-wrap">
+                    <label class="field-label" for="redirectUris">Redirect URIs <span
+                            class="field-required">*</span></label>
+                    <div class="tag-input-wrap" id="redirectTagWrap">
+                        <input type="text" class="tag-real-input" id="redirectInput"
+                            placeholder="https://yourapp.com/callback — press Enter to add" />
+                    </div>
+                    <span class="field-hint">The exact URI(s) the server will redirect to after auth. Add each one and
+                        press Enter or comma.</span>
+                </div>
+
+                <div class="form-actions">
+                    <span></span>
+                    <button class="btn btn-primary" id="step1Next">Continue to Auth Config →</button>
+                </div>
+            </div>
+
+            <!-- ── Step 2: Auth Config ── -->
+            <div class="form-section" id="step2">
+                <div class="section-heading">Authorization Configuration</div>
+                <div class="section-desc">Configure which OAuth 2.0 grant types, scopes, and security options this
+                    client can use.</div>
+
+                <div class="field-wrap">
+                    <label class="field-label">Allowed Scopes <span class="field-required">*</span></label>
+                    <div class="scope-grid" id="scopeGrid">
+                        <label class="scope-check"><input type="checkbox" value="openid" checked /><span
+                                class="scope-check-label">openid</span></label>
+                        <label class="scope-check"><input type="checkbox" value="profile" checked /><span
+                                class="scope-check-label">profile</span></label>
+                        <label class="scope-check"><input type="checkbox" value="email" /><span
+                                class="scope-check-label">email</span></label>
+                        <label class="scope-check"><input type="checkbox" value="address" /><span
+                                class="scope-check-label">address</span></label>
+                        <label class="scope-check"><input type="checkbox" value="phone" /><span
+                                class="scope-check-label">phone</span></label>
+                        <label class="scope-check"><input type="checkbox" value="offline_access" /><span
+                                class="scope-check-label">offline_access</span></label>
+                    </div>
+                    <span class="field-hint" style="margin-top:10px;display:block">Select all scopes this client may
+                        request. Clients can only request scopes from this list.</span>
+                </div>
+
+                <div class="field-wrap" style="margin-top:28px">
+                    <label class="field-label">Grant Types <span class="field-required">*</span></label>
+                    <div class="grant-list">
+                        <div class="toggle-row">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Authorization Code</div>
+                                <div class="toggle-sub">Standard OIDC flow. Required for most web and mobile apps.</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" id="grantCode" checked disabled /><span
+                                    class="toggle-slider"></span></label>
+                        </div>
+                        <div class="toggle-row">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Refresh Token</div>
+                                <div class="toggle-sub">Allow clients to obtain new access tokens without
+                                    re-authentication.</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" id="grantRefresh" checked /><span
+                                    class="toggle-slider"></span></label>
+                        </div>
+                        <div class="toggle-row" id="pkceToggleRow">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Require PKCE</div>
+                                <div class="toggle-sub">Enforce Proof Key for Code Exchange (S256). Always on for public
+                                    clients.</div>
+                            </div>
+                            <label class="toggle"><input type="checkbox" id="requirePkce" /><span
+                                    class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-wrap" style="margin-top:28px" id="tokenFieldsWrap">
+                    <label class="field-label">Token Lifetimes</label>
+                    <div class="field-row">
+                        <div class="field-wrap">
+                            <label class="field-label" for="accessTokenTtl" style="font-size:10px">Access Token
+                                (seconds)</label>
+                            <input type="text" id="accessTokenTtl" value="3600" placeholder="3600" />
+                        </div>
+                        <div class="field-wrap">
+                            <label class="field-label" for="refreshTokenTtl" style="font-size:10px">Refresh Token
+                                (seconds)</label>
+                            <input type="text" id="refreshTokenTtl" value="2592000" placeholder="2592000" />
+                        </div>
+                    </div>
+                    <span class="field-hint">Default: 1 hour access, 30 days refresh. Leave blank to use server
+                        defaults.</span>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-ghost" id="step2Back">← Back</button>
+                    <button class="btn btn-primary" id="step2Next">Review & Register →</button>
+                </div>
+            </div>
+
+            <!-- ── Step 3: Review ── -->
+            <div class="form-section" id="step3">
+                <div class="section-heading">Review Configuration</div>
+                <div class="section-desc">Check your settings before registering. The client secret (if applicable) will
+                    be shown once after registration.</div>
+
+                <div id="reviewPanel" style="border:1px solid var(--border); margin-bottom:28px;">
+                    <div style="padding:16px 20px; border-bottom:1px solid var(--border); background:var(--gray);">
+                        <div
+                            style="font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">
+                            Client Configuration Summary</div>
+                    </div>
+                    <div id="reviewRows" style="padding:0 20px;"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-ghost" id="step3Back">← Edit Config</button>
+                    <button class="btn btn-primary" id="registerBtn">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M7 1v9M3 7l4 4 4-4" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" />
+                        </svg>
+                        Register Client
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── Success Screen ── -->
+            <div class="success-screen" id="successScreen">
+                <div class="success-geo">
+                    <div class="success-geo-base"></div>
+                    <div class="success-geo-accent"></div>
+                    <div class="success-geo-icon">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                            <path d="M6 14l6 6 10-10" stroke="#22c55e" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="success-title">Client Registered</h2>
+                <p class="success-sub" id="successSubtext">Your OIDC client has been registered. Copy your credentials
+                    below — the secret won't be shown again.</p>
+
+                <div class="cred-box" id="credBox">
+                    <div class="cred-row">
+                        <div class="cred-key">Client Name</div>
+                        <div class="cred-val" id="credName">—</div>
+                    </div>
+                    <div class="cred-row">
+                        <div class="cred-key">Client ID</div>
+                        <div class="cred-val" id="credId">—</div>
+                        <button class="cred-copy" onclick="copyVal('credId',this)">Copy</button>
+                    </div>
+                    <div class="cred-row" id="credSecretRow">
+                        <div class="cred-key">Client Secret</div>
+                        <div class="cred-val" id="credSecret">—</div>
+                        <button class="cred-copy" onclick="copyVal('credSecret',this)">Copy</button>
+                    </div>
+                    <div class="cred-row">
+                        <div class="cred-key">Type</div>
+                        <div class="cred-val" id="credType">—</div>
+                    </div>
+                    <div class="cred-row">
+                        <div class="cred-key">Scopes</div>
+                        <div class="cred-val" id="credScopes">—</div>
+                    </div>
+                </div>
+
+                <div class="success-actions">
+                    <a href="/dashboard/clients" class="btn btn-outline">← All Clients</a>
+                    <a href="#" class="btn btn-primary" id="viewClientBtn">View Client Details →</a>
+                    <button class="btn btn-ghost" id="registerAnotherBtn">Register Another</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            const ACCESS_KEY = 'chai_access';
+            const USER_KEY = 'chai_user';
+            function getToken() { return localStorage.getItem(ACCESS_KEY); }
+            function getUser() { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; } }
+            function el(id) { return document.getElementById(id); }
+
+            // ── Shared API helper ─────────────────────────────────────────────
+            async function apiFetch(url, opts = {}) {
+                const token = getToken();
+                opts.headers = { ...(opts.headers || {}), ...(token ? { 'Authorization': `Bearer ${token}` } : {}) };
+                opts.credentials = opts.credentials || 'include';
+                const res = await fetch(url, opts);
+                const newToken = res.headers.get('X-New-Access-Token');
+                if (newToken) localStorage.setItem(ACCESS_KEY, newToken);
+                return res;
+            }
+
+            function redirectToLogin() {
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/auth/login?next=/dashboard/clients/new';
+            }
+
+            function showError(msg) {
+                el('errorMsg').textContent = msg;
+                el('errorAlert').classList.remove('hidden');
+                el('errorAlert').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                setTimeout(() => el('errorAlert').classList.add('hidden'), 6000);
+            }
+
+            // ── Auth check ──
+            const token = getToken();
+            const user = getUser();
+            if (!token || !user) { redirectToLogin(); return; }
+            if (user.role !== 'admin') { window.location.href = '/dashboard'; return; }
+
+            el('userAvatar').textContent = user.name?.[0]?.toUpperCase() ?? 'A';
+            el('userName').textContent = user.name ?? 'Admin';
+
+            el('logoutBtn').onclick = async (e) => {
+                e.preventDefault();
+                await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/';
+            };
+
+            // ── State ──
+            let currentStep = 1;
+            let redirectUris = [];
+            let clientType = 'confidential';
+
+            // ── Step display ──
+            function gotoStep(n) {
+                currentStep = n;
+                ['step1', 'step2', 'step3'].forEach((id, i) => {
+                    el(id).classList.toggle('active', i + 1 === n);
+                });
+                updateWizard(n);
+                el('errorAlert').classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function updateWizard(n) {
+                for (let i = 1; i <= 3; i++) {
+                    const ws = el('ws' + i);
+                    ws.style.opacity = i <= n ? '1' : '0.4';
+                }
+            }
+
+            // ── Type selector ──
+            document.querySelectorAll('input[name="clientType"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    clientType = radio.value;
+                    el('typeConfLabel').classList.toggle('selected', clientType === 'confidential');
+                    el('typePubLabel').classList.toggle('selected', clientType === 'public');
+                    if (clientType === 'public') {
+                        el('requirePkce').checked = true;
+                        el('requirePkce').disabled = true;
+                    } else {
+                        el('requirePkce').disabled = false;
+                    }
+                });
+            });
+            el('typeConfLabel').onclick = () => { el('typeConfLabel').querySelector('input').checked = true; el('typeConfLabel').querySelector('input').dispatchEvent(new Event('change')); };
+            el('typePubLabel').onclick = () => { el('typePubLabel').querySelector('input').checked = true; el('typePubLabel').querySelector('input').dispatchEvent(new Event('change')); };
+
+            // ── Tag input for redirect URIs ──
+            const redirectInput = el('redirectInput');
+            const redirectWrap = el('redirectTagWrap');
+
+            function addUri(raw) {
+                const uri = raw.trim().replace(/,+$/, '');
+                if (!uri) return;
+                if (redirectUris.includes(uri)) return;
+                redirectUris.push(uri);
+                renderTags();
+            }
+
+            function removeUri(uri) {
+                redirectUris = redirectUris.filter(u => u !== uri);
+                renderTags();
+            }
+
+            function renderTags() {
+                const chips = redirectWrap.querySelectorAll('.tag-chip');
+                chips.forEach(c => c.remove());
+                redirectUris.forEach(uri => {
+                    const chip = document.createElement('div');
+                    chip.className = 'tag-chip';
+                    chip.innerHTML = `<span>${escHtml(uri)}</span><button class="tag-chip-remove" title="Remove">×</button>`;
+                    chip.querySelector('button').onclick = () => removeUri(uri);
+                    redirectWrap.insertBefore(chip, redirectInput);
+                });
+            }
+
+            redirectInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    addUri(redirectInput.value);
+                    redirectInput.value = '';
+                }
+                if (e.key === 'Backspace' && !redirectInput.value && redirectUris.length) {
+                    removeUri(redirectUris[redirectUris.length - 1]);
+                }
+            });
+            redirectInput.addEventListener('blur', () => {
+                if (redirectInput.value.trim()) {
+                    addUri(redirectInput.value);
+                    redirectInput.value = '';
+                }
+            });
+            redirectWrap.addEventListener('click', () => redirectInput.focus());
+
+            // ── Step 1 next ──
+            el('step1Next').onclick = () => {
+                const name = el('clientName').value.trim();
+                if (!name) { showError('Application name is required.'); return; }
+                if (name.length < 2) { showError('Name must be at least 2 characters.'); return; }
+                if (!redirectUris.length) { showError('At least one redirect URI is required.'); return; }
+                const invalid = redirectUris.find(u => !u.match(/^https?:\/\/.+/));
+                if (invalid) { showError(`Invalid redirect URI: "${invalid}". Must start with http:// or https://`); return; }
+                gotoStep(2);
+            };
+
+            // ── Step 2 back/next ──
+            el('step2Back').onclick = () => gotoStep(1);
+            el('step2Next').onclick = () => {
+                const scopes = getSelectedScopes();
+                if (!scopes.includes('openid')) { showError('"openid" scope is required and must be selected.'); return; }
+                buildReview();
+                gotoStep(3);
+            };
+
+            // ── Step 3 back/register ──
+            el('step3Back').onclick = () => gotoStep(2);
+            el('registerBtn').onclick = () => doRegister();
+
+            function getSelectedScopes() {
+                return [...document.querySelectorAll('#scopeGrid input:checked')].map(i => i.value);
+            }
+
+            function buildReview() {
+                const scopes = getSelectedScopes();
+                const grants = [];
+                grants.push('authorization_code');
+                if (el('grantRefresh').checked) grants.push('refresh_token');
+
+                const rows = [
+                    ['Name', escHtml(el('clientName').value.trim())],
+                    ['Type', `<span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${clientType === 'confidential' ? '#90cdf4' : 'var(--yellow)'}">${clientType}</span>`],
+                    ['Redirect URIs', redirectUris.map(u => `<code style="font-family:DM Mono,monospace;font-size:11px">${escHtml(u)}</code>`).join('<br>')],
+                    ['Scopes', scopes.map(s => `<span style="font-family:DM Mono,monospace;font-size:11px;background:var(--gray2);padding:2px 6px;border:1px solid var(--border)">${s}</span>`).join(' ')],
+                    ['Grant Types', grants.map(g => `<code style="font-family:DM Mono,monospace;font-size:11px">${g}</code>`).join(', ')],
+                    ['PKCE', el('requirePkce').checked ? '<span style="color:var(--success)">Required (S256)</span>' : '<span style="color:var(--muted)">Optional</span>'],
+                    ['Client Secret', clientType === 'confidential' ? '<span style="color:var(--yellow)">Will be generated</span>' : '<span style="color:var(--muted)">None (public client)</span>'],
+                ];
+
+                el('reviewRows').innerHTML = rows.map(([k, v]) => `
+    <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);width:140px;flex-shrink:0;padding-top:2px">${k}</div>
+      <div style="font-size:13px;flex:1;line-height:1.6">${v}</div>
+    </div>
+  `).join('');
+            }
+
+            async function doRegister() {
+                const btn = el('registerBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="animation:spin 1s linear infinite"><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Registering…';
+
+                const scopes = getSelectedScopes();
+
+                const payload = {
+                    client_name: el('clientName').value.trim(),
+                    client_type: clientType,
+                    redirect_uris: redirectUris,
+                    allowed_scopes: scopes.join(' '),
+                    pkce_required: el('requirePkce').checked || clientType === 'public',
+                };
+                // Generate a random secret for confidential clients (backend requires one)
+                if (clientType === 'confidential') {
+                    const arr = new Uint8Array(32);
+                    crypto.getRandomValues(arr);
+                    payload.client_secret = Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+                }
+
+                try {
+                    const res = await apiFetch('/clients', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    if (res.status === 401 || res.status === 403) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Registration failed');
+
+                    const client = data.data ?? data;
+                    showSuccess(client);
+                } catch (err) {
+                    showError(err.message || 'Failed to register client. Please try again.');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v9M3 7l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Register Client';
+                }
+            }
+
+            function showSuccess(client) {
+                el('formHeader').style.display = 'none';
+                ['step1', 'step2', 'step3'].forEach(id => el(id).classList.remove('active'));
+                el('successScreen').classList.add('active');
+
+                el('credName').textContent = client.client_name ?? '—';
+                el('credId').textContent = client.client_id ?? '—';
+                el('credType').textContent = client.client_type ?? '—';
+                el('credScopes').textContent = client.allowed_scopes ?? '—';
+
+                if (client.client_secret) {
+                    el('credSecret').textContent = client.client_secret;
+                    el('credSecretRow').style.display = '';
+                    el('successSubtext').textContent = 'Your OIDC client has been registered. Copy the credentials below — the client secret won\'t be shown again.';
+                } else {
+                    el('credSecretRow').style.display = 'none';
+                    el('successSubtext').textContent = 'Your public OIDC client has been registered. No secret is issued for public clients — use PKCE for security.';
+                }
+
+                const id = client.client_id;
+                if (id) el('viewClientBtn').href = `/dashboard/clients/${id}`;
+
+                el('registerAnotherBtn').onclick = () => {
+                    el('formHeader').style.display = '';
+                    el('successScreen').classList.remove('active');
+                    // Reset form
+                    el('clientName').value = '';
+                    redirectUris = [];
+                    renderTags();
+                    clientType = 'confidential';
+                    el('typeConfLabel').classList.add('selected');
+                    el('typePubLabel').classList.remove('selected');
+                    document.querySelector('input[value="confidential"]').checked = true;
+                    el('requirePkce').checked = false;
+                    el('requirePkce').disabled = false;
+                    el('grantRefresh').checked = true;
+                    document.querySelectorAll('#scopeGrid input').forEach(cb => { cb.checked = cb.value === 'openid' || cb.value === 'profile'; });
+                    el('accessTokenTtl').value = '3600';
+                    el('refreshTokenTtl').value = '2592000';
+                    gotoStep(1);
+                };
+            }
+
+            function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+            // global copy helper
+            window.copyVal = function (id, btn) {
+                const val = el(id).textContent;
+                navigator.clipboard.writeText(val).then(() => {
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+                });
+            };
+
+            // spin keyframe
+            const style = document.createElement('style');
+            style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+            document.head.appendChild(style);
+
+        })();
+    </script>
+</body>
+
+</html>

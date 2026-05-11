@@ -1,6 +1,5 @@
-import { z } from "zod";
 import ApiError from "../../common/utils/apiError.js";
-import { SignUpSchema, LoginSchema,  User} from "./auth.models.js"
+import { SignUpSchema, LoginSchema } from "./auth.models.js";
 
 export function validateSignUp(req, res, next) {
     const result = SignUpSchema.safeParse(req.body);
@@ -21,8 +20,6 @@ export function validateLogin(req, res, next) {
     req.body = result.data;
     next();
 }
-
-export const validateUserData = validateLogin;
 
 export function requireRefreshCookie(req, res, next) {
     if (!req.cookies?.refreshToken) return next(ApiError.badRequest("Refresh token cookie required"));

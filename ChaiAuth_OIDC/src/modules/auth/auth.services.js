@@ -1,14 +1,18 @@
 import bcrypt from "bcrypt";
-import { checkIfUserExists, checkIfEmailExists, getUser, insertUser, updateRefreshToken } from "../../common/db/db.js";
+import {
+    checkIfUserExists, checkIfEmailExists, getUser,
+    insertUser, updateRefreshToken,
+} from "../../common/db/db.js";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../common/utils/jwt.utils.js";
 import ApiError from "../../common/utils/apiError.js";
 import { Role } from "../../common/constants/roles.js";
 
-const COOKIE_OPTS = {
+export const COOKIE_OPTS = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
+    path: "/auth/refresh",
 };
 
 function tokenPayload(user) {
@@ -42,10 +46,11 @@ export async function createUser(username, password, profile = {}) {
 
 export async function loginUser(username, password) {
     const user = await getUser(username);
-    if (!user) throw ApiError.unauthorized("Invalid username or password");
+    const dummyHash = "$2b$12$invalidhashpadding.topreventuserenum.attack.padding.extra";
+    const hashToCompare = user ? user.password : dummyHash;
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) throw ApiError.unauthorized("Invalid username or password");
+    const valid = await bcrypt.compare(password, hashToCompare);
+    if (!user || !valid) throw ApiError.unauthorized("Invalid username or password");
 
     const payload = tokenPayload(user);
     const accessToken = generateAccessToken(payload);
@@ -68,7 +73,6 @@ export async function rotateTokens(incomingRefreshToken) {
 
     const user = await getUser(decoded.name);
     if (!user) throw ApiError.unauthorized("User not found");
-
     if (user.refresh_token !== incomingRefreshToken) {
         await updateRefreshToken(user.username, null);
         throw ApiError.unauthorized("Refresh token reuse detected — session revoked");
@@ -90,10 +94,8 @@ export async function revokeSession(incomingRefreshToken) {
     try {
         decoded = verifyRefreshToken(incomingRefreshToken);
     } catch {
-        return; 
+        return;
     }
 
     await updateRefreshToken(decoded.name, null);
 }
-
-export { COOKIE_OPTS };

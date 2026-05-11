@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChaiAuth | Client Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f0e8;
+            --red: #d62828;
+            --blue: #1a3a6b;
+            --yellow: #f4d03f;
+            --gray: #1a1a1a;
+            --gray2: #242424;
+            --gray3: #2e2e2e;
+            --muted: #6b6b6b;
+            --border: #2e2e2e;
+            --input-bg: #111;
+            --success: #22c55e;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Sidebar (shared) ── */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: var(--gray);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--red);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .brand-mark::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            background: var(--yellow);
+        }
+
+        .brand-name {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            padding: 12px 20px 6px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--gray2);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background: var(--gray2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: var(--red);
+        }
+
+        .nav-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .user-role {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--yellow);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 8px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        /* ── Layout ── */
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: var(--black);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content {
+            padding: 32px;
+            flex: 1;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            padding: 9px 18px;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #b71c1c;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: none;
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background: rgba(214, 40, 40, 0.1);
+            border-color: var(--red);
+        }
+
+        .btn-warning {
+            background: none;
+            border: 1px solid rgba(244, 208, 63, 0.3);
+            color: var(--yellow);
+        }
+
+        .btn-warning:hover {
+            background: rgba(244, 208, 63, 0.08);
+            border-color: var(--yellow);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 10px;
+        }
+
+        .btn-xs {
+            padding: 4px 9px;
+            font-size: 10px;
+        }
+
+        /* ── Alerts ── */
+        .alert {
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .alert-error {
+            background: rgba(214, 40, 40, 0.1);
+            border: 1px solid rgba(214, 40, 40, 0.3);
+            color: #f87171;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .alert-warn {
+            background: rgba(244, 208, 63, 0.08);
+            border: 1px solid rgba(244, 208, 63, 0.3);
+            color: var(--yellow);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── Page Header ── */
+        .client-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .page-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 8px;
+        }
+
+        .client-title {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .client-type-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+        }
+
+        .badge-confidential {
+            background: rgba(26, 58, 107, 0.4);
+            color: #90cdf4;
+            border: 1px solid rgba(26, 58, 107, 0.5);
+        }
+
+        .badge-public {
+            background: rgba(244, 208, 63, 0.1);
+            color: var(--yellow);
+            border: 1px solid rgba(244, 208, 63, 0.3);
+        }
+
+        .client-id-line {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .client-header-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        /* ── Skeleton ── */
+        .skeleton {
+            background: var(--gray2);
+            border-radius: 2px;
+            animation: shimmer 1.5s infinite;
+            display: inline-block;
+        }
+
+        .sk-line {
+            height: 14px;
+            display: block;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: .4
+            }
+
+            50% {
+                opacity: .8
+            }
+        }
+
+        /* ── Tabs ── */
+        .tabs-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 12px 20px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.15s;
+        }
+
+        .tab-btn:hover {
+            color: var(--white);
+        }
+
+        .tab-btn.active {
+            color: var(--white);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Info Grid ── */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .info-panel {
+            background: var(--gray);
+            border: 1px solid var(--border);
+        }
+
+        .info-panel-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .info-rows {
+            padding: 0 20px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-key {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            width: 140px;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .info-val {
+            font-size: 13px;
+            flex: 1;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .info-val code {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--muted);
+            color: var(--white);
+        }
+
+        .copy-btn.copied {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        /* ── Scope Pills ── */
+        .scope-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            margin: 2px;
+        }
+
+        /* ── Edit Form ── */
+        .edit-panel {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .edit-panel-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .edit-panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .edit-panel-body {
+            padding: 24px;
+        }
+
+        .field-wrap {
+            margin-bottom: 18px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+            line-height: 1.5;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color 0.15s;
+            appearance: none;
+        }
+
+        input::placeholder {
+            color: var(--muted);
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--red);
+        }
+
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        /* Tag Input */
+        .tag-input-wrap {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 8px;
+            min-height: 48px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: flex-start;
+            cursor: text;
+            transition: border-color 0.15s;
+        }
+
+        .tag-input-wrap:focus-within {
+            border-color: var(--red);
+        }
+
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray2);
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--white);
+        }
+
+        .tag-chip-remove {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s;
+        }
+
+        .tag-chip-remove:hover {
+            color: var(--red);
+        }
+
+        .tag-real-input {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            outline: none;
+            flex: 1;
+            min-width: 160px;
+            padding: 3px 4px;
+        }
+
+        .tag-real-input::placeholder {
+            color: var(--muted);
+        }
+
+        /* Toggle */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toggle-row:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .toggle-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .toggle-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--gray3);
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 3px;
+            top: 3px;
+            background: var(--muted);
+            transition: 0.2s;
+        }
+
+        .toggle input:checked+.toggle-slider {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        .toggle input:checked+.toggle-slider::before {
+            transform: translateX(18px);
+            background: var(--white);
+        }
+
+        /* Scope checkboxes */
+        .scope-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .scope-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+
+        .scope-check input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--red);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .scope-check-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            transition: color 0.15s;
+        }
+
+        .scope-check:has(input:checked) {
+            border-color: rgba(214, 40, 40, 0.4);
+        }
+
+        .scope-check:has(input:checked) .scope-check-label {
+            color: var(--white);
+        }
+
+        /* Secret reveal */
+        .secret-reveal-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+        }
+
+        .secret-reveal-val {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            flex: 1;
+            color: var(--white);
+            word-break: break-all;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            background: var(--gray);
+            border: 1px solid rgba(214, 40, 40, 0.25);
+        }
+
+        .danger-zone-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(214, 40, 40, 0.2);
+        }
+
+        .danger-zone-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f87171;
+            letter-spacing: 0.05em;
+        }
+
+        .danger-zone-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .danger-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 16px;
+            background: rgba(214, 40, 40, 0.04);
+            border: 1px solid rgba(214, 40, 40, 0.15);
+        }
+
+        .danger-info-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .danger-info-sub {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            max-width: 460px;
+            width: 100%;
+            position: relative;
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--yellow);
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -0.01em;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .modal-body strong {
+            color: var(--white);
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            padding: 10px 12px;
+            outline: none;
+            margin-top: 12px;
+            transition: border-color 0.15s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--red);
+        }
+
+        @media (max-width: 1000px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .client-header {
+                flex-direction: column;
+            }
+
+            .scope-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .scope-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .client-title {
+                font-size: 22px;
+            }
+
+            .tabs-nav {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <div class="brand-mark"></div>
+                <span class="brand-name">ChaiAuth</span>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a href="/dashboard" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="1" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                    <rect x="9" y="9" width="6" height="6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="/dashboard/profile" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                Profile
+            </a>
+            <div class="nav-section-label">Admin</div>
+            <a href="/dashboard/clients" class="nav-item active">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="3" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                Clients
+            </a>
+            <a href="/dashboard/clients/new" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                New Client
+            </a>
+            <div class="nav-section-label">Docs</div>
+            <a href="/.well-known/openid-configuration" target="_blank" class="nav-item">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L1 4v5c0 3.5 3 6 7 7 4-1 7-3.5 7-7V4L8 1z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+                OIDC Discovery
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div>
+                    <div class="user-name" id="userName">Admin</div>
+                    <div class="user-role">ADMIN</div>
+                </div>
+            </div>
+            <a href="#" class="btn-logout" id="logoutBtn">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <span class="topbar-title" id="topbarTitle">Client Details</span>
+            <div class="topbar-right">
+                <a href="/dashboard/clients" class="btn btn-outline btn-sm">← All Clients</a>
+                <a href="/dashboard/clients/new" class="btn btn-primary btn-sm">+ New Client</a>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- Alerts -->
+            <div class="alert alert-error hidden" id="errorAlert">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 5v4M8 10.5v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span id="errorMsg"></span>
+            </div>
+            <div class="alert alert-success hidden" id="successAlert">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px">
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <span id="successMsg"></span>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState">
+                <div style="margin-bottom:32px">
+                    <div class="skeleton sk-line" style="width:100px;margin-bottom:12px"></div>
+                    <div class="skeleton sk-line" style="width:260px;height:28px;margin-bottom:12px"></div>
+                    <div class="skeleton sk-line" style="width:200px"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+                    <div class="skeleton" style="height:200px"></div>
+                    <div class="skeleton" style="height:200px"></div>
+                </div>
+            </div>
+
+            <!-- Main Content (hidden until loaded) -->
+            <div id="mainContent" class="hidden">
+
+                <!-- Client Header -->
+                <div class="client-header">
+                    <div class="client-header-left">
+                        <div class="page-eyebrow">Client Details</div>
+                        <div class="client-title">
+                            <span id="clientNameTitle">—</span>
+                            <span class="client-type-badge" id="clientTypeBadge"></span>
+                        </div>
+                        <div class="client-id-line">
+                            <span
+                                style="color:var(--muted);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase">ID</span>
+                            <code id="clientIdDisplay">—</code>
+                            <button class="copy-btn" id="copyIdBtn"
+                                onclick="copyText(document.getElementById('clientIdDisplay').textContent, this)">Copy</button>
+                        </div>
+                    </div>
+                    <div class="client-header-actions" id="headerActions"></div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="overview">Overview</button>
+                    <button class="tab-btn" data-tab="edit">Edit Config</button>
+                    <button class="tab-btn" data-tab="danger">Danger Zone</button>
+                </div>
+
+                <!-- ── Tab: Overview ── -->
+                <div class="tab-panel active" id="tab-overview">
+                    <div class="info-grid">
+                        <div class="info-panel">
+                            <div class="info-panel-header">Client Info</div>
+                            <div class="info-rows" id="infoClientRows"></div>
+                        </div>
+                        <div class="info-panel">
+                            <div class="info-panel-header">Authorization</div>
+                            <div class="info-rows" id="infoAuthRows"></div>
+                        </div>
+                    </div>
+
+                    <!-- Redirect URIs -->
+                    <div class="info-panel" style="margin-bottom:24px">
+                        <div class="info-panel-header">Redirect URIs</div>
+                        <div id="redirectUrisList" style="padding:16px 20px;"></div>
+                    </div>
+
+                    <!-- Secret -->
+                    <div class="info-panel" id="secretPanel">
+                        <div class="info-panel-header">Client Credentials</div>
+                        <div style="padding:16px 20px">
+                            <div class="info-row" style="border:none;padding-top:0">
+                                <div class="info-key">Client ID</div>
+                                <div class="info-val"><code id="secretClientId">—</code></div>
+                                <button class="copy-btn"
+                                    onclick="copyText(document.getElementById('secretClientId').textContent, this)">Copy</button>
+                            </div>
+                            <div class="info-row" id="secretRowWrap">
+                                <div class="info-key">Client Secret</div>
+                                <div class="info-val">
+                                    <div class="secret-reveal-wrap">
+                                        <span class="secret-reveal-val"
+                                            id="secretVal">••••••••••••••••••••••••••••••••</span>
+                                        <button class="btn btn-outline btn-xs" id="toggleSecretBtn">Reveal</button>
+                                        <button class="copy-btn hidden" id="copySecretBtn">Copy</button>
+                                    </div>
+                                    <div style="font-size:11px;color:var(--muted);margin-top:8px">Secret is stored
+                                        hashed. To get a new plaintext secret, use Regenerate below.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Tab: Edit Config ── -->
+                <div class="tab-panel" id="tab-edit">
+                    <div class="edit-panel">
+                        <div class="edit-panel-header">
+                            <div class="edit-panel-title">Application Settings</div>
+                        </div>
+                        <div class="edit-panel-body">
+                            <div class="field-wrap">
+                                <label class="field-label" for="editName">Client Name</label>
+                                <input type="text" id="editName" maxlength="120" />
+                            </div>
+                            <div class="field-wrap">
+                                <label class="field-label" for="editRedirectUris">Redirect URIs</label>
+                                <div class="tag-input-wrap" id="editRedirectWrap">
+                                    <input type="text" class="tag-real-input" id="editRedirectInput"
+                                        placeholder="https://… — press Enter to add" />
+                                </div>
+                                <span class="field-hint">Add or remove redirect URIs. Click × to remove existing
+                                    ones.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit-panel">
+                        <div class="edit-panel-header">
+                            <div class="edit-panel-title">Scopes & Grants</div>
+                        </div>
+                        <div class="edit-panel-body">
+                            <div class="field-wrap">
+                                <label class="field-label">Allowed Scopes</label>
+                                <div class="scope-grid" id="editScopeGrid">
+                                    <label class="scope-check"><input type="checkbox" value="openid" /><span
+                                            class="scope-check-label">openid</span></label>
+                                    <label class="scope-check"><input type="checkbox" value="profile" /><span
+                                            class="scope-check-label">profile</span></label>
+                                    <label class="scope-check"><input type="checkbox" value="email" /><span
+                                            class="scope-check-label">email</span></label>
+                                    <label class="scope-check"><input type="checkbox" value="address" /><span
+                                            class="scope-check-label">address</span></label>
+                                    <label class="scope-check"><input type="checkbox" value="phone" /><span
+                                            class="scope-check-label">phone</span></label>
+                                    <label class="scope-check"><input type="checkbox" value="offline_access" /><span
+                                            class="scope-check-label">offline_access</span></label>
+                                </div>
+                            </div>
+                            <div class="field-wrap" style="margin-top:20px">
+                                <label class="field-label">Grant Configuration</label>
+                                <div>
+                                    <div class="toggle-row">
+                                        <div>
+                                            <div class="toggle-title">Refresh Token Grant</div>
+                                            <div class="toggle-sub">Allow refresh token issuance.</div>
+                                        </div>
+                                        <label class="toggle"><input type="checkbox" id="editGrantRefresh" /><span
+                                                class="toggle-slider"></span></label>
+                                    </div>
+                                    <div class="toggle-row" id="editPkceRow">
+                                        <div>
+                                            <div class="toggle-title">Require PKCE</div>
+                                            <div class="toggle-sub">Enforce S256 code challenge. Always on for public
+                                                clients.</div>
+                                        </div>
+                                        <label class="toggle"><input type="checkbox" id="editRequirePkce" /><span
+                                                class="toggle-slider"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;margin-top:8px">
+                        <button class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+                        <button class="btn btn-outline" id="cancelEditBtn">Discard</button>
+                    </div>
+                </div>
+
+                <!-- ── Tab: Danger Zone ── -->
+                <div class="tab-panel" id="tab-danger">
+                    <div class="danger-zone">
+                        <div class="danger-zone-header">
+                            <div class="danger-zone-title">⚠ Danger Zone</div>
+                        </div>
+                        <div class="danger-zone-body">
+
+                            <div class="danger-item" id="regenItem">
+                                <div class="danger-info">
+                                    <div class="danger-info-title">Regenerate Client Secret</div>
+                                    <div class="danger-info-sub">Generates a new client secret immediately. All clients
+                                        using the current secret will fail to authenticate until updated.</div>
+                                </div>
+                                <button class="btn btn-warning btn-sm" id="regenSecretBtn">Regenerate Secret</button>
+                            </div>
+
+                            <div class="danger-item">
+                                <div class="danger-info">
+                                    <div class="danger-info-title">Delete Client</div>
+                                    <div class="danger-info-sub">Permanently delete this client and invalidate all
+                                        issued tokens. This action cannot be undone.</div>
+                                </div>
+                                <button class="btn btn-danger btn-sm" id="deleteClientBtn">Delete Client</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /mainContent -->
+        </div><!-- /content -->
+    </main>
+
+    <!-- ── Modals ── -->
+    <div class="modal-backdrop hidden" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Delete Client</div>
+            </div>
+            <div class="modal-body">
+                You are about to permanently delete <strong id="deleteModalName">this client</strong>. All tokens issued
+                for this client will be invalidated immediately.<br><br>
+                Type the client name to confirm:<br>
+                <input type="text" class="modal-input" id="deleteConfirmInput" placeholder="Type client name…" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-sm" id="deleteCancelBtn">Cancel</button>
+                <button class="btn btn-danger btn-sm" id="deleteConfirmBtn" disabled>Delete Client</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="regenModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Regenerate Secret</div>
+            </div>
+            <div class="modal-body">
+                A new client secret will be generated. The current secret will be invalidated immediately.<br><br>
+                <strong>Copy the new secret from the result — it will not be shown again.</strong>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-sm" id="regenCancelBtn">Cancel</button>
+                <button class="btn btn-warning btn-sm" id="regenConfirmBtn">Yes, Regenerate</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="newSecretModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">New Client Secret</div>
+            </div>
+            <div class="modal-body">
+                Your new secret has been generated. Copy it now — it will not be shown again.<br>
+                <div
+                    style="margin-top:16px;background:var(--input-bg);border:1px solid rgba(244,208,63,0.3);padding:12px 14px">
+                    <div
+                        style="font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--yellow);margin-bottom:8px">
+                        New Client Secret</div>
+                    <div style="font-family:DM Mono,monospace;font-size:13px;word-break:break-all;color:var(--white)"
+                        id="newSecretVal"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-sm"
+                    onclick="copyText(document.getElementById('newSecretVal').textContent, this)">Copy Secret</button>
+                <button class="btn btn-primary btn-sm" id="newSecretDoneBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const ACCESS_KEY = 'chai_access';
+            const USER_KEY = 'chai_user';
+            function getToken() { return localStorage.getItem(ACCESS_KEY); }
+            function getUser() { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch { return null; } }
+            function el(id) { return document.getElementById(id); }
+            function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+            // ── Shared API helper ─────────────────────────────────────────────
+            async function apiFetch(url, opts = {}) {
+                const token = getToken();
+                opts.headers = { ...(opts.headers || {}), ...(token ? { 'Authorization': `Bearer ${token}` } : {}) };
+                opts.credentials = opts.credentials || 'include';
+                const res = await fetch(url, opts);
+                const newToken = res.headers.get('X-New-Access-Token');
+                if (newToken) localStorage.setItem(ACCESS_KEY, newToken);
+                return res;
+            }
+
+            function redirectToLogin() {
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+            }
+
+            function showError(msg) { el('errorMsg').textContent = msg; el('errorAlert').classList.remove('hidden'); setTimeout(() => el('errorAlert').classList.add('hidden'), 6000); }
+            function showSuccess(msg) { el('successMsg').textContent = msg; el('successAlert').classList.remove('hidden'); setTimeout(() => el('successAlert').classList.add('hidden'), 5000); }
+
+            const token = getToken(), user = getUser();
+            if (!token || !user) { redirectToLogin(); return; }
+            if (user.role !== 'admin') { window.location.href = '/dashboard'; return; }
+
+            el('userAvatar').textContent = user.name?.[0]?.toUpperCase() ?? 'A';
+            el('userName').textContent = user.name ?? 'Admin';
+            el('logoutBtn').onclick = async (e) => {
+                e.preventDefault();
+                await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(USER_KEY);
+                window.location.href = '/';
+            };
+
+            // ── Get client ID from URL ──
+            const clientId = window.location.pathname.split('/').pop();
+            if (!clientId || clientId === 'clients') { window.location.href = '/dashboard/clients'; return; }
+
+            let clientData = null;
+            let editUris = [];
+
+            // ── Tabs ──
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                    btn.classList.add('active');
+                    el('tab-' + btn.dataset.tab).classList.add('active');
+                };
+            });
+
+            // ── Load client ──
+            async function loadClient() {
+                try {
+                    const res = await apiFetch(`/clients/${clientId}`);
+                    if (res.status === 401 || res.status === 403) { redirectToLogin(); return; }
+                    if (res.status === 404) { showError('Client not found.'); return; }
+                    const data = await res.json();
+                    clientData = data.data ?? data;
+                    renderClient(clientData);
+                    el('loadingState').classList.add('hidden');
+                    el('mainContent').classList.remove('hidden');
+                } catch (e) {
+                    showError('Failed to load client data.');
+                }
+            }
+
+            function renderClient(c) {
+                el('topbarTitle').textContent = c.client_name;
+                el('clientNameTitle').textContent = c.client_name;
+                el('clientIdDisplay').textContent = c.client_id;
+                el('secretClientId').textContent = c.client_id;
+
+                const isConfidential = c.client_type === 'confidential';
+                el('clientTypeBadge').textContent = c.client_type;
+                el('clientTypeBadge').className = `client-type-badge ${isConfidential ? 'badge-confidential' : 'badge-public'}`;
+
+                // Header actions
+                el('headerActions').innerHTML = `
+    <a href="/dashboard/clients/new" class="btn btn-outline btn-sm">+ New Client</a>
+  `;
+
+                // Overview tab
+                const created = c.created_at ? new Date(c.created_at).toLocaleString() : '—';
+                const updated = c.updated_at ? new Date(c.updated_at).toLocaleString() : '—';
+                el('infoClientRows').innerHTML = [
+                    ['Name', escHtml(c.client_name)],
+                    ['Client ID', `<code style="font-family:DM Mono,monospace;font-size:11px">${escHtml(c.client_id)}</code>`],
+                    ['Type', `<span class="client-type-badge ${isConfidential ? 'badge-confidential' : 'badge-public'}" style="font-size:10px">${c.client_type}</span>`],
+                    ['Created', created],
+                    ['Updated', updated],
+                ].map(([k, v]) => infoRow(k, v)).join('');
+
+                const scopes = (c.allowed_scopes || '').split(' ').filter(Boolean);
+                const grants = (c.grant_types || ['authorization_code']).join(', ');
+                el('infoAuthRows').innerHTML = [
+                    ['Scopes', scopes.map(s => `<span class="scope-pill">${escHtml(s)}</span>`).join('')],
+                    ['Grant Types', `<code style="font-family:DM Mono,monospace;font-size:11px">${escHtml(grants)}</code>`],
+                    ['PKCE', c.pkce_required ? '<span style="color:var(--success)">Required (S256)</span>' : '<span style="color:var(--muted)">Optional</span>'],
+                ].map(([k, v]) => infoRow(k, v)).join('');
+
+                // Redirect URIs
+                const rawUris = c.client_redirect_uris || c.redirect_uris || [];
+                const uris = Array.isArray(rawUris) ? rawUris : String(rawUris).split('\n').filter(Boolean);
+                el('redirectUrisList').innerHTML = uris.length ? uris.map(u =>
+                    `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><path d="M2 6h8M6 2l4 4-4 4" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <code style="font-family:DM Mono,monospace;font-size:11px;flex:1">${escHtml(u)}</code>
+    </div>`
+                ).join('') : '<div style="padding:8px 0;color:var(--muted);font-size:13px">No redirect URIs configured.</div>';
+
+                // Secret panel
+                if (!isConfidential) {
+                    el('secretPanel').innerHTML = `
+      <div class="info-panel-header">Client Credentials</div>
+      <div style="padding:16px 20px">
+        <div class="info-row" style="border:none;padding-top:0">
+          <div class="info-key">Client ID</div>
+          <div class="info-val"><code style="font-family:DM Mono,monospace;font-size:11px">${escHtml(c.client_id)}</code></div>
+          <button class="copy-btn" onclick="copyText('${escHtml(c.client_id)}', this)">Copy</button>
+        </div>
+        <div style="padding:12px 0;font-size:12px;color:var(--muted)">Public clients do not use a client secret. PKCE is used for security instead.</div>
+      </div>`;
+                    el('regenItem').style.display = 'none';
+                }
+
+                // Populate edit tab
+                el('editName').value = c.client_name;
+                const rawEditUris = c.client_redirect_uris || c.redirect_uris || [];
+                editUris = Array.isArray(rawEditUris) ? [...rawEditUris] : String(rawEditUris).split('\n').filter(Boolean);
+                renderEditTags();
+
+                const scopeList = scopes;
+                document.querySelectorAll('#editScopeGrid input').forEach(cb => { cb.checked = scopeList.includes(cb.value); });
+                el('editGrantRefresh').checked = (c.grant_types || []).includes('refresh_token');
+                el('editRequirePkce').checked = !!c.pkce_required;
+                if (!isConfidential) { el('editRequirePkce').checked = true; el('editRequirePkce').disabled = true; }
+
+                // Danger zone client name for deletion confirm
+                el('deleteModalName').textContent = c.client_name;
+            }
+
+            function infoRow(k, v) {
+                return `<div class="info-row"><div class="info-key">${k}</div><div class="info-val">${v}</div></div>`;
+            }
+
+            // ── Edit tag input ──
+            const editRedirectInput = el('editRedirectInput');
+            function addEditUri(raw) { const u = raw.trim(); if (!u || editUris.includes(u)) return; editUris.push(u); renderEditTags(); }
+            function removeEditUri(u) { editUris = editUris.filter(x => x !== u); renderEditTags(); }
+            function renderEditTags() {
+                const wrap = el('editRedirectWrap');
+                wrap.querySelectorAll('.tag-chip').forEach(c => c.remove());
+                editUris.forEach(uri => {
+                    const chip = document.createElement('div');
+                    chip.className = 'tag-chip';
+                    chip.innerHTML = `<span>${escHtml(uri)}</span><button class="tag-chip-remove">×</button>`;
+                    chip.querySelector('button').onclick = () => removeEditUri(uri);
+                    wrap.insertBefore(chip, editRedirectInput);
+                });
+            }
+            editRedirectInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addEditUri(editRedirectInput.value); editRedirectInput.value = ''; }
+                if (e.key === 'Backspace' && !editRedirectInput.value && editUris.length) removeEditUri(editUris[editUris.length - 1]);
+            });
+            editRedirectInput.addEventListener('blur', () => { if (editRedirectInput.value.trim()) { addEditUri(editRedirectInput.value); editRedirectInput.value = ''; } });
+            el('editRedirectWrap').addEventListener('click', () => editRedirectInput.focus());
+
+            // ── Save changes ──
+            el('saveChangesBtn').onclick = async () => {
+                const btn = el('saveChangesBtn');
+                btn.disabled = true; btn.textContent = 'Saving…';
+                const scopes = [...document.querySelectorAll('#editScopeGrid input:checked')].map(i => i.value);
+                if (!scopes.includes('openid')) { showError('"openid" scope is required.'); btn.disabled = false; btn.textContent = 'Save Changes'; return; }
+                if (!editUris.length) { showError('At least one redirect URI required.'); btn.disabled = false; btn.textContent = 'Save Changes'; return; }
+                const grants = ['authorization_code'];
+                if (el('editGrantRefresh').checked) grants.push('refresh_token');
+                const payload = {
+                    client_name: el('editName').value.trim(),
+                    redirect_uris: editUris,
+                    allowed_scopes: scopes.join(' '),
+                    pkce_required: el('editRequirePkce').checked,
+                };
+                try {
+                    const res = await apiFetch(`/clients/${clientId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (res.status === 401 || res.status === 403) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Update failed');
+                    clientData = data.data ?? data;
+                    renderClient(clientData);
+                    showSuccess('Client updated successfully.');
+                } catch (e) { showError(e.message || 'Failed to update client.'); }
+                finally { btn.disabled = false; btn.textContent = 'Save Changes'; }
+            };
+
+            el('cancelEditBtn').onclick = () => { if (clientData) renderClient(clientData); };
+
+            // ── Toggle secret ──
+            let secretRevealed = false;
+            el('toggleSecretBtn').onclick = () => {
+                secretRevealed = !secretRevealed;
+                el('toggleSecretBtn').textContent = secretRevealed ? 'Hide' : 'Reveal';
+                el('secretVal').textContent = secretRevealed ? '(Hashed — use Regenerate to get plaintext)' : '••••••••••••••••••••••••••••••••';
+            };
+
+            // ── Delete client ──
+            el('deleteClientBtn').onclick = () => { el('deleteModal').classList.remove('hidden'); el('deleteConfirmInput').value = ''; el('deleteConfirmBtn').disabled = true; };
+            el('deleteCancelBtn').onclick = () => el('deleteModal').classList.add('hidden');
+            el('deleteConfirmInput').addEventListener('input', () => {
+                el('deleteConfirmBtn').disabled = el('deleteConfirmInput').value.trim() !== (clientData?.client_name ?? '');
+            });
+            el('deleteConfirmBtn').onclick = async () => {
+                const btn = el('deleteConfirmBtn'); btn.disabled = true; btn.textContent = 'Deleting…';
+                try {
+                    const res = await apiFetch(`/clients/${clientId}`, { method: 'DELETE' });
+                    if (!res.ok) { const d = await res.json().catch(() => ({})); throw new Error(d.message || 'Delete failed'); }
+                    window.location.href = '/dashboard/clients';
+                } catch (e) { showError(e.message || 'Failed to delete.'); el('deleteModal').classList.add('hidden'); btn.disabled = false; btn.textContent = 'Delete Client'; }
+            };
+
+            // ── Regen secret ──
+            el('regenSecretBtn').onclick = () => el('regenModal').classList.remove('hidden');
+            el('regenCancelBtn').onclick = () => el('regenModal').classList.add('hidden');
+            el('regenConfirmBtn').onclick = async () => {
+                const btn = el('regenConfirmBtn'); btn.disabled = true; btn.textContent = 'Regenerating…';
+                try {
+                    const res = await apiFetch(`/clients/${clientId}/secret`, { method: 'POST' });
+                    if (res.status === 401 || res.status === 403) { redirectToLogin(); return; }
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Regeneration failed');
+                    el('regenModal').classList.add('hidden');
+                    el('newSecretVal').textContent = (data.data ?? data).client_secret ?? data.client_secret ?? '—';
+                    el('newSecretModal').classList.remove('hidden');
+                } catch (e) { showError(e.message || 'Failed to regenerate secret.'); el('regenModal').classList.add('hidden'); }
+                finally { btn.disabled = false; btn.textContent = 'Yes, Regenerate'; }
+            };
+            el('newSecretDoneBtn').onclick = () => el('newSecretModal').classList.add('hidden');
+
+            // ── Global copy ──
+            window.copyText = function (text, btn) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const orig = btn.textContent;
+                    btn.textContent = 'Copied!'; btn.classList.add('copied');
+                    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+                });
+            };
+
+            loadClient();
+        })();
+    </script>
+</body>
+
+</html>
