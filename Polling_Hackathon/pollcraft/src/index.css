@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Movement';
+  src: url('/Movement-DirectBlack.otf') format('opentype');
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    color: #c73e57;
+    font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  ::selection { background: var(--brand-glow); color: var(--text-primary); }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--surface-900); }
+  ::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 font-bold text-xs uppercase
+           transition-all duration-150 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed;
+    background: var(--brand);
+    color: var(--text-inverse);
+    letter-spacing: 0.1em;
+    border-radius: 0;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--brand-light);
+    box-shadow: 4px 4px 0 var(--brand-dim-strong);
+  }
+  .btn-primary:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-transparent text-xs uppercase font-mono
+           transition-all duration-150 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed;
+    border: 1px solid var(--border-default);
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    border-radius: 0;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+    background: var(--surface-700);
+  }
+
+  .btn-signal {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 font-bold text-xs uppercase
+           transition-all duration-150 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed;
+    background: var(--signal);
+    color: var(--text-inverse);
+    letter-spacing: 0.1em;
+    border-radius: 0;
+  }
+  .btn-signal:hover:not(:disabled) { background: var(--signal-dark); }
+
+  .btn-danger {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-transparent text-xs uppercase font-mono
+           transition-all duration-150 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed;
+    border: 1px solid var(--brand);
+    color: var(--brand);
+    letter-spacing: 0.06em;
+    border-radius: 0;
+  }
+  .btn-danger:hover:not(:disabled) { background: var(--brand); color: var(--text-inverse); }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0px;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.25s ease;
+  }
+  .card-hover:hover {
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-1px);
+  }
+
+  .input-base {
+    @apply w-full rounded-sm px-4 py-2.5 text-sm transition-all duration-150 focus:outline-none;
+    background: var(--input-bg);
+    border: 1px solid var(--border-default);
+    color: var(--text-primary);
+  }
+  .input-base::placeholder { color: var(--text-muted); }
+  .input-base:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-glow);
+    background: var(--surface-800);
+  }
+
+  .label-base {
+    @apply block text-xs font-mono font-medium uppercase tracking-widest mb-1.5;
+    color: var(--text-secondary);
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono font-medium uppercase tracking-wider;
+  }
+
+  .modal-overlay {
+    background: var(--modal-overlay);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-panel {
+    background: var(--modal-bg);
+    border: 1px solid var(--modal-border);
+    box-shadow: var(--shadow-modal);
+  }
+}
+
+@layer utilities {
+  .grid-bauhaus {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background-color: var(--border-subtle);
+  }
+
+  .animate-in {
+    animation: slideUp 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+
+  .bauhaus-stripe {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      var(--brand-dim) 3px,
+      var(--brand-dim) 6px
+    );
+  }
+
+  .geo-border-tl {
+    border-top: 3px solid var(--brand);
+    border-left: 3px solid var(--brand);
+  }
+
+  .geo-dot-pattern {
+    background-image: radial-gradient(circle, var(--border-subtle) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .live-dot::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--status-active);
+    margin-right: 6px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .brand-glow { box-shadow: 0 0 40px var(--brand-glow); }
+}
+
+@font-face {
+  font-family: 'Movement';
+  src: local('Movement');
+  font-display: swap;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+@keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes barGrow { from { width: 0%; } to { width: var(--bar-width); } }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-700) 25%, var(--surface-600) 50%, var(--surface-700) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 2px;
+}
+
+.recharts-tooltip-wrapper { outline: none !important; }
+
+.section-enter {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.section-enter.visible { opacity: 1; transform: translateY(0); }
