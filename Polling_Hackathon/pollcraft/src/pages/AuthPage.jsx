@@ -141,8 +141,8 @@ export default function AuthPage() {
             {googleLoading ? (
               <div className="flex items-center justify-center gap-2 py-3 text-xs [color:var(--text-muted)] font-mono">
                 <span className="flex gap-1">
-                  {[0,1,2].map(i => (
-                    <span key={i} className="w-1 h-1 rounded-full animate-pulse" style={{ background: 'var(--text-muted)', animationDelay: `${i*0.15}s` }} />
+                  {[0, 1, 2].map(i => (
+                    <span key={i} className="w-1 h-1 rounded-full animate-pulse" style={{ background: 'var(--text-muted)', animationDelay: `${i * 0.15}s` }} />
                   ))}
                 </span>
                 Signing in with Google...
@@ -157,6 +157,8 @@ export default function AuthPage() {
                   theme="filled_black"
                   size="large"
                   width="320"
+                  use_fedcm_for_prompt={false}
+                  itp_support={false}
                 />
               </div>
             )}
@@ -224,8 +226,8 @@ export default function AuthPage() {
             >
               {loading ? (
                 <span className="flex gap-1">
-                  {[0,1,2].map(i => (
-                    <span key={i} className="w-1.5 h-1.5 [background:var(--surface-900)] rounded-full animate-pulse" style={{ animationDelay: `${i*0.15}s` }} />
+                  {[0, 1, 2].map(i => (
+                    <span key={i} className="w-1.5 h-1.5 [background:var(--surface-900)] rounded-full animate-pulse" style={{ animationDelay: `${i * 0.15}s` }} />
                   ))}
                 </span>
               ) : (
