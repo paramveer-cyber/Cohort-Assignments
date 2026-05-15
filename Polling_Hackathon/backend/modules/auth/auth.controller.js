@@ -13,14 +13,14 @@ import jwt from "jsonwebtoken";
 const COOKIE_OPTS = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
 const ANON_COOKIE_OPTS = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 30 * 24 * 60 * 60 * 1000,
 };
 
