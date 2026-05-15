@@ -15,11 +15,11 @@ import { GeoBg, SectionDivider } from '../components/ui/BauhausAccents.jsx'
 function PollStatusWatcher({ pollId, onStatusChange }) {
   const { getToken } = useAuth()
   const adminToken = getToken()
-  useSocket(pollId, {
+  useSocket(pollId, adminToken, {
     onExpired: (data) => onStatusChange(data.pollId, data.status),
     onPublished: (data) => onStatusChange(data.pollId, data.status),
     onStatusChanged: (data) => onStatusChange(data.pollId, data.status),
-  }, adminToken)
+  })
   return null
 }
 

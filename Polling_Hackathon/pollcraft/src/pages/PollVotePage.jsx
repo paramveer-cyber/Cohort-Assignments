@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { pollsApi } from '../api/index.js'
+import { pollsApi, authApi } from '../api/index.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useSocket } from '../hooks/useSocket.js'
 import Navbar from '../components/layout/Navbar.jsx'
@@ -159,7 +159,7 @@ function VoteContent() {
     return () => { cancelled = true }
   }, [pollKey, user])
 
-  useSocket(pollId, null, {
+  useSocket(pollId, {
     onExpired: () => {
       if (!readonlyReason) setReadonlyReason('expired')
     },
@@ -191,6 +191,9 @@ function VoteContent() {
 
     setSubmitting(true)
     try {
+      if (!user && poll.anonymousAllowed) {
+        await authApi.getAnonToken()
+      }
       await pollsApi.respond(pollKey,
         Object.entries(answers).map(([questionId, selectedOptionId]) => ({
           questionId, selectedOptionId,

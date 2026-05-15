@@ -128,7 +128,7 @@ function AnalyticsContent() {
     setAnalytics(prev => prev ? { ...prev, pollStatus: data.status } : prev)
   }, [])
 
-  useSocket(id, {
+  useSocket(id, adminToken, {
     onAnalytics: handleAnalyticsUpdate,
     onCount: handleCount,
     onResponse: () => loadAnalytics(),
@@ -140,7 +140,7 @@ function AnalyticsContent() {
     onViewerCount: handleViewerCount,
     onStatusChanged: handleStatusChanged,
     onAdminJoinError: (data) => setAdminJoinError(data.message),
-  }, adminToken)
+  })
 
   useEffect(() => {
     setSocketConnected(true)

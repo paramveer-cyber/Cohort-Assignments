@@ -94,7 +94,7 @@ function PublicAnalyticsContent() {
     setViewerCount(data.count)
   }, [])
 
-  useSocket(id, {
+  useSocket(id, null, {
     onCount: handleCount,
     onResponse: () => loadResults(),
     onConnect: () => {
