@@ -1,12 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
 import { io } from "socket.io-client";
 
-export function useSocket(pollId, token, handlers) {
+export function useSocket(pollId, token, handlers = {}) {
   const socketRef = useRef(null);
   const handlersRef = useRef(handlers);
 
   useEffect(() => {
-    handlersRef.current = handlers;
+    handlersRef.current = handlers || {};
   }, [handlers]);
 
   const emit = useCallback((event, data) => {
@@ -25,43 +25,40 @@ export function useSocket(pollId, token, handlers) {
       } else {
         socket.emit("join:poll:public", pollId);
       }
-      if (handlersRef.current.onConnect) handlersRef.current.onConnect();
+      handlersRef.current?.onConnect?.();
     });
 
     socket.on("disconnect", () => {
-      if (handlersRef.current.onDisconnect) handlersRef.current.onDisconnect();
+      handlersRef.current?.onDisconnect?.();
     });
 
     socket.on("analytics-updated", (data) => {
-      if (handlersRef.current.onAnalytics) handlersRef.current.onAnalytics(data);
+      handlersRef.current?.onAnalytics?.(data);
     });
 
     socket.on("poll-expired", () => {
-      if (handlersRef.current.onExpired) handlersRef.current.onExpired();
+      handlersRef.current?.onExpired?.();
     });
 
     socket.on("poll-published", () => {
-      if (handlersRef.current.onPublished) handlersRef.current.onPublished();
+      handlersRef.current?.onPublished?.();
     });
 
     socket.on("poll-status-changed", (data) => {
-      if (handlersRef.current.onStatusChanged) handlersRef.current.onStatusChanged(data);
+      handlersRef.current?.onStatusChanged?.(data);
     });
 
     socket.on("response-count-updated", (data) => {
-      if (handlersRef.current.onCount) handlersRef.current.onCount(data);
+      handlersRef.current?.onCount?.(data);
+      handlersRef.current?.onResponse?.(data);
     });
 
     socket.on("viewer-count-updated", (data) => {
-      if (handlersRef.current.onViewerCount) handlersRef.current.onViewerCount(data);
-    });
-
-    socket.on("response-count-updated", (data) => {
-      if (handlersRef.current.onResponse) handlersRef.current.onResponse(data);
+      handlersRef.current?.onViewerCount?.(data);
     });
 
     socket.on("error", (err) => {
-      if (handlersRef.current.onError) handlersRef.current.onError(err);
+      handlersRef.current?.onError?.(err);
     });
 
     return () => {

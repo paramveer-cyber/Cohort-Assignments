@@ -89,7 +89,7 @@ export const authApi = {
   },
   logout: () => req('/auth/logout', { method: 'POST' }),
   deleteAccount: () => req('/auth/account', { method: 'DELETE' }),
-  getAnonToken: () => req('/auth/anon-token', { method: 'POST' }),
+  issueAnonToken: () => req('/auth/anon-token', { method: 'POST' }),
 }
 
 export const pollsApi = {

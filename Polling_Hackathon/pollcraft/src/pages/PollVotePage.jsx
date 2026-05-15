@@ -159,7 +159,8 @@ function VoteContent() {
     return () => { cancelled = true }
   }, [pollKey, user])
 
-  useSocket(pollId, {
+  // FIX: Added 'null' as the second argument so handlers are passed correctly
+  useSocket(pollId, null, {
     onExpired: () => {
       if (!readonlyReason) setReadonlyReason('expired')
     },
@@ -192,7 +193,7 @@ function VoteContent() {
     setSubmitting(true)
     try {
       if (!user && poll.anonymousAllowed) {
-        await authApi.getAnonToken()
+        await authApi.issueAnonToken()
       }
       await pollsApi.respond(pollKey,
         Object.entries(answers).map(([questionId, selectedOptionId]) => ({
