@@ -19,7 +19,7 @@ pollRoutes.get("/", readRateLimiter, listPublicPolls);
 pollRoutes.get("/:slug", readRateLimiter, optionalAuth, getPollBySlug);
 pollRoutes.get("/:slug/submission", readRateLimiter, optionalAuth, handleGetSubmission);
 
-pollRoutes.post("/:slug/respond", submitRateLimiter, authMiddleware, validate(SubmitResponseSchema), handleSubmitResponse);
+pollRoutes.post("/:slug/respond", submitRateLimiter, optionalAuth, validate(SubmitResponseSchema), handleSubmitResponse);
 
 pollRoutes.post("/", authMiddleware, validate(CreatePollSchema), handleCreatePoll);
 pollRoutes.put("/:id", authMiddleware, validate(UpdatePollSchema), handleUpdatePoll);

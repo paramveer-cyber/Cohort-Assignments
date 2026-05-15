@@ -173,7 +173,7 @@ export const getSubmissionStatus = async (slug, userId) => {
     };
 };
 
-export const submitResponse = async ({ slug, userId, answers: answerData }) => {
+export const submitResponse = async ({ slug, userId, sessionToken, answers: answerData }) => {
     const poll = await findPollBySlug(slug);
     if (!poll) throw ApiError.notFound("Poll not found");
 
@@ -189,18 +189,19 @@ export const submitResponse = async ({ slug, userId, answers: answerData }) => {
         throw ApiError.unAuthorized("This poll requires authentication");
     }
 
-    if (!userId) {
-        throw ApiError.unAuthorized("Anonymous voting is not supported without a session token. Please sign in.");
+    if (poll.anonymousAllowed && !userId && !sessionToken) {
+        throw ApiError.badRequest("Anonymous submissions require a session token");
     }
 
-    const lockKey = `lock:response:${poll.id}:${userId}`;
+    const lockIdentifier = userId ?? sessionToken;
+    const lockKey = `lock:response:${poll.id}:${lockIdentifier}`;
     const acquired = await redis.set(lockKey, "1", { NX: true, EX: 15 });
     if (!acquired) {
         throw ApiError.conflict("A submission is already in progress. Please wait.");
     }
 
     try {
-        const existing = await findExistingResponse(poll.id, userId, null);
+        const existing = await findExistingResponse(poll.id, userId ?? null, userId ? null : sessionToken);
         if (existing) throw ApiError.conflict("You have already submitted a response to this poll");
 
         const answeredIds = new Set(answerData.map((a) => a.questionId));
@@ -226,8 +227,8 @@ export const submitResponse = async ({ slug, userId, answers: answerData }) => {
 
         const response = await insertResponse({
             pollId:       poll.id,
-            userId,
-            sessionToken: null,
+            userId:       userId ?? null,
+            sessionToken: userId ? null : (sessionToken ?? null),
             answerData,
         });
 

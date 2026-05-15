@@ -26,8 +26,9 @@ export const handleSubmitResponse = asyncHandler(async (req, res) => {
     const { slug }  = req.params;
     const userId    = req.user?.userId ?? null;
     const answers   = req.body.answers;
+    const sessionToken = req.body.sessionToken ?? null;
 
-    const response = await submitResponse({ slug, userId, answers });
+    const response = await submitResponse({ slug, userId, sessionToken, answers });
     return created(res, "Response submitted successfully", { responseId: response.id });
 });
 
