@@ -27,6 +27,7 @@ function CreatePollContent() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [slug, setSlug] = useState('')
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false)
   const [anonymousAllowed, setAnonymousAllowed] = useState(false)
   const [expiresAt, setExpiresAt] = useState('')
   const [publishOn, setPublishOn] = useState('')
@@ -131,6 +132,12 @@ function CreatePollContent() {
         err.errors.forEach(er => { e[er.path] = er.message })
         setErrors(e)
         toast.error('Please fix validation errors')
+      } else if (err.status === 409 || (err.message || '').toLowerCase().includes('slug')) {
+        const newSlug = generateSlug()
+        setSlug(newSlug)
+        setSlugManuallyEdited(false)
+        setErrors(prev => ({ ...prev, slug: 'Slug was taken — a new one was generated. You can customize it.' }))
+        toast.error('Slug was already taken — try again with the new one')
       } else {
         toast.error(err.message || 'Failed to create poll')
       }
@@ -195,7 +202,7 @@ function CreatePollContent() {
                 value={title}
                 onChange={e => {
                   setTitle(e.target.value)
-                  if (!slug) setSlug(generateSlug())
+                  if (!slugManuallyEdited) setSlug(generateSlug())
                   setErrors(prev => ({ ...prev, title: '' }))
                 }}
                 placeholder="What do you want to ask?"
@@ -219,7 +226,11 @@ function CreatePollContent() {
               <label className="label-base">Slug (optional)</label>
               <input
                 value={slug}
-                onChange={e => { setSlug(e.target.value); setErrors(prev => ({ ...prev, slug: '' })) }}
+                onChange={e => {
+                  setSlug(e.target.value)
+                  setSlugManuallyEdited(true)
+                  setErrors(prev => ({ ...prev, slug: '' }))
+                }}
                 placeholder="view-xxxxxx (auto-generated)"
                 className={`input-base font-mono ${errors.slug ? 'border-crimson' : ''}`}
               />

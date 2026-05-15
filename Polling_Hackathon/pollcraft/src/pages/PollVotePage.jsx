@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { pollsApi } from '../api/index.js'
+import { pollsApi, authApi } from '../api/index.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useSocket } from '../hooks/useSocket.js'
 import Navbar from '../components/layout/Navbar.jsx'
-import { ToastProvider } from '../components/ui/Toast.jsx'
+import { ToastProvider, useToast } from '../components/ui/Toast.jsx'
 import { BauhausCorner } from '../components/ui/BauhausAccents.jsx'
 import { CheckCircle, AlertCircle, Lock, Clock, ArrowRight, Archive, BarChart2 } from 'lucide-react'
 
@@ -16,6 +16,13 @@ function ReadonlyBanner({ reason }) {
       text: 'text-signal',
       label: 'Your response is recorded',
       sub: 'Answers shown below are what you submitted.',
+    },
+    duplicate: {
+      icon: <AlertCircle size={16} className="text-crimson shrink-0" />,
+      bg: '[background:var(--crimson-dim)] [border-color:var(--crimson-border)]',
+      text: 'text-crimson',
+      label: 'Already submitted',
+      sub: 'You have already submitted a response to this poll.',
     },
     expired: {
       icon: <Clock size={16} className="[color:var(--text-muted)] shrink-0" />,
@@ -102,6 +109,7 @@ function VoteContent() {
   const pollKey = token ? `view-${token}` : slug
   const navigate = useNavigate()
   const { user } = useAuth()
+  const toast = useToast()
 
   const [poll, setPoll] = useState(null)
   const [pollId, setPollId] = useState(null)
@@ -132,10 +140,19 @@ function VoteContent() {
         setPoll(p)
         setPollId(p.id)
 
-        if (submissionResult.status === 'fulfilled' && submissionResult.value?.submitted) {
+        // Ensure anon token cookie is set so anonymous submissions are accepted
+        if (p.anonymousAllowed && !user) {
+          try { await authApi.issueAnonToken() } catch { /* cookie already set or network hiccup */ }
+        }
+
+        const alreadySubmitted409 =
+          submissionResult.status === 'rejected' && submissionResult.reason?.status === 409
+        if (alreadySubmitted409) {
+          setReadonlyReason('duplicate')
+        } else if (submissionResult.status === 'fulfilled' && submissionResult.value?.submitted) {
           const sub = submissionResult.value
           const answerMap = {}
-          if (sub.answers) {
+          if (sub?.answers) {
             sub.answers.forEach(a => {
               answerMap[a.questionId] = a.selectedOptionId
             })
@@ -199,11 +216,25 @@ function VoteContent() {
       setReadonlyReason('submitted')
     } catch (err) {
       if (err.status === 409) {
-        setReadonlyReason('submitted')
+        setReadonlyReason('duplicate')
       } else if (err.status === 401) {
         setReadonlyReason('auth')
       } else if (err.status === 400 && err.message === 'This poll has expired') {
         setReadonlyReason('expired')
+      } else if (err.status === 400 && err.message?.includes('Anonymous session required')) {
+        // anonToken cookie missing or expired — re-issue and retry once
+        try {
+          await authApi.issueAnonToken()
+          await pollsApi.respond(
+            pollKey,
+            Object.entries(answers).map(([questionId, selectedOptionId]) => ({
+              questionId, selectedOptionId,
+            })),
+          )
+          setReadonlyReason('submitted')
+        } catch (retryErr) {
+          setValidationErrors({ _global: retryErr.message || 'Submission failed. Please refresh and try again.' })
+        }
       } else {
         setValidationErrors({ _global: err.message || 'Submission failed' })
       }

@@ -115,11 +115,11 @@ export const findExistingResponse = (pollId, userId, sessionToken) => {
     });
 };
 
-export const findResponseWithAnswers = (pollId, userId) => {
-    return db.query.responses.findFirst({
-        where: and(eq(responses.pollId, pollId), eq(responses.userId, userId)),
-        with: { answers: true },
-    });
+export const findResponseWithAnswers = (pollId, userId, sessionToken = null) => {
+    const condition = userId
+        ? and(eq(responses.pollId, pollId), eq(responses.userId, userId))
+        : and(eq(responses.pollId, pollId), eq(responses.sessionToken, sessionToken));
+    return db.query.responses.findFirst({ where: condition, with: { answers: true } });
 };
 
 export const hasUserRespondedToPoll = async (pollId, userId, sessionToken) => {

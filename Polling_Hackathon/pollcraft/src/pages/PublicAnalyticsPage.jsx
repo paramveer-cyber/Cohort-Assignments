@@ -35,30 +35,20 @@ function csvEscape(val) {
 
 function exportCSV(results) {
   const title = results.pollTitle || 'poll'
-  console.log(results)
-  const questions = results.questions || []
-  const rows = []
-  rows.push(['Made using PollNow, :)'])
-  rows.push(['Total Responses', String(results.totalResponses ?? 0)])
-  rows.push(['Computed At', csvEscape(results.computedAt ? new Date(results.computedAt).toISOString() : '')])
-  rows.push([])
-  rows.push(['Question #', 'Question', 'Option', 'Votes', 'Percentage'])
-  questions.forEach((q, qi) => {
-    const totalQ = q.options.reduce((s, o) => s + o.votes, 0)
-    q.options.forEach(opt => {
-      const pct = totalQ > 0 ? ((opt.votes / totalQ) * 100).toFixed(1) + '%' : '0.0%'
-      rows.push([String(qi + 1), csvEscape(q.content), csvEscape(opt.text), String(opt.votes), pct])
-    })
-    rows.push([])
-  })
-  const csv = rows.map(r => r.join(',')).join('\n')
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}-results.csv`
-  link.click()
-  URL.revokeObjectURL(url)
+  const rows = [["Question", "Option", "Votes"]];
+  results.questions?.forEach((question) => {
+    question.options?.forEach((option) => {
+      rows.push([question.text, option.text, option.votes]);
+    });
+  });
+  const csv = rows.map((row) => row.map(String).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `${title}.csv`;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }
 
 function PublicAnalyticsContent() {
@@ -107,7 +97,13 @@ function PublicAnalyticsContent() {
   useSocket(id, {
     onCount: handleCount,
     onResponse: () => loadResults(),
-    onConnect: () => setSocketConnected(true),
+    onConnect: () => {
+      setSocketConnected(true)
+      if (pollInterval.current) {
+        clearInterval(pollInterval.current)
+        pollInterval.current = null
+      }
+    },
     onDisconnect: () => {
       setSocketConnected(false)
       if (!pollInterval.current) {
@@ -118,7 +114,6 @@ function PublicAnalyticsContent() {
   })
 
   useEffect(() => {
-    setSocketConnected(true)
     return () => {
       if (pollInterval.current) clearInterval(pollInterval.current)
     }

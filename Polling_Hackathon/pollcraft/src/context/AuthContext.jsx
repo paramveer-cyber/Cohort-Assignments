@@ -62,8 +62,10 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  const getToken = useCallback(() => tokenStore.get(), [])
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, googleAuth, logout, setUser }}>
+    <AuthContext.Provider value={{ user, loading, login, register, googleAuth, logout, setUser, getToken }}>
       {children}
     </AuthContext.Provider>
   )

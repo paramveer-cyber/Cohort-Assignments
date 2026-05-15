@@ -33,7 +33,6 @@ export const UpdatePollSchema = z.object({
 });
 
 export const SubmitResponseSchema = z.object({
-    sessionToken: z.string().min(1).max(255).optional(),
     answers: z.array(
         z.object({
             questionId:       z.string().uuid(),

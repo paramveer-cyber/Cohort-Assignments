@@ -46,6 +46,10 @@ const buildAnalytics = async (pollId) => {
 
     return {
         pollId,
+        pollTitle: poll.title,
+        pollDescription: poll.description ?? null,
+        pollStatus: poll.status,
+        resultsVisibility: poll.resultsVisibility,
         totalResponses,
         questions: Object.values(questionMap).sort((a, b) => a.displayOrder - b.displayOrder),
         participation: participation.map((p) => ({ hour: p.hour, count: p.count })),
@@ -95,5 +99,5 @@ export const getAnalytics = async (pollId) => {
 };
 
 export const invalidateAnalyticsCache = async (pollId) => {
-    await redis.del(analyticsKey(pollId));
+    await redis.del([analyticsKey(pollId), staleKey(pollId)]);
 };

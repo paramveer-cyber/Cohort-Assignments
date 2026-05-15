@@ -30,7 +30,8 @@ function exportCSV(analytics) {
   const title = analytics.pollTitle || 'poll'
   const rows = []
 
-  rows.push(['Made using PollNow, :)'])
+  rows.push(['Poll Title', csvEscape(analytics.pollTitle || '')])
+  rows.push(['Poll Description', csvEscape(analytics.pollDescription || '')])
   rows.push(['Status', csvEscape(analytics.pollStatus || '')])
   rows.push(['Results Visibility', csvEscape(analytics.resultsVisibility || '')])
   rows.push(['Total Responses', String(analytics.totalResponses ?? 0)])

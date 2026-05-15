@@ -9,7 +9,7 @@ import {
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const generateTokens = async (user) => {
-    const accessToken  = generateToken(user.id, user.email);
+    const accessToken = generateToken(user.id, user.email);
     const refreshToken = generateRefreshToken(user.id);
     await setUserRefreshToken(user.id, refreshToken);
     return { accessToken, refreshToken };
@@ -76,8 +76,8 @@ export const findOrCreateGoogleUser = async (payload) => {
             user = await insertUser({
                 name,
                 email,
-                avatarUrl:  picture ?? null,
-                provider:   "google",
+                avatarUrl: picture ?? null,
+                provider: "google",
                 providerId: googleId,
             });
         }

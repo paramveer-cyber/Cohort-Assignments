@@ -3,20 +3,20 @@ import { findPollById } from "../modules/poll/poll.queries.js";
 import { publicRoom, adminRoom, emitToPublic } from "./index.js";
 
 const JOIN_LIMIT_PER_SOCKET = 20;
-const EVENT_RATE_LIMIT      = 100;
-const EVENT_WINDOW_MS       = 1000;
+const EVENT_RATE_LIMIT = 100;
+const EVENT_WINDOW_MS = 1000;
 
-const socketJoinCounts  = new Map();
+const socketJoinCounts = new Map();
 const socketEventBucket = new Map();
 const socketPublicRooms = new Map();
-const socketAdminRooms  = new Map();
+const socketAdminRooms = new Map();
 
 const checkEventRate = (socketId) => {
-    const now    = Date.now();
+    const now = Date.now();
     const bucket = socketEventBucket.get(socketId) ?? { count: 0, windowStart: now };
 
     if (now - bucket.windowStart > EVENT_WINDOW_MS) {
-        bucket.count       = 1;
+        bucket.count = 1;
         bucket.windowStart = now;
         socketEventBucket.set(socketId, bucket);
         return true;
@@ -76,7 +76,7 @@ export const registerSocketHandlers = (io) => {
                 const poll = await findPollById(pollId);
                 if (!poll) return;
 
-                const isOwner  = socket.user?.userId === poll.creatorId;
+                const isOwner = socket.user?.userId === poll.creatorId;
                 const isPublic = ["active", "published"].includes(poll.status);
 
                 if (!isPublic && !isOwner) return;

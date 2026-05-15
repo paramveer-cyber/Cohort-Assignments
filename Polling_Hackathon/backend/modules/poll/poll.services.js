@@ -1,6 +1,7 @@
 import redis from "../../config/redis.js";
 import ApiError from "../../common/utils/api-error.js";
 import { generateSlug } from "../../common/utils/slugify.js";
+import jwt from "jsonwebtoken";
 import {
     findPollBySlug, findPollById, findPollsByCreator,
     insertPoll, updatePollStatus, updatePollFields, deletePollById,
@@ -34,6 +35,16 @@ const invalidateAllPollCaches = async (poll) => {
         `analytics:lock:${poll.id}`,
     ];
     await redis.del(keys);
+};
+
+const extractAnonId = (anonToken) => {
+    if (!anonToken) return null;
+    try {
+        const decoded = jwt.verify(anonToken, process.env.JWT_SECRET, { issuer: "pollApp" });
+        return decoded.anonId ?? null;
+    } catch {
+        return null;
+    }
 };
 
 export const createPoll = async ({ creatorId, title, description, slug, anonymousAllowed, expiresAt, publishOn, resultsVisibility, questions }) => {
@@ -73,6 +84,11 @@ export const updatePoll = async (pollId, requesterId, data) => {
 
     const updated = await updatePollFields(pollId, data);
     await invalidatePollCache(updated.slug);
+
+    if (data.questions !== undefined) {
+        await invalidateAnalyticsCache(pollId);
+    }
+
     return updated;
 };
 
@@ -128,7 +144,7 @@ export const getCreatorAnalytics = async (pollId, requesterId) => {
     return getAnalytics(pollId);
 };
 
-export const getPublishedAnalytics = async (pollId, requesterId, sessionToken) => {
+export const getPublishedAnalytics = async (pollId, requesterId, anonToken) => {
     const poll = await findPollById(pollId);
     if (!poll || poll.status !== "published") throw ApiError.notFound("Poll not found");
 
@@ -142,7 +158,8 @@ export const getPublishedAnalytics = async (pollId, requesterId, sessionToken) =
         if (requesterId === poll.creatorId) {
             return getAnalytics(pollId);
         }
-        const hasResponded = await hasUserRespondedToPoll(pollId, requesterId ?? null, sessionToken ?? null);
+        const anonId = extractAnonId(anonToken);
+        const hasResponded = await hasUserRespondedToPoll(pollId, requesterId ?? null, anonId ?? null);
         if (!hasResponded) {
             throw ApiError.forbidden("Only respondents can view results");
         }
@@ -151,15 +168,18 @@ export const getPublishedAnalytics = async (pollId, requesterId, sessionToken) =
     return getAnalytics(pollId);
 };
 
-export const getSubmissionStatus = async (slug, userId) => {
+export const getSubmissionStatus = async (slug, userId, anonToken = null) => {
     const poll = await findPollBySlug(slug);
     if (!poll) throw ApiError.notFound("Poll not found");
 
-    if (!userId) {
+    const anonId = !userId ? extractAnonId(anonToken) : null;
+
+    if (!userId && !anonId) {
         return { submitted: false, answers: [] };
     }
 
-    const response = await findResponseWithAnswers(poll.id, userId);
+    const response = await findResponseWithAnswers(poll.id, userId ?? null, anonId);
+
     if (!response) {
         return { submitted: false, answers: [] };
     }
@@ -173,7 +193,7 @@ export const getSubmissionStatus = async (slug, userId) => {
     };
 };
 
-export const submitResponse = async ({ slug, userId, sessionToken, answers: answerData }) => {
+export const submitResponse = async ({ slug, userId, anonToken, answers: answerData }) => {
     const poll = await findPollBySlug(slug);
     if (!poll) throw ApiError.notFound("Poll not found");
 
@@ -189,11 +209,15 @@ export const submitResponse = async ({ slug, userId, sessionToken, answers: answ
         throw ApiError.unAuthorized("This poll requires authentication");
     }
 
-    if (poll.anonymousAllowed && !userId && !sessionToken) {
-        throw ApiError.badRequest("Anonymous submissions require a session token");
+    let anonId = null;
+    if (poll.anonymousAllowed && !userId) {
+        anonId = extractAnonId(anonToken);
+        if (!anonId) {
+            throw ApiError.badRequest("Anonymous session required. Call /auth/anon-token first.");
+        }
     }
 
-    const lockIdentifier = userId ?? sessionToken;
+    const lockIdentifier = userId ?? anonId;
     const lockKey = `lock:response:${poll.id}:${lockIdentifier}`;
     const acquired = await redis.set(lockKey, "1", { NX: true, EX: 15 });
     if (!acquired) {
@@ -201,7 +225,7 @@ export const submitResponse = async ({ slug, userId, sessionToken, answers: answ
     }
 
     try {
-        const existing = await findExistingResponse(poll.id, userId ?? null, userId ? null : sessionToken);
+        const existing = await findExistingResponse(poll.id, userId ?? null, userId ? null : anonId);
         if (existing) throw ApiError.conflict("You have already submitted a response to this poll");
 
         const answeredIds = new Set(answerData.map((a) => a.questionId));
@@ -228,7 +252,7 @@ export const submitResponse = async ({ slug, userId, sessionToken, answers: answ
         const response = await insertResponse({
             pollId:       poll.id,
             userId:       userId ?? null,
-            sessionToken: userId ? null : (sessionToken ?? null),
+            sessionToken: userId ? null : anonId,
             answerData,
         });
 

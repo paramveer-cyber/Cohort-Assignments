@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { pollsApi } from '../api/index.js'
-import { tokenStore } from '../api/index.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useSocket } from '../hooks/useSocket.js'
 import Navbar from '../components/layout/Navbar.jsx'
@@ -14,7 +13,8 @@ import { Plus, BarChart2, FileText, Zap, Globe, Clock, Archive } from 'lucide-re
 import { GeoBg, SectionDivider } from '../components/ui/BauhausAccents.jsx'
 
 function PollStatusWatcher({ pollId, onStatusChange }) {
-  const adminToken = tokenStore.get()
+  const { getToken } = useAuth()
+  const adminToken = getToken()
   useSocket(pollId, {
     onExpired: (data) => onStatusChange(data.pollId, data.status),
     onPublished: (data) => onStatusChange(data.pollId, data.status),
