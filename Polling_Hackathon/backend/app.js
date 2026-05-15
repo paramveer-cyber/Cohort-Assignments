@@ -16,8 +16,6 @@ const CORS_CONFIG = {
 
 const app = express();
 
-const proxyCount = parseInt(process.env.TRUST_PROXY_HOPS || "0", 10);
-if (proxyCount > 0) app.set("trust proxy", proxyCount);
 app.set("trust proxy", 1);
 app.use(helmet());
 app.use(cors(CORS_CONFIG));
