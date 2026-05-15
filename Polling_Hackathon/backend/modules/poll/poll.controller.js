@@ -39,7 +39,12 @@ export const handleSubmitResponse = async (req, res, next) => {
         const { slug } = req.params;
         const userId = req.user?.userId ?? null;
         const answers = req.body.answers;
-        const anonToken = req.cookies?.anonToken ?? null;
+        let anonToken = null;
+        const authHeader = req.headers?.authorization;
+        
+        if (!userId && authHeader && authHeader.startsWith("Bearer ")) {
+            anonToken = authHeader.split(" ")[1];
+        }
 
         const response = await submitResponse({ slug, userId, anonToken, answers });
         return created(res, "Response submitted successfully", { responseId: response.id });

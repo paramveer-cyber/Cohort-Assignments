@@ -155,8 +155,7 @@ export const issueAnonToken = async (req, res, next) => {
             issuer: "pollApp",
         });
 
-        res.cookie("anonToken", anonToken, ANON_COOKIE_OPTS);
-        return ok(res, "Anon token issued", { issued: true });
+        return ok(res, "Anon token issued", { issued: true, token: anonToken });
     } catch (err) {
         next(err);
     }

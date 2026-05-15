@@ -1,12 +1,19 @@
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 let _token = null
+let _anonToken = null
 let _refreshPromise = null
 
 export const tokenStore = {
   get: () => _token,
   set: (t) => { _token = t },
   clear: () => { _token = null },
+}
+
+export const anonTokenStore = {
+  get: () => _anonToken,
+  set: (t) => { _anonToken = t },
+  clear: () => { _anonToken = null },
 }
 
 async function tryRefresh() {
@@ -33,8 +40,14 @@ async function tryRefresh() {
 
 async function req(path, opts = {}) {
   const token = tokenStore.get()
+  const anonToken = anonTokenStore.get()
   const headers = { 'Content-Type': 'application/json', ...opts.headers }
-  if (token) headers['Authorization'] = `Bearer ${token}`
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  } else if (anonToken) {
+    headers['Authorization'] = `Bearer ${anonToken}`
+  }
 
   const res = await fetch(`${BASE}${path}`, {
     ...opts,
@@ -89,7 +102,13 @@ export const authApi = {
   },
   logout: () => req('/auth/logout', { method: 'POST' }),
   deleteAccount: () => req('/auth/account', { method: 'DELETE' }),
-  issueAnonToken: () => req('/auth/anon-token', { method: 'POST' }),
+  issueAnonToken: async () => {
+    const res = await req('/auth/anon-token', { method: 'POST' })
+    if (res.data && res.data.token) {
+      anonTokenStore.set(res.data.token)
+    }
+    return res
+  },
 }
 
 export const pollsApi = {
