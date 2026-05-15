@@ -57,7 +57,7 @@ function DashboardContent() {
     try {
       const { poll } = await pollsApi.activate(id)
       setPolls(prev => prev.map(p => p.id === id ? poll : p))
-      toast.success('Poll activated — now accepting responses')
+      toast.success('Poll activated ; now accepting responses')
     } catch (err) {
       toast.error(err.message || 'Failed to activate')
     } finally {
@@ -73,7 +73,7 @@ function DashboardContent() {
     try {
       const { poll } = await pollsApi.publish(publishModal.id, visibility)
       setPolls(prev => prev.map(p => p.id === publishModal.id ? { ...poll, resultsVisibility: visibility } : p))
-      toast.success(`Poll published — ${visibility === 'all' ? 'visible to everyone' : visibility === 'respondents' ? 'visible to respondents' : 'private'}`)
+      toast.success(`Poll published ; ${visibility === 'all' ? 'visible to everyone' : visibility === 'respondents' ? 'visible to respondents' : 'private'}`)
       setPublishModal(null)
     } catch (err) {
       toast.error(err.message || 'Failed to publish')
@@ -150,7 +150,7 @@ function DashboardContent() {
             <div>
               <p className="text-xs font-mono uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>Control Panel</p>
               <h1 className="text-4xl font-bold tracking-tight" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1 }}>DASHBOARD</h1>
-              <p className="text-xs font-mono mt-1.5" style={{ color: 'var(--text-muted)' }}>— {user?.name}</p>
+              <p className="text-xs font-mono mt-1.5" style={{ color: 'var(--text-muted)' }}>; {user?.name}</p>
             </div>
           </div>
           <Link to="/create"

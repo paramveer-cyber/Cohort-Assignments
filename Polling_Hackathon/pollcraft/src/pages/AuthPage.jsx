@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '../context/AuthContext.jsx'
 import { ApiError } from '../api/index.js'
 import { Eye, EyeOff, BarChart2, ArrowRight, AlertCircle } from 'lucide-react'
-import { GeoBg, BauhausCorner } from '../components/ui/BauhausAccents.jsx'
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
+import { GeoBg } from '../components/ui/BauhausAccents.jsx'
 
 export default function AuthPage() {
   const [mode, setMode] = useState('login')
@@ -17,40 +16,12 @@ export default function AuthPage() {
   const [serverError, setServerError] = useState('')
   const { login, register, googleAuth } = useAuth()
   const navigate = useNavigate()
-  const googleBtnRef = useRef(null)
 
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID || !window.google) return
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleCredential,
-    })
-    renderGoogleBtn()
-  }, [])
-
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID || !window.google) return
-    renderGoogleBtn()
-  }, [mode])
-
-  function renderGoogleBtn() {
-    if (!googleBtnRef.current || !window.google) return
-    googleBtnRef.current.innerHTML = ''
-    window.google.accounts.id.renderButton(googleBtnRef.current, {
-      type: 'standard',
-      theme: 'filled_black',
-      size: 'large',
-      text: mode === 'login' ? 'signin_with' : 'signup_with',
-      shape: 'rectangular',
-      width: googleBtnRef.current.offsetWidth || 320,
-    })
-  }
-
-  async function handleGoogleCredential(response) {
+  const handleGoogleSuccess = async (credentialResponse) => {
     setGoogleLoading(true)
     setServerError('')
     try {
-      await googleAuth(response.credential)
+      await googleAuth(credentialResponse.credential)
       navigate('/dashboard')
     } catch (err) {
       setServerError(err.message || 'Google sign-in failed')
@@ -166,30 +137,35 @@ export default function AuthPage() {
             </div>
           )}
 
-          {GOOGLE_CLIENT_ID && (
-            <div className="mb-6">
-              <div
-                ref={googleBtnRef}
-                className="w-full"
-                style={{ minHeight: 44 }}
-              />
-              {googleLoading && (
-                <div className="flex items-center justify-center gap-2 mt-2 text-xs [color:var(--text-muted)] font-mono">
-                  <span className="flex gap-1">
-                    {[0,1,2].map(i => (
-                      <span key={i} className="w-1 h-1 [background:var(--text-muted)] rounded-full animate-pulse" style={{ animationDelay: `${i*0.15}s` }} />
-                    ))}
-                  </span>
-                  Signing in with Google...
-                </div>
-              )}
-              <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px [background:var(--surface-600)]" />
-                <span className="text-xs font-mono [color:var(--text-muted)] uppercase tracking-widest">or</span>
-                <div className="flex-1 h-px [background:var(--surface-600)]" />
+          <div className="mb-6">
+            {googleLoading ? (
+              <div className="flex items-center justify-center gap-2 py-3 text-xs [color:var(--text-muted)] font-mono">
+                <span className="flex gap-1">
+                  {[0,1,2].map(i => (
+                    <span key={i} className="w-1 h-1 rounded-full animate-pulse" style={{ background: 'var(--text-muted)', animationDelay: `${i*0.15}s` }} />
+                  ))}
+                </span>
+                Signing in with Google...
               </div>
+            ) : (
+              <div className="flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setServerError('Google sign-in failed')}
+                  text={mode === 'login' ? 'signin_with' : 'signup_with'}
+                  shape="rectangular"
+                  theme="filled_black"
+                  size="large"
+                  width="320"
+                />
+              </div>
+            )}
+            <div className="flex items-center gap-3 my-5">
+              <div className="flex-1 h-px [background:var(--surface-600)]" />
+              <span className="text-xs font-mono [color:var(--text-muted)] uppercase tracking-widest">or</span>
+              <div className="flex-1 h-px [background:var(--surface-600)]" />
             </div>
-          )}
+          </div>
 
           <form onSubmit={submit} className="space-y-4">
             {mode === 'register' && (

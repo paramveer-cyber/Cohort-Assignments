@@ -277,7 +277,7 @@ function PublicAnalyticsContent() {
           <div className="card p-5">
             <p className="text-xs font-mono [color:var(--text-muted)] uppercase tracking-widest mb-2">Computed</p>
             <p className="font-mono text-sm [color:var(--text-secondary)]">
-              {results.computedAt ? new Date(results.computedAt).toLocaleTimeString() : '—'}
+              {results.computedAt ? new Date(results.computedAt).toLocaleTimeString() : ';'}
             </p>
           </div>
         </div>

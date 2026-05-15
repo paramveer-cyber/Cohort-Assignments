@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Search, ChevronRight, BookOpen, Zap, BarChart2, Globe, Shield, Clock, X, ArrowRight } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Search, ChevronRight, BookOpen, Zap, BarChart2, Globe, Shield, Clock, X, ArrowRight, Users } from 'lucide-react'
 import Navbar from '../components/layout/Navbar.jsx'
 
 const SECTIONS = [
@@ -25,27 +24,86 @@ A poll lets you collect structured responses from any audience. To create one:
 - Titles should be clear and specific. Avoid ambiguous questions.
 - Add multiple questions if you need richer data.
 - Custom slugs make sharing easier: \`/view-yourname\` instead of a random ID.
+- Mark questions as mandatory if a response without them is not useful.
         `.trim(),
       },
       {
         id: 'anonymous-vs-auth',
         title: 'Anonymous vs Authenticated Polls',
         content: `
-**Anonymous polls** allow anyone to respond without logging in. Each vote is tracked by session, not account — respondents remain completely private.
+**Anonymous polls** allow anyone to respond without logging in. Each vote is tracked by a session token the client generates — respondents remain completely private, but duplicate submissions are still prevented per device/session.
 
 Use anonymous polls when:
 - You want maximum participation with no friction
 - Respondent privacy is critical
-- You're running public surveys
+- You are running public surveys or quick sentiment checks
 
-**Authenticated polls** require a signed-in account to respond. This links each vote to a verified user identity.
+When submitting anonymously, the client sends a \`sessionToken\` alongside answers. This token is tied to the browser session and is used solely for duplicate prevention — no identity is stored.
+
+**Authenticated polls** require a signed-in account to respond. Each vote is linked to a verified user ID.
 
 Use authenticated polls when:
-- You need to prevent duplicate votes
-- Responses should be tied to accounts
+- You need strict one-vote-per-account enforcement
+- Responses should be tied to known identities
 - You want to control who can participate
 
 You can toggle anonymous mode in the Create Poll form. This setting is locked once the poll is activated.
+        `.trim(),
+      },
+    ],
+  },
+  {
+    id: 'voting',
+    icon: <Users size={16} />,
+    title: 'Voting & Responses',
+    articles: [
+      {
+        id: 'voting-anonymous',
+        title: 'Voting Without an Account',
+        content: `
+If a poll has anonymous mode enabled, you can vote without signing in.
+
+**How it works:**
+1. Open the poll link — no login prompt appears.
+2. Select your answers and submit.
+3. The app generates a \`sessionToken\` unique to your browser session and sends it with your answers.
+4. The server records your response tied to that token instead of a user account.
+
+**Duplicate prevention:**
+The session token is stored in your browser. If you return to the same poll URL, the page checks your previous submission and shows what you already answered. You cannot submit twice from the same session.
+
+**Limitations:**
+- Clearing browser storage resets the session token. A new token is treated as a new session by the server, but the database unique constraint prevents double-counting from the same token.
+- Switching devices means a new session token — anonymous responses cannot be merged across devices.
+- If you are signed in when submitting to an anonymous poll, your user account is used instead of a session token, giving you a persistent submission record across devices.
+        `.trim(),
+      },
+      {
+        id: 'voting-authenticated',
+        title: 'Voting with an Account',
+        content: `
+For authenticated polls, you must be signed in to submit a response.
+
+1. Open the poll link. If you are not signed in, you will be prompted to log in first.
+2. Select your answers and submit.
+3. Your response is stored against your user ID.
+
+**Submission tracking:**
+After voting, you can return to the poll page to review what you submitted. The page fetches your existing submission and displays your selected options.
+
+**Duplicate prevention:**
+The database enforces a unique constraint on (pollId, userId). A second submission attempt returns a conflict error — no duplicates are possible even if the client submits twice simultaneously (a server-side lock prevents races).
+        `.trim(),
+      },
+      {
+        id: 'mandatory-questions',
+        title: 'Mandatory Questions',
+        content: `
+Poll creators can mark individual questions as **mandatory**. A submission that omits any mandatory question is rejected by the server with a clear error listing which question IDs are missing.
+
+On the vote page, mandatory questions are visually marked. The submit button stays disabled until all mandatory questions have a selected option.
+
+Optional questions can be skipped — they are included in analytics only when answered.
         `.trim(),
       },
     ],
@@ -135,7 +193,7 @@ You can find the share link on:
 **Best practices:**
 - Use a custom slug for branded or recurring polls
 - Share via direct link — no account required if anonymous mode is on
-- For authenticated polls, remind respondents they'll need to sign in
+- For authenticated polls, remind respondents they will need to sign in
         `.trim(),
       },
       {
@@ -152,7 +210,7 @@ The results page shows:
 
 Results links follow the format \`/results/:pollId\` and work without login.
 
-For **Respondents Only** visibility, respondents who voted are automatically granted access when they're signed in.
+For **Respondents Only** visibility, respondents who voted are automatically granted access when they are signed in. Anonymous respondents are granted access if their session token matches a recorded submission.
         `.trim(),
       },
     ],
@@ -202,6 +260,49 @@ The number of users currently viewing the analytics page for this poll. Updated 
     ],
   },
   {
+    id: 'security',
+    icon: <Shield size={16} />,
+    title: 'Security & Auth',
+    articles: [
+      {
+        id: 'authentication',
+        title: 'Authentication Methods',
+        content: `
+PollNow supports two authentication methods:
+
+**Email + Password**
+Register with your name, email, and a password of at least 8 characters. Passwords are hashed server-side. On login, a short-lived JWT is issued and stored in memory (not localStorage). A longer-lived refresh token is stored in an HTTP-only cookie.
+
+**Google Sign-In**
+Click "Sign in with Google" on the auth page. You are redirected through Google's OAuth consent screen. On return, Google issues an ID token that is verified server-side. A PollNow JWT and refresh cookie are then issued the same way as email login.
+
+No Google credentials are stored — only the verified user identity (name, email) returned by Google.
+
+**Session Management**
+JWTs expire after a short window. The app automatically refreshes them using the HTTP-only cookie before expiry. If the cookie is missing or expired, you are signed out and redirected to the login page.
+        `.trim(),
+      },
+      {
+        id: 'rate-limiting',
+        title: 'Rate Limiting',
+        content: `
+The API applies rate limiting to protect against abuse:
+
+**Submission endpoint**
+A per-IP rate limiter applies to poll response submissions. Hitting the limit returns a 429 error. The limit resets after a short window.
+
+**Read endpoints**
+Poll and analytics read endpoints have a separate, more permissive rate limiter.
+
+**Analytics endpoints**
+Creator analytics and published results endpoints have their own limit to prevent scraping.
+
+In addition to IP-level limits, the server acquires a short-lived Redis lock per (pollId, userId/sessionToken) when processing a submission. This prevents duplicate submissions from simultaneous requests even when the rate limiter has not yet triggered.
+        `.trim(),
+      },
+    ],
+  },
+  {
     id: 'glossary',
     icon: <BookOpen size={16} />,
     title: 'Glossary',
@@ -224,7 +325,9 @@ The number of users currently viewing the analytics page for this poll. Updated 
 
 **Published** — A closed poll with finalized results made visible at a chosen visibility level.
 
-**Anonymous Mode** — A poll setting that allows voting without a user account.
+**Anonymous Mode** — A poll setting that allows voting without a user account. Responses are tracked by session token instead of user ID.
+
+**Session Token** — A client-generated identifier sent with anonymous submissions for duplicate prevention. Stored in browser storage.
 
 **Slug** — A human-readable URL segment for a poll. Format: \`view-yourname\`.
 
@@ -236,9 +339,11 @@ The number of users currently viewing the analytics page for this poll. Updated 
 
 **Socket.IO Room** — A named channel on the server that a poll's viewers subscribe to. Broadcasts are scoped to this room.
 
-**Redis** — In-memory data store used for analytics caching and rate limiting.
+**Redis** — In-memory data store used for analytics caching, submission locks, and rate limiting.
 
 **JWT** — JSON Web Token. Used for authentication. Refreshed automatically to keep sessions alive.
+
+**Refresh Token** — A long-lived token stored in an HTTP-only cookie. Used to obtain a new JWT without re-login.
         `.trim(),
       },
     ],

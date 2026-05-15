@@ -50,7 +50,7 @@ function UserPageContent() {
     expired: { color: 'var(--status-expired)', bg: 'var(--status-expired-bg)', border: 'var(--status-expired-border)', label: 'Expired' },
   }
 
-  const memberSince = user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '—'
+  const memberSince = user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ';'
 
   return (
     <div className="min-h-screen pt-14" style={{ background: 'var(--page-bg)' }}>

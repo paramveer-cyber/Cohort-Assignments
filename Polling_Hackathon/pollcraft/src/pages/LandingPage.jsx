@@ -32,19 +32,19 @@ function AnimatedSection({ children, delay = 0, className = '' }) {
 }
 
 const features = [
-  { icon: <Zap size={18} />, title: 'Instant Vote Propagation', desc: 'Every cast vote broadcasts via WebSocket to all connected viewers — no refresh, no delay, no approximation.' },
+  { icon: <Zap size={18} />, title: 'Instant Vote Propagation', desc: 'Every cast vote broadcasts via WebSocket to all connected viewers ; no refresh, no delay, no approximation.' },
   { icon: <Globe size={18} />, title: 'Flexible Visibility', desc: 'Publish polls publicly, limit access to respondents, or keep results private. You control the audience.' },
   { icon: <Shield size={18} />, title: 'Anonymous Mode', desc: 'Enable anonymous voting so participants answer freely. No account required when you want broad reach.' },
-  { icon: <TrendingUp size={18} />, title: 'Live Analytics', desc: 'Per-option vote distribution, hourly participation trends, and live viewer counts — all updating in real time.' },
+  { icon: <TrendingUp size={18} />, title: 'Live Analytics', desc: 'Per-option vote distribution, hourly participation trends, and live viewer counts ; all updating in real time.' },
   { icon: <Users size={18} />, title: 'Live Viewer Presence', desc: 'Track exactly how many people are watching results unfold with your poll room open right now.' },
   { icon: <Clock size={18} />, title: 'Scheduled Expiry', desc: 'Set a deadline and walk away. Polls auto-expire at the exact time you specify, ready to publish.' },
 ]
 
 const workflow = [
   { n: '01', title: 'Create', desc: 'Build your poll in seconds. Define options, toggle anonymous mode, set an optional expiry.' },
-  { n: '02', title: 'Activate', desc: 'Go live with one click. Share the link — your poll starts accepting real responses immediately.' },
+  { n: '02', title: 'Activate', desc: 'Go live with one click. Share the link ; your poll starts accepting real responses immediately.' },
   { n: '03', title: 'Watch', desc: 'See results stream in live. Track participation, option momentum, and active viewer count.' },
-  { n: '04', title: 'Publish', desc: 'Close the poll and publish results — public, respondents-only, or private — with permanent analytics.' },
+  { n: '04', title: 'Publish', desc: 'Close the poll and publish results ; public, respondents-only, or private ; with permanent analytics.' },
 ]
 
 const marqueeItems = ['Real-time Voting', 'WebSocket Powered', 'Zero Refresh', 'Live Analytics', 'Anonymous Mode', 'Scheduled Expiry', 'Live Viewer Count', 'Instant Results', 'Swiss Precision', 'Bauhaus Design']
@@ -276,7 +276,7 @@ function HeroSection() {
           </h1>
 
           <p className="text-lg leading-relaxed max-w-md mb-2" style={{ color: 'var(--text-secondary)' }}>
-            Create polls. Go live instantly. Every vote propagates via WebSocket to every connected viewer — no reload, no polling, no lag.
+            Create polls. Go live instantly. Every vote propagates via WebSocket to every connected viewer ; no reload, no polling, no lag.
           </p>
 
           <div className="flex flex-wrap gap-3">
@@ -374,7 +374,7 @@ function FeaturesSection() {
               </h2>
             </div>
             <p className="text-sm max-w-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              Every feature serves precision. No filler — just what real-time polling needs to work at its best.
+              Every feature serves precision. No filler ; just what real-time polling needs to work at its best.
             </p>
           </div>
         </AnimatedSection>
@@ -424,7 +424,7 @@ function ArchitectureSection() {
               Purpose-built stack for sub-50ms vote propagation. Redis caches analytics, PostgreSQL stores everything durable, Socket.IO rooms broadcast updates instantly.
             </p>
             <div className="space-y-3">
-              {['Redis-cached analytics with 30s TTL', 'Socket.IO rooms per poll — zero broadcast overlap', 'JWT + refresh token rotation for security', 'Rate-limited vote submission prevents abuse'].map(item => (
+              {['Redis-cached analytics with 30s TTL', 'Socket.IO rooms per poll ; zero broadcast overlap', 'JWT + refresh token rotation for security', 'Rate-limited vote submission prevents abuse'].map(item => (
                 <div key={item} className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
                   <CheckCircle size={14} style={{ color: 'var(--jade)', flexShrink: 0 }} />
                   {item}
