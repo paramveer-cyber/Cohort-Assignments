@@ -1,9 +1,5 @@
 # Pollnow — Architecture & Developer Guide
 
-> Fullstack realtime polling platform. Read this to modify, debug, or extend any part of the system.
-
----
-
 ## Quick Start
 
 ```bash
