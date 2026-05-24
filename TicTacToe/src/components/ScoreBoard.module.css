@@ -1,0 +1,56 @@
+.wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--black);
+  width: 100%;
+}
+
+.block {
+  padding: 10px 14px;
+  border-right: 1px solid var(--black);
+  position: relative;
+  transition: background 0.15s;
+}
+
+.block:last-child { border-right: none; }
+
+.block.active { background: var(--black); }
+.block.active .label { color: rgba(255,255,255,0.5); }
+.block.active .symbol { color: var(--red); }
+.block.active .score { color: var(--white); }
+
+.block.winner { background: var(--red); }
+.block.winner .label,
+.block.winner .symbol,
+.block.winner .score { color: var(--white); }
+
+.label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2px;
+  transition: color 0.15s;
+}
+
+.symbol {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.score {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  transition: color 0.15s;
+}

@@ -1,0 +1,23 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 340px;
+  margin-top: 16px;
+}
+.left { display: flex; align-items: center; gap: 8px; }
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--mid);
+  display: inline-block;
+}
+.active { background: var(--fg); }
+.txt {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid);
+}

@@ -1,0 +1,23 @@
+.main {
+  font-family: var(--mono);
+  font-size: 42px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--fg);
+}
+.sub {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--mid);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+.label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-top: 6px;
+}

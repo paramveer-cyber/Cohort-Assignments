@@ -1,0 +1,26 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --red: #E8000A;
+  --black: #0A0A0A;
+  --white: #F5F4F0;
+  --light: #EEEEE9;
+  --gray: #CACAC5;
+  --muted: #888884;
+  --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+}

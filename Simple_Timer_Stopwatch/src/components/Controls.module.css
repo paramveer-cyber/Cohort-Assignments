@@ -1,0 +1,27 @@
+.controls { display: flex; gap: 10px; margin-top: 28px; }
+
+.btn {
+  height: 44px;
+  padding: 0 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  transition: opacity 0.1s, transform 0.08s;
+}
+
+.btn:hover:not(:disabled) { background: var(--fg); color: var(--bg); }
+.btn:active:not(:disabled) { transform: scale(0.97); }
+.btn:disabled { opacity: 0.3; cursor: default; }
+
+.primary {
+  composes: btn;
+  background: var(--fg);
+  color: var(--bg);
+}
+.primary:hover:not(:disabled) { opacity: 0.75; }

@@ -1,0 +1,43 @@
+:root {
+  --bg: #ffffff;
+  --fg: #000000;
+  --mid: #888888;
+  --border: #000000;
+  --grid-line: rgba(0, 0, 0, 0.07);
+  --mono: 'IBM Plex Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f5f5f5;
+    --mid: #666666;
+    --border: #f5f5f5;
+    --grid-line: rgba(255, 255, 255, 0.06);
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--mono);
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+}

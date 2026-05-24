@@ -1,0 +1,33 @@
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--black);
+  border-bottom: 1px solid var(--black);
+  cursor: pointer;
+  transition: background 0.08s;
+  position: relative;
+}
+
+.cell:nth-child(3n) { border-right: none; }
+.cell:nth-child(n+7) { border-bottom: none; }
+
+.cell:not(.taken):hover { background: var(--light); }
+
+.cell.taken { cursor: default; }
+
+.cell.win { background: var(--red); }
+
+.mark {
+  font-family: var(--font);
+  font-size: clamp(36px, 8vw, 56px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--black);
+  transition: color 0.1s;
+}
+
+.cell.win .mark { color: var(--white); }

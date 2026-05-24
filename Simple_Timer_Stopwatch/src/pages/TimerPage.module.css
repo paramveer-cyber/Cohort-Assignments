@@ -1,0 +1,50 @@
+.inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.numInput {
+  width: 58px;
+  height: 40px;
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 300;
+  text-align: center;
+  -moz-appearance: textfield;
+  outline: none;
+}
+.numInput::-webkit-inner-spin-button,
+.numInput::-webkit-outer-spin-button { -webkit-appearance: none; }
+.numInput:focus { border-color: var(--fg); }
+.colon {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--mid);
+  padding-bottom: 16px;
+}
+.inputLabel {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-top: 3px;
+}
+.subTxt {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mid);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}

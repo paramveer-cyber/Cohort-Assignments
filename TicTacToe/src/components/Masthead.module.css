@@ -1,0 +1,27 @@
+.masthead {
+  width: 100%;
+  border-top: 3px solid var(--black);
+  border-bottom: 1px solid var(--black);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  padding: 6px 0 4px;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.sub {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1;
+}
