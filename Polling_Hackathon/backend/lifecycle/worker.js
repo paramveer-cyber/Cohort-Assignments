@@ -3,7 +3,7 @@ import { invalidateAnalyticsCache } from "../modules/analytics/analytics.service
 import { emitPollStatusChanged } from "../socket/index.js";
 import redis from "../config/redis.js";
 
-const INTERVAL_MS = 5000;
+const INTERVAL_MS = 45 * 1000;
 
 const pollCacheKey = (slug) => `poll:${slug}`;
 
