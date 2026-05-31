@@ -1,0 +1,16 @@
+{
+  "name": "learningai",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Paramveer Oberoi",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "openai": "^6.39.1"
+  }
+}
