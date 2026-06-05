@@ -12,7 +12,11 @@ export type PartySlot = {
 
 export const getPartySlots = (userId: string): Promise<PartySlot[]> =>
     db
-        .select({ id: user_party.id, pokeId: user_party.pokeId, orderId: user_party.orderId })
+        .select({
+            id: user_party.id,
+            pokeId: user_party.pokeId,
+            orderId: user_party.orderId,
+        })
         .from(user_party)
         .where(eq(user_party.userId, userId))
         .orderBy(user_party.orderId);
@@ -25,39 +29,66 @@ export const getPartySize = async (userId: string): Promise<number> => {
     return rows[0]?.count ?? 0;
 };
 
-export const slotOccupied = async (userId: string, orderId: string): Promise<boolean> => {
+export const slotOccupied = async (
+    userId: string,
+    orderId: string
+): Promise<boolean> => {
     const rows = await db
         .select({ id: user_party.id })
         .from(user_party)
-        .where(and(eq(user_party.userId, userId), eq(user_party.orderId, orderId)));
+        .where(
+            and(eq(user_party.userId, userId), eq(user_party.orderId, orderId))
+        );
     return rows.length > 0;
 };
 
-export const pokemonAlreadyInParty = async (userId: string, pokeId: number): Promise<boolean> => {
+export const pokemonAlreadyInParty = async (
+    userId: string,
+    pokeId: number
+): Promise<boolean> => {
     const rows = await db
         .select({ id: user_party.id })
         .from(user_party)
-        .where(and(eq(user_party.userId, userId), eq(user_party.pokeId, pokeId)));
+        .where(
+            and(eq(user_party.userId, userId), eq(user_party.pokeId, pokeId))
+        );
     return rows.length > 0;
 };
 
-export const insertPartySlot = async (userId: string, pokeId: number, orderId: string): Promise<PartySlot> => {
+export const insertPartySlot = async (
+    userId: string,
+    pokeId: number,
+    orderId: string
+): Promise<PartySlot> => {
     const [slot] = await db
         .insert(user_party)
         .values({ userId, pokeId, orderId })
-        .returning({ id: user_party.id, pokeId: user_party.pokeId, orderId: user_party.orderId });
+        .returning({
+            id: user_party.id,
+            pokeId: user_party.pokeId,
+            orderId: user_party.orderId,
+        });
     return slot;
 };
 
-export const deletePartySlot = async (userId: string, pokeId: number): Promise<boolean> => {
+export const deletePartySlot = async (
+    userId: string,
+    pokeId: number
+): Promise<boolean> => {
     const result = await db
         .delete(user_party)
-        .where(and(eq(user_party.userId, userId), eq(user_party.pokeId, pokeId)))
+        .where(
+            and(eq(user_party.userId, userId), eq(user_party.pokeId, pokeId))
+        )
         .returning({ id: user_party.id });
     return result.length > 0;
 };
 
-export const updateSlotOrder = async (userId: string, slotId: string, newOrderId: string): Promise<boolean> => {
+export const updateSlotOrder = async (
+    userId: string,
+    slotId: string,
+    newOrderId: string
+): Promise<boolean> => {
     const result = await db
         .update(user_party)
         .set({ orderId: newOrderId })
@@ -82,36 +113,47 @@ export const getUserXP = async (userId: string): Promise<number> => {
     return rows[0]?.userXP ?? 0;
 };
 
-export const deductXP = async (userId: string, xpCost: number): Promise<{ newXP: number } | null> => {
+export const deductXP = async (
+    userId: string,
+    xpCost: number
+): Promise<{ newXP: number } | null> => {
     const result = await db
         .update(users)
         .set({ userXP: sql`${users.userXP} - ${xpCost}` })
         .where(and(eq(users.id, userId), sql`${users.userXP} >= ${xpCost}`))
-        .returning({ newXP: users.userXP });
+        .returning({ newXP: sql<number>`COALESCE(${users.userXP}, 0)` });
     return result[0] ?? null;
 };
 
-export const addUserXP = async (userId: string, xpAmount: number): Promise<{ newXP: number } | null> => {
+export const addUserXP = async (
+    userId: string,
+    xpAmount: number
+): Promise<{ newXP: number } | null> => {
     const rows = await db
         .update(users)
         .set({ userXP: sql`${users.userXP} + ${xpAmount}` })
         .where(eq(users.id, userId))
-        .returning({ newXP: users.userXP });
+        .returning({ newXP: sql<number>`COALESCE(${users.userXP}, 0)` });
     return rows[0] ?? null;
 };
 
-export const removeUserXP = async (userId: string, xpAmount: number): Promise<{ newXP: number } | null> => {
+export const removeUserXP = async (
+    userId: string,
+    xpAmount: number
+): Promise<{ newXP: number } | null> => {
     const rows = await db
         .update(users)
         .set({ userXP: sql`GREATEST(${users.userXP} - ${xpAmount}, 0)` })
         .where(eq(users.id, userId))
-        .returning({ newXP: users.userXP });
+        .returning({ newXP: sql<number>`COALESCE(${users.userXP}, 0)` });
     return rows[0] ?? null;
 };
 
-export const nextAvailableOrderId = async (userId: string): Promise<string | null> => {
+export const nextAvailableOrderId = async (
+    userId: string
+): Promise<string | null> => {
     const slots = await getPartySlots(userId);
-    const taken = new Set(slots.map(s => s.orderId));
+    const taken = new Set(slots.map((s) => s.orderId));
     for (let i = 1; i <= MAX_PARTY_SIZE; i++) {
         const candidate = i.toFixed(3);
         if (!taken.has(candidate)) return candidate;
