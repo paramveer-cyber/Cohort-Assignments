@@ -1,0 +1,2 @@
+ALTER TABLE "user_party" DROP CONSTRAINT "pokemon_id";--> statement-breakpoint
+ALTER TABLE "user_party" ADD CONSTRAINT "pokemon_id" CHECK ("user_party"."pokemon_id" >= 0 AND "user_party"."pokemon_id" <= 99999);
