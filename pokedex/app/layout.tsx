@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { AuthProvider } from '@/context/auth/AuthContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Analytics } from '@vercel/analytics/next';
 
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 
@@ -71,7 +72,9 @@ export default function RootLayout({
                         minHeight: '100vh',
                     }}
                 >
-                    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+                    <GoogleOAuthProvider
+                        clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+                    >
                         <AuthProvider>
                             <Navbar />
                             <main style={{ flex: 1 }}>{children}</main>
@@ -79,6 +82,7 @@ export default function RootLayout({
                         </AuthProvider>
                     </GoogleOAuthProvider>
                 </div>
+                <Analytics />
             </body>
         </html>
     );
